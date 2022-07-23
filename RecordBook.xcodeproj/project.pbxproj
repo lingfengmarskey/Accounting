@@ -1,0 +1,588 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8D59E603288BDC69007C86A7 /* RecordBookApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D59E602288BDC69007C86A7 /* RecordBookApp.swift */; };
+		8D59E605288BDC69007C86A7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D59E604288BDC69007C86A7 /* ContentView.swift */; };
+		8D59E607288BDC69007C86A7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8D59E606288BDC69007C86A7 /* Assets.xcassets */; };
+		8D59E60A288BDC69007C86A7 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8D59E609288BDC69007C86A7 /* Preview Assets.xcassets */; };
+		8D59E614288BDC69007C86A7 /* RecordBookTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D59E613288BDC69007C86A7 /* RecordBookTests.swift */; };
+		8D59E61E288BDC69007C86A7 /* RecordBookUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D59E61D288BDC69007C86A7 /* RecordBookUITests.swift */; };
+		8D59E620288BDC69007C86A7 /* RecordBookUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D59E61F288BDC69007C86A7 /* RecordBookUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		8D59E610288BDC69007C86A7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8D59E5F7288BDC69007C86A7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D59E5FE288BDC69007C86A7;
+			remoteInfo = RecordBook;
+		};
+		8D59E61A288BDC69007C86A7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8D59E5F7288BDC69007C86A7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D59E5FE288BDC69007C86A7;
+			remoteInfo = RecordBook;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		8D59E5FF288BDC69007C86A7 /* RecordBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecordBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D59E602288BDC69007C86A7 /* RecordBookApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordBookApp.swift; sourceTree = "<group>"; };
+		8D59E604288BDC69007C86A7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		8D59E606288BDC69007C86A7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8D59E609288BDC69007C86A7 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		8D59E60F288BDC69007C86A7 /* RecordBookTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RecordBookTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D59E613288BDC69007C86A7 /* RecordBookTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordBookTests.swift; sourceTree = "<group>"; };
+		8D59E619288BDC69007C86A7 /* RecordBookUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RecordBookUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D59E61D288BDC69007C86A7 /* RecordBookUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordBookUITests.swift; sourceTree = "<group>"; };
+		8D59E61F288BDC69007C86A7 /* RecordBookUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordBookUITestsLaunchTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D59E5FC288BDC69007C86A7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8D59E60C288BDC69007C86A7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8D59E616288BDC69007C86A7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		8D59E5F6288BDC69007C86A7 = {
+			isa = PBXGroup;
+			children = (
+				8D59E601288BDC69007C86A7 /* RecordBook */,
+				8D59E612288BDC69007C86A7 /* RecordBookTests */,
+				8D59E61C288BDC69007C86A7 /* RecordBookUITests */,
+				8D59E600288BDC69007C86A7 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		8D59E600288BDC69007C86A7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D59E5FF288BDC69007C86A7 /* RecordBook.app */,
+				8D59E60F288BDC69007C86A7 /* RecordBookTests.xctest */,
+				8D59E619288BDC69007C86A7 /* RecordBookUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8D59E601288BDC69007C86A7 /* RecordBook */ = {
+			isa = PBXGroup;
+			children = (
+				8D59E602288BDC69007C86A7 /* RecordBookApp.swift */,
+				8D59E604288BDC69007C86A7 /* ContentView.swift */,
+				8D59E606288BDC69007C86A7 /* Assets.xcassets */,
+				8D59E608288BDC69007C86A7 /* Preview Content */,
+			);
+			path = RecordBook;
+			sourceTree = "<group>";
+		};
+		8D59E608288BDC69007C86A7 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				8D59E609288BDC69007C86A7 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		8D59E612288BDC69007C86A7 /* RecordBookTests */ = {
+			isa = PBXGroup;
+			children = (
+				8D59E613288BDC69007C86A7 /* RecordBookTests.swift */,
+			);
+			path = RecordBookTests;
+			sourceTree = "<group>";
+		};
+		8D59E61C288BDC69007C86A7 /* RecordBookUITests */ = {
+			isa = PBXGroup;
+			children = (
+				8D59E61D288BDC69007C86A7 /* RecordBookUITests.swift */,
+				8D59E61F288BDC69007C86A7 /* RecordBookUITestsLaunchTests.swift */,
+			);
+			path = RecordBookUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8D59E5FE288BDC69007C86A7 /* RecordBook */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8D59E623288BDC69007C86A7 /* Build configuration list for PBXNativeTarget "RecordBook" */;
+			buildPhases = (
+				8D59E5FB288BDC69007C86A7 /* Sources */,
+				8D59E5FC288BDC69007C86A7 /* Frameworks */,
+				8D59E5FD288BDC69007C86A7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RecordBook;
+			productName = RecordBook;
+			productReference = 8D59E5FF288BDC69007C86A7 /* RecordBook.app */;
+			productType = "com.apple.product-type.application";
+		};
+		8D59E60E288BDC69007C86A7 /* RecordBookTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8D59E626288BDC69007C86A7 /* Build configuration list for PBXNativeTarget "RecordBookTests" */;
+			buildPhases = (
+				8D59E60B288BDC69007C86A7 /* Sources */,
+				8D59E60C288BDC69007C86A7 /* Frameworks */,
+				8D59E60D288BDC69007C86A7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8D59E611288BDC69007C86A7 /* PBXTargetDependency */,
+			);
+			name = RecordBookTests;
+			productName = RecordBookTests;
+			productReference = 8D59E60F288BDC69007C86A7 /* RecordBookTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		8D59E618288BDC69007C86A7 /* RecordBookUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8D59E629288BDC69007C86A7 /* Build configuration list for PBXNativeTarget "RecordBookUITests" */;
+			buildPhases = (
+				8D59E615288BDC69007C86A7 /* Sources */,
+				8D59E616288BDC69007C86A7 /* Frameworks */,
+				8D59E617288BDC69007C86A7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8D59E61B288BDC69007C86A7 /* PBXTargetDependency */,
+			);
+			name = RecordBookUITests;
+			productName = RecordBookUITests;
+			productReference = 8D59E619288BDC69007C86A7 /* RecordBookUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		8D59E5F7288BDC69007C86A7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1340;
+				LastUpgradeCheck = 1340;
+				TargetAttributes = {
+					8D59E5FE288BDC69007C86A7 = {
+						CreatedOnToolsVersion = 13.4.1;
+					};
+					8D59E60E288BDC69007C86A7 = {
+						CreatedOnToolsVersion = 13.4.1;
+						TestTargetID = 8D59E5FE288BDC69007C86A7;
+					};
+					8D59E618288BDC69007C86A7 = {
+						CreatedOnToolsVersion = 13.4.1;
+						TestTargetID = 8D59E5FE288BDC69007C86A7;
+					};
+				};
+			};
+			buildConfigurationList = 8D59E5FA288BDC69007C86A7 /* Build configuration list for PBXProject "RecordBook" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 8D59E5F6288BDC69007C86A7;
+			productRefGroup = 8D59E600288BDC69007C86A7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8D59E5FE288BDC69007C86A7 /* RecordBook */,
+				8D59E60E288BDC69007C86A7 /* RecordBookTests */,
+				8D59E618288BDC69007C86A7 /* RecordBookUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D59E5FD288BDC69007C86A7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D59E60A288BDC69007C86A7 /* Preview Assets.xcassets in Resources */,
+				8D59E607288BDC69007C86A7 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8D59E60D288BDC69007C86A7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8D59E617288BDC69007C86A7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D59E5FB288BDC69007C86A7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D59E605288BDC69007C86A7 /* ContentView.swift in Sources */,
+				8D59E603288BDC69007C86A7 /* RecordBookApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8D59E60B288BDC69007C86A7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D59E614288BDC69007C86A7 /* RecordBookTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8D59E615288BDC69007C86A7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D59E620288BDC69007C86A7 /* RecordBookUITestsLaunchTests.swift in Sources */,
+				8D59E61E288BDC69007C86A7 /* RecordBookUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8D59E611288BDC69007C86A7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8D59E5FE288BDC69007C86A7 /* RecordBook */;
+			targetProxy = 8D59E610288BDC69007C86A7 /* PBXContainerItemProxy */;
+		};
+		8D59E61B288BDC69007C86A7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8D59E5FE288BDC69007C86A7 /* RecordBook */;
+			targetProxy = 8D59E61A288BDC69007C86A7 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		8D59E621288BDC69007C86A7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		8D59E622288BDC69007C86A7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		8D59E624288BDC69007C86A7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"RecordBook/Preview Content\"";
+				DEVELOPMENT_TEAM = E393H8D2JP;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = coma.marcostech.RecordBook;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		8D59E625288BDC69007C86A7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"RecordBook/Preview Content\"";
+				DEVELOPMENT_TEAM = E393H8D2JP;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = coma.marcostech.RecordBook;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		8D59E627288BDC69007C86A7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = E393H8D2JP;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = coma.marcostech.RecordBookTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RecordBook.app/RecordBook";
+			};
+			name = Debug;
+		};
+		8D59E628288BDC69007C86A7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = E393H8D2JP;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = coma.marcostech.RecordBookTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RecordBook.app/RecordBook";
+			};
+			name = Release;
+		};
+		8D59E62A288BDC69007C86A7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = E393H8D2JP;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = coma.marcostech.RecordBookUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = RecordBook;
+			};
+			name = Debug;
+		};
+		8D59E62B288BDC69007C86A7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = E393H8D2JP;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = coma.marcostech.RecordBookUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = RecordBook;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8D59E5FA288BDC69007C86A7 /* Build configuration list for PBXProject "RecordBook" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8D59E621288BDC69007C86A7 /* Debug */,
+				8D59E622288BDC69007C86A7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8D59E623288BDC69007C86A7 /* Build configuration list for PBXNativeTarget "RecordBook" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8D59E624288BDC69007C86A7 /* Debug */,
+				8D59E625288BDC69007C86A7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8D59E626288BDC69007C86A7 /* Build configuration list for PBXNativeTarget "RecordBookTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8D59E627288BDC69007C86A7 /* Debug */,
+				8D59E628288BDC69007C86A7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8D59E629288BDC69007C86A7 /* Build configuration list for PBXNativeTarget "RecordBookUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8D59E62A288BDC69007C86A7 /* Debug */,
+				8D59E62B288BDC69007C86A7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 8D59E5F7288BDC69007C86A7 /* Project object */;
+}
