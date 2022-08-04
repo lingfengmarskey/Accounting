@@ -8,12 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		8D59E603288BDC69007C86A7 /* RecordBookApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D59E602288BDC69007C86A7 /* RecordBookApp.swift */; };
-		8D59E605288BDC69007C86A7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D59E604288BDC69007C86A7 /* ContentView.swift */; };
 		8D59E607288BDC69007C86A7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8D59E606288BDC69007C86A7 /* Assets.xcassets */; };
 		8D59E60A288BDC69007C86A7 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8D59E609288BDC69007C86A7 /* Preview Assets.xcassets */; };
 		8D59E614288BDC69007C86A7 /* RecordBookTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D59E613288BDC69007C86A7 /* RecordBookTests.swift */; };
 		8D59E61E288BDC69007C86A7 /* RecordBookUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D59E61D288BDC69007C86A7 /* RecordBookUITests.swift */; };
 		8D59E620288BDC69007C86A7 /* RecordBookUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D59E61F288BDC69007C86A7 /* RecordBookUITestsLaunchTests.swift */; };
+		8D59E62F288BDCD2007C86A7 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D59E62E288BDCD2007C86A7 /* CloudKit.framework */; };
+		8D953589289B89CE0098CB78 /* Root in Frameworks */ = {isa = PBXBuildFile; productRef = 8D953588289B89CE0098CB78 /* Root */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,7 +37,6 @@
 /* Begin PBXFileReference section */
 		8D59E5FF288BDC69007C86A7 /* RecordBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecordBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D59E602288BDC69007C86A7 /* RecordBookApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordBookApp.swift; sourceTree = "<group>"; };
-		8D59E604288BDC69007C86A7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		8D59E606288BDC69007C86A7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8D59E609288BDC69007C86A7 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		8D59E60F288BDC69007C86A7 /* RecordBookTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RecordBookTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -44,6 +44,10 @@
 		8D59E619288BDC69007C86A7 /* RecordBookUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RecordBookUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D59E61D288BDC69007C86A7 /* RecordBookUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordBookUITests.swift; sourceTree = "<group>"; };
 		8D59E61F288BDC69007C86A7 /* RecordBookUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordBookUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		8D59E62C288BDCC9007C86A7 /* RecordBook.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RecordBook.entitlements; sourceTree = "<group>"; };
+		8D59E62E288BDCD2007C86A7 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		8D953587289B88C70098CB78 /* Feature */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Feature; sourceTree = "<group>"; };
+		8D9535A0289BA0520098CB78 /* Core */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Core; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +55,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8D953589289B89CE0098CB78 /* Root in Frameworks */,
+				8D59E62F288BDCD2007C86A7 /* CloudKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,10 +80,13 @@
 		8D59E5F6288BDC69007C86A7 = {
 			isa = PBXGroup;
 			children = (
+				8D9535A0289BA0520098CB78 /* Core */,
+				8D953587289B88C70098CB78 /* Feature */,
 				8D59E601288BDC69007C86A7 /* RecordBook */,
 				8D59E612288BDC69007C86A7 /* RecordBookTests */,
 				8D59E61C288BDC69007C86A7 /* RecordBookUITests */,
 				8D59E600288BDC69007C86A7 /* Products */,
+				8D59E62D288BDCD2007C86A7 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -94,8 +103,8 @@
 		8D59E601288BDC69007C86A7 /* RecordBook */ = {
 			isa = PBXGroup;
 			children = (
+				8D59E62C288BDCC9007C86A7 /* RecordBook.entitlements */,
 				8D59E602288BDC69007C86A7 /* RecordBookApp.swift */,
-				8D59E604288BDC69007C86A7 /* ContentView.swift */,
 				8D59E606288BDC69007C86A7 /* Assets.xcassets */,
 				8D59E608288BDC69007C86A7 /* Preview Content */,
 			);
@@ -127,6 +136,14 @@
 			path = RecordBookUITests;
 			sourceTree = "<group>";
 		};
+		8D59E62D288BDCD2007C86A7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8D59E62E288BDCD2007C86A7 /* CloudKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -143,6 +160,9 @@
 			dependencies = (
 			);
 			name = RecordBook;
+			packageProductDependencies = (
+				8D953588289B89CE0098CB78 /* Root */,
+			);
 			productName = RecordBook;
 			productReference = 8D59E5FF288BDC69007C86A7 /* RecordBook.app */;
 			productType = "com.apple.product-type.application";
@@ -257,7 +277,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D59E605288BDC69007C86A7 /* ContentView.swift in Sources */,
 				8D59E603288BDC69007C86A7 /* RecordBookApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -414,6 +433,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = RecordBook/RecordBook.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"RecordBook/Preview Content\"";
@@ -425,6 +445,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -443,6 +464,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = RecordBook/RecordBook.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"RecordBook/Preview Content\"";
@@ -454,6 +476,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -583,6 +606,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		8D953588289B89CE0098CB78 /* Root */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Root;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8D59E5F7288BDC69007C86A7 /* Project object */;
 }

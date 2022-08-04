@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import Root
 
 @main
 struct RecordBookApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            RootView()
         }
     }
 }
