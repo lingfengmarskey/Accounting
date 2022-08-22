@@ -18,8 +18,6 @@ import Foundation
 struct AccountBook: Identifiable {
     let id: String
     let name: String
-    let ownerUser: User
-    let participators: [User]
     let createdAt: Date
 }
 
@@ -36,20 +34,11 @@ struct AccountRecord: Identifiable {
     let name: String
     let amount: Int
     let createdAt: Date
-    let createdByUser: User
-    let updatedByUser: User
-    let ownerBook: AccountBook
+    let ownerBookId: String
     let description: String
-}
-
-/// 用户
-///
-/// Zone:
-/// No save in cloud, managed by the apple
-struct User: Identifiable {
-    let id: String
-    let name: String
-    let authType: AuthType
+    let type: AccountRecord
+    let mainCategory: AccountRecordMainCategory
+    let subCategory: AccountRecordSubCategory
 }
 
 /// 账单类型
@@ -68,7 +57,7 @@ enum AccoutnRecordType {
 struct AccountRecordMainCategory: Identifiable {
     let id: String
     let name: String
-    let subCategories: [AccountRecordSubCategory]
+    let subCategoriesId: [String]
 }
 
 /// 账单子类别
@@ -84,11 +73,92 @@ struct AccountRecordSubCategory: Identifiable {
     let name: String
 }
 
-/// 权限类型
-///
-/// Managed by the apple.
-enum AuthType {
-    case read
-    case writeRead
-    case owner
-}
+
+/**
+ open class Participant : NSObject, NSSecureCoding, NSCopying {
+
+     
+     @NSCopying open var userIdentity: CKUserIdentity { get }
+
+     
+     /** The default participant role is @c CKShareParticipantRolePrivateUser. */
+     @available(iOS 12.0, *)
+     open var role: CKShare.ParticipantRole
+
+     
+     /** The default participant type is @c CKShareParticipantTypePrivateUser. */
+     @available(iOS, introduced: 10.0, deprecated: 12.0)
+     open var type: CKShare.ParticipantType
+
+     
+     open var acceptanceStatus: CKShare.ParticipantAcceptanceStatus { get }
+
+     
+     /** The default permission for a new participant is @c CKShareParticipantPermissionReadOnly. */
+     open var permission: CKShare.ParticipantPermission
+ }
+ 
+ @available(iOS 10.0, *)
+ public enum ParticipantAcceptanceStatus : Int, @unchecked Sendable {
+
+     
+     case unknown = 0
+
+     case pending = 1
+
+     case accepted = 2
+
+     case removed = 3
+ }
+
+ 
+ /** These permissions determine what share participants can do with records inside that share */
+ @available(iOS 10.0, *)
+ public enum ParticipantPermission : Int, @unchecked Sendable {
+
+     
+     case unknown = 0
+
+     case none = 1
+
+     case readOnly = 2
+
+     case readWrite = 3
+ }
+
+ 
+ /** @abstract The participant type determines whether a participant can modify the list of participants on a share.
+  *
+  *  @discussion
+  *  - Owners can add private users
+  *  - Private users can access the share
+  *  - Public users are "self-added" when the participant accesses the shareURL.  Owners cannot add public users.
+  */
+ @available(iOS 12.0, *)
+ public enum ParticipantRole : Int, @unchecked Sendable {
+
+     
+     case unknown = 0
+
+     case owner = 1
+
+     case privateUser = 3
+
+     case publicUser = 4
+ }
+
+ 
+ @available(iOS, introduced: 10.0, deprecated: 12.0, renamed: "CKShareParticipantRole")
+ public enum ParticipantType : Int, @unchecked Sendable {
+
+     
+     case unknown = 0
+
+     case owner = 1
+
+     case privateUser = 3
+
+     case publicUser = 4
+ }
+ 
+ */
