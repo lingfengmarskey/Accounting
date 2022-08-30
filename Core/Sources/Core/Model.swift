@@ -15,10 +15,10 @@ import Foundation
 ///
 /// Record:
 /// private
-struct AccountBook: Identifiable {
-    let id: String
-    let name: String
-    let createdAt: Date
+public struct AccountBook: Identifiable {
+    public let id: String
+    public let name: String
+    public let createdAt: Date
 }
 
 /// 账单
@@ -29,20 +29,20 @@ struct AccountBook: Identifiable {
 ///
 /// Record:
 /// private
-struct AccountRecord: Identifiable {
-    let id: String
-    let name: String
-    let amount: Int
-    let createdAt: Date
-    let ownerBookId: String
-    let description: String
-    let type: AccountRecord
-    let mainCategory: AccountRecordMainCategory
-    let subCategory: AccountRecordSubCategory
+public struct AccountRecord: Identifiable {
+    public let id: String
+    public let name: String
+    public let amount: Int
+    public let createdAt: Date
+    public let ownerBookId: String
+    public let description: String
+    public let type: AccoutnRecordType
+    public let mainCategory: AccountRecordMainCategory
+    public let subCategory: AccountRecordSubCategory
 }
 
 /// 账单类型
-enum AccoutnRecordType {
+public enum AccoutnRecordType {
     case payment
     case income
 }
@@ -54,10 +54,10 @@ enum AccoutnRecordType {
 ///
 /// Record:
 /// public
-struct AccountRecordMainCategory: Identifiable {
-    let id: String
-    let name: String
-    let subCategoriesId: [String]
+public struct AccountRecordMainCategory: Identifiable {
+    public let id: String
+    public let name: String
+    public let subCategoriesId: [String]
 }
 
 /// 账单子类别
@@ -68,9 +68,9 @@ struct AccountRecordMainCategory: Identifiable {
 ///
 /// Record:
 /// public
-struct AccountRecordSubCategory: Identifiable {
-    let id: String
-    let name: String
+public struct AccountRecordSubCategory: Identifiable {
+    public let id: String
+    public let name: String
 }
 
 

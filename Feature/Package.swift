@@ -10,10 +10,13 @@ let package = Package(
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(name: "Root",targets: ["Root"]),
         .library(name: "AccountBookList",targets: ["AccountBookList"]),
+        .library(name: "Setting",targets: ["Setting"]),
+        .library(name: "Booklist",targets: ["Booklist"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
+        .package(name: "Core", path: "../Core"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -28,5 +31,13 @@ let package = Package(
             dependencies: ["Root"]),
         .target(name: "AccountBookList",
                dependencies: []),
+        .target(name: "Setting",
+               dependencies: [
+                .product(name: "Core", package: "Core"),
+               ]),
+        .target(name: "Booklist",
+               dependencies: [
+                .product(name: "Core", package: "Core"),
+               ]),
     ]
 )
