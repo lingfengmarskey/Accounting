@@ -15,3 +15,9 @@ public struct BooklistView: View {
         Text("book list view")
     }
 }
+
+struct BooklistView_Previews: PreviewProvider {
+    static var previews: some View {
+        BooklistView()
+    }
+}

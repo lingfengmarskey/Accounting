@@ -7,12 +7,21 @@
 
 import SwiftUI
 import Root
+import ComposableArchitecture
 
 @main
 struct RecordBookApp: App {
     var body: some Scene {
         WindowGroup {
-            RootView()
+            RootView(
+                Store(
+                    initialState: RootStore.State(),
+                    reducer: {
+                        RootStore()
+                            .signpost()
+                            ._printChanges()
+                    })
+            )
         }
     }
 }

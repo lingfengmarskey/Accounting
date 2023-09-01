@@ -3,6 +3,11 @@
 
 import PackageDescription
 
+let coreDependencies: [PackageDescription.Target.Dependency] = [
+    .product(name: "Core", package: "Core"),
+    .product(name: "UIComponents", package: "UIComponents"),
+]
+
 let package = Package(
     name: "Feature",
     platforms: [.iOS(.v15), .macOS(.v12)],
@@ -17,27 +22,27 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
         .package(name: "Core", path: "../Core"),
+        .package(name: "UIComponents", path: "../UIComponents"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "Root",
-            dependencies: [
-                "AccountBookList"
+            dependencies: coreDependencies + [
+                "AccountBookList",
             ]),
         .testTarget(
             name: "RootTests",
             dependencies: ["Root"]),
         .target(name: "AccountBookList",
-               dependencies: []),
+               dependencies: coreDependencies
+               ),
         .target(name: "Setting",
-               dependencies: [
-                .product(name: "Core", package: "Core"),
-               ]),
+               dependencies: coreDependencies
+               ),
         .target(name: "Booklist",
-               dependencies: [
-                .product(name: "Core", package: "Core"),
-               ]),
+               dependencies:coreDependencies
+               ),
     ]
 )

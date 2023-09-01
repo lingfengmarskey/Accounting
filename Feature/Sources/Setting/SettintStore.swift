@@ -8,19 +8,24 @@
 import Foundation
 import ComposableArchitecture
 import UIKit
+import Core
 
 public enum SettingStore {
     public struct Environment {
         public var backgroundQueue: AnySchedulerOf<DispatchQueue>
-
+        public var preferences: PreferencesProtocol
+        
         public init(
-            backgroundQueue: AnySchedulerOf<DispatchQueue>
+            backgroundQueue: AnySchedulerOf<DispatchQueue>,
+            preferences: PreferencesProtocol
         ) {
             self.backgroundQueue = backgroundQueue
+            self.preferences = preferences
         }
 
         public static let live = Self(
-            backgroundQueue: .main
+            backgroundQueue: .main,
+            preferences: Preferences()
         )
     }
     
@@ -59,8 +64,16 @@ public enum SettingStore {
     
     public static let reducer = Reducer<
         State, Action, Environment
-    > { _, action, _ in
+    > { state, action, env in
         switch action {
+        case .onAppear:
+            if let currentBookId = env.preferences.value(forKey: "currentBook") as? String {
+                // check current book id is validate
+                
+            } else {
+                state.bookState = .notChoosen
+            }
+            return .none
         default:
             return .none
         }

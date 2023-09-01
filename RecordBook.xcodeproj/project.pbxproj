@@ -35,6 +35,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8D537DDB2AA06BCA00103745 /* Domain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Domain; sourceTree = "<group>"; };
+		8D537DDC2AA0A38E00103745 /* UIComponents */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = UIComponents; sourceTree = "<group>"; };
 		8D59E5FF288BDC69007C86A7 /* RecordBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecordBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D59E602288BDC69007C86A7 /* RecordBookApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordBookApp.swift; sourceTree = "<group>"; };
 		8D59E606288BDC69007C86A7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -80,6 +82,8 @@
 		8D59E5F6288BDC69007C86A7 = {
 			isa = PBXGroup;
 			children = (
+				8D537DDC2AA0A38E00103745 /* UIComponents */,
+				8D537DDB2AA06BCA00103745 /* Domain */,
 				8D9535A0289BA0520098CB78 /* Core */,
 				8D953587289B88C70098CB78 /* Feature */,
 				8D59E601288BDC69007C86A7 /* RecordBook */,
