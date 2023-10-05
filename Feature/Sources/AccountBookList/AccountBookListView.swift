@@ -20,30 +20,32 @@ public struct AccountBookListView: View {
 
     public var body: some View {
         WithViewStore(self.store, observe: { $0 }) { viewStore in
-            ZStack {
-                List(viewStore.state.books) {
-                    BookView(title: $0.name, owner: $0.owner.name)
-                }
-                .listStyle(.plain)
-                VStack {
-                    Spacer()
-                    Button {
-                        viewStore.send(.addBook)
-                    } label: {
-                        Image(systemName: "plus")
-                            .renderingMode(.some(.template))
-                            .foregroundColor(.white)
-                            .frame(width: 22, height: 22)
-                            .padding(8)
-                            .background(Color.black)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 25)
-                                    .stroke(Color.white, lineWidth: 2)
+            NavigationView {
+                ZStack {
+                    List {
+                        ForEach(viewStore.books) {
+                            BookView(
+                                title: $0.name,
+                                owner: $0.owner.name,
+                                id: $0.id,
+                                selectedId: viewStore.$selected
                             )
+                        }
+                        .onDelete { index in
+                            viewStore.send(.removeItem(index))
+                        }
                     }
-                    .padding(10)
-                    .background(Color.black)
-                    .cornerRadius(25)
+                    .listStyle(.insetGrouped)
+                    VStack {
+                        Spacer()
+                        PlusButton(disable: viewStore.saveDisable) {
+                            viewStore.send(.addBook)
+                        }
+                    }
+                }
+                .navigationTitle("Account Books")
+                .toolbar {
+                    EditButton()
                 }
             }
             .onAppear {
@@ -59,7 +61,7 @@ struct AccountBooklistView_Previews: PreviewProvider {
             Store(
                 initialState: AccountBooklistStore.State(),
                 reducer: {
-//                    AccountBooklistStore()
+                    AccountBooklistStore()
                 })
         )
     }
