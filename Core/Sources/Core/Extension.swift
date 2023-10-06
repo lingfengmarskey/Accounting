@@ -29,3 +29,10 @@ extension Date {
         return res
     }
 }
+
+public extension String {
+    var firstValue: String {
+        let value = String(prefix(1))
+        return value
+    }
+}

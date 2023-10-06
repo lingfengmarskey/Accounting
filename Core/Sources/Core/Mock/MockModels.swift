@@ -11,14 +11,13 @@ import Fakery
 public let modelFaker = Faker(locale: "ja")
 public extension [AccountBookModel] {
     static func stub() -> [AccountBookModel] {
-        let number = modelFaker.number.randomInt(min: 0, max: 5)
+        let number = modelFaker.number.randomInt(min: 0, max: 10)
         var result: [AccountBookModel] = []
         for _ in 0...number {
             result.append(.stub())
         }
         return result
     }
-    
 }
 
 
@@ -41,6 +40,18 @@ extension AccountBookModel {
         )
     }
 }
+
+public extension [ParticipacerModel] {
+    static func stub() -> [ParticipacerModel] {
+        let number = modelFaker.number.randomInt(min: 0, max: 15)
+        var result: [ParticipacerModel] = []
+        for _ in 0...number {
+            result.append(.stub())
+        }
+        return result
+    }
+}
+
 
 extension ParticipacerModel {
     static func stub() -> ParticipacerModel {

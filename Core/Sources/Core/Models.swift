@@ -48,7 +48,7 @@ public struct UserModel: Equatable, Identifiable {
     }
 }
 
-public struct ParticipacerModel: Equatable {
+public struct ParticipacerModel: Equatable, Identifiable, User {
     public var permission: Permission
     
     public var id: String

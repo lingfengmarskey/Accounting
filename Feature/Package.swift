@@ -17,6 +17,7 @@ let package = Package(
         .library(name: "AccountBookList",targets: ["AccountBookList"]),
         .library(name: "Setting",targets: ["Setting"]),
         .library(name: "Booklist",targets: ["Booklist"]),
+        .library(name: "AccountBookConfig",targets: ["AccountBookConfig"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -42,6 +43,9 @@ let package = Package(
                dependencies: coreDependencies
                ),
         .target(name: "Booklist",
+               dependencies:coreDependencies
+               ),
+        .target(name: "AccountBookConfig",
                dependencies:coreDependencies
                ),
     ]
