@@ -9,10 +9,13 @@ import Foundation
 import SwiftUI
 import UIComponents
 import ComposableArchitecture
+import AccountBookConfig
 
 public struct AccountBookListView: View {
 
     let store: StoreOf<AccountBooklistStore>
+
+    @State var mode: EditMode = .inactive
     
     public init(_ store: StoreOf<AccountBooklistStore>) {
         self.store = store
@@ -21,6 +24,7 @@ public struct AccountBookListView: View {
     public var body: some View {
         WithViewStore(self.store, observe: { $0 }) { viewStore in
             NavigationView {
+                
                 ZStack {
                     List {
                         ForEach(viewStore.books) {
@@ -35,11 +39,17 @@ public struct AccountBookListView: View {
                             viewStore.send(.removeItem(index))
                         }
                     }
-                    .listStyle(.insetGrouped)
+                    .listStyle(.plain)
                     VStack {
                         Spacer()
-                        PlusButton(disable: viewStore.saveDisable) {
-                            viewStore.send(.addBook)
+                        NavigationLink {
+                            AccountBookConfigView(self.store.scope(state: \.accountBookConfig, action: AccountBooklistStore.Action.accountBookConfig))
+                        } label: {
+                            PlusButton(disable: viewStore.$saveDisable) {
+                                viewStore.send(.selectDone)
+                            } onAdd: {
+                                viewStore.send(.addBook)
+                            }
                         }
                     }
                 }
@@ -47,6 +57,7 @@ public struct AccountBookListView: View {
                 .toolbar {
                     EditButton()
                 }
+                .environment(\.editMode, $mode)
             }
             .onAppear {
                 viewStore.send(.onAppear)

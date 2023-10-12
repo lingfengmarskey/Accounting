@@ -37,8 +37,9 @@ let package = Package(
             name: "RootTests",
             dependencies: ["Root"]),
         .target(name: "AccountBookList",
-               dependencies: coreDependencies
-               ),
+               dependencies: coreDependencies + [
+                "AccountBookConfig",
+               ]),
         .target(name: "Setting",
                dependencies: coreDependencies
                ),

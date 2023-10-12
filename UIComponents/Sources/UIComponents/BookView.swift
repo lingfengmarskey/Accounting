@@ -14,7 +14,7 @@ public struct BookView: View {
     @Binding var selectedId: String?
 
     @Environment(\.editMode) private var editMode
-
+    
     public init(
         title: String,
         owner: String,
@@ -29,7 +29,7 @@ public struct BookView: View {
 
     public var body: some View {
         HStack {
-            if editMode?.wrappedValue == .inactive {
+            if editMode?.wrappedValue.isEditing == false {
                 if  let selectedId = selectedId,
                    selectedId == id {
                     Image(systemName: "checkmark.circle.fill")
@@ -50,7 +50,7 @@ public struct BookView: View {
         }
         .padding(5)
         .onTapGesture {
-            if editMode?.wrappedValue == .inactive {
+            if editMode?.wrappedValue.isEditing == false {
                 selectedId = id
             }
         }

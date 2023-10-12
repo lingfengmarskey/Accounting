@@ -10,60 +10,60 @@ import SwiftUI
 
 public struct PlusButton: View {
     
-    var onTap: (() -> Void)
-    
-    var disable: Bool
+    var onSave: (() -> Void)
+    var onAdd: (() -> Void)
+
+    @Binding var saveDisable: Bool
 
     @Environment(\.editMode) private var editMode
 
-    private var isEditing: Bool {
-        editMode?.wrappedValue == .active
-    }
-
-    private var isBackgroundDisable: Bool {
-        if !isEditing { return disable }
-        return false
+    var backgroundColor: Color {
+        if isEditing {
+            return .black
+        }
+        return saveDisable ? Color.gray : Color.black
     }
     
-    public init(disable: Bool, onTap: @escaping () -> Void) {
-        self.onTap = onTap
-        self.disable = disable
+    private var isEditing: Bool {
+        editMode?.wrappedValue.isEditing == true
+    }
+
+    public init(disable: Binding<Bool>, 
+                onTap: @escaping () -> Void,
+                onAdd: @escaping () -> Void) {
+        self.onSave = onTap
+        self.onAdd = onAdd
+        _saveDisable = disable
     }
     
     public var body: some View {
         Button {
-            onTap()
-        } label: {
             if isEditing {
-                Image(systemName: "plus")
-                    .renderingMode(.some(.template))
-                    .foregroundColor(.white)
-                    .frame(width: 22, height: 22)
-                    .padding(8)
-                    .background(Color.black)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 25)
-                            .stroke(Color.white, lineWidth: 2)
-                    )
+               onAdd()
             } else {
-                Text("OK")
-                    .foregroundColor(.white)
-                    .fontWeight(.heavy)
-                    .padding(.leading)
-                    .padding(.trailing)
+                if !saveDisable {
+                    onSave()
+                }
             }
+        } label: {
+            Text(isEditing ? "Add" : "OK")
+                .fontWeight(.heavy)
+                .padding(EdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 10))
+                .foregroundColor(.white)
+                .background(backgroundColor)
         }
-        .padding(10)
-        .background(isBackgroundDisable ? Color.gray : Color.black)
         .cornerRadius(25)
-        .disabled(disable)
+        .animation(.easeInOut, value: editMode?.wrappedValue)
     }
 }
 
 struct PlusButton_Previews: PreviewProvider {
     static var previews: some View {
-        PlusButton(disable: false) {
-            
+        PlusButton(disable: .constant(true)) {
+        
+        } onAdd: {
+                
         }
+
     }
 }

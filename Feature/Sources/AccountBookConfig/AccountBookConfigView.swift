@@ -24,7 +24,7 @@ public struct AccountBookConfigView: View {
     
     public var body: some View {
         WithViewStore(self.store, observe: { $0 }) { viewStore in
-            NavigationView {
+
                 ScrollView {
                     VStack(alignment: .leading) {
                         Text("Account Name")
@@ -51,7 +51,6 @@ public struct AccountBookConfigView: View {
                         
                     }
                 }
-            }
         }
     }
 }
