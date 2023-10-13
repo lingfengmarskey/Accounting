@@ -32,7 +32,11 @@ public struct AccountBookListView: View {
                                 title: $0.name,
                                 owner: $0.owner.name,
                                 id: $0.id,
-                                selectedId: viewStore.$selected
+                                selectedId: viewStore.$selected,
+                                onTapDetail: {
+                                    //TODO: selected one will be in edit page by present
+                                    path.append("config")
+                                }
                             )
                         }
                         .onDelete { index in
@@ -43,8 +47,7 @@ public struct AccountBookListView: View {
                     VStack {
                         Spacer()
                         FooterButton {
-                            viewStore.send(.selectDone)
-                            path.append("config")
+
                         } onAdd: {
                             viewStore.send(.addBook)
                             path.append("config")
