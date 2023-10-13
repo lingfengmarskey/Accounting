@@ -11,7 +11,7 @@ public struct BookView: View {
     var owner: String
     var id: String
 
-    var onTapDetail: (() -> Void)
+    var onTapDetail: ((String) -> Void)
     
     @Binding var selectedId: String?
 
@@ -22,7 +22,7 @@ public struct BookView: View {
         owner: String,
         id: String,
         selectedId: Binding<String?>,
-        onTapDetail: @escaping () -> Void
+        onTapDetail: @escaping (String) -> Void
     ) {
         self.title = title
         self.owner = owner
@@ -60,13 +60,14 @@ public struct BookView: View {
                     selectedId = id
                 }
             }
-            Button(action: onTapDetail, label: {
+            Button(action: { onTapDetail(id) }, label: {
                 Image(systemName: "info.circle")
                     .renderingMode(.template)
                     .resizable()
                     .frame(width: 22, height: 22)
                     .foregroundStyle(.black)
             })
+            .padding(.leading, 5)
         }
         
     }
@@ -81,7 +82,7 @@ struct BookView_Previews: PreviewProvider {
             owner: "Lee",
             id: "123",
             selectedId: .constant("123"),
-            onTapDetail: {}
+            onTapDetail: { _ in }
         )
             .previewLayout(.sizeThatFits)
     }

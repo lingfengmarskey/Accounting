@@ -18,6 +18,8 @@ public struct AccountBooklistStore: Reducer {
 
         var accountBookConfig: AccountBookConfigStore.State = .init()
 
+        var isShouldPresent = false
+        
         public init() {}
     }
 
@@ -26,6 +28,8 @@ public struct AccountBooklistStore: Reducer {
         case toTop
         case addBook
         case selectDone
+        case tapDetail(bookID: String)
+        case setPresent(Bool)
         case removeItem(IndexSet)
         case binding(BindingAction<State>)
         case accountBookConfig(AccountBookConfigStore.Action)
@@ -40,15 +44,24 @@ public struct AccountBooklistStore: Reducer {
             case .onAppear:
                 return .none
             case .addBook:
-                // TODO: move to addBook
                 state.accountBookConfig = .init()
-                return .none
-            case .selectDone:
-                if let selected = state.selected,
-                   let book = state.books.first(where: { $0.id == selected })
+                return .run { send in
+                    await send(.setPresent(true))
+                }
+            case .tapDetail(bookID: let id):
+                if let book = state.books.first(where: { $0.id == id })
                 {
                     state.accountBookConfig.book = book
+                    return .run { send in
+                        await send(.setPresent(true))
+                    }
                 }
+                return .none
+            case .setPresent(let value):
+                state.isShouldPresent = value
+                return .none
+            case .selectDone:
+                // TODO:
                 return .none
             case let .removeItem(index):
                 // TODO: remove item

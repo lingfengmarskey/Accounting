@@ -16,15 +16,13 @@ public struct AccountBookListView: View {
 
     @State var mode: EditMode = .inactive
 
-    @State private var path = NavigationPath()
-
     public init(_ store: StoreOf<AccountBooklistStore>) {
         self.store = store
     }
 
     public var body: some View {
         WithViewStore(self.store, observe: { $0 }) { viewStore in
-            NavigationStack(path: $path) {
+            NavigationStack {
                 ZStack {
                     List {
                         ForEach(viewStore.books) {
@@ -33,9 +31,8 @@ public struct AccountBookListView: View {
                                 owner: $0.owner.name,
                                 id: $0.id,
                                 selectedId: viewStore.$selected,
-                                onTapDetail: {
-                                    //TODO: selected one will be in edit page by present
-                                    path.append("config")
+                                onTapDetail: { id in
+                                    viewStore.send(.tapDetail(bookID: id))
                                 }
                             )
                         }
@@ -50,16 +47,10 @@ public struct AccountBookListView: View {
 
                         } onAdd: {
                             viewStore.send(.addBook)
-                            path.append("config")
                         }
                     }
                     .disabled(mode.isEditing ? false : viewStore.saveDisable)
                 }
-                .navigationDestination(for: String.self, destination: { view in
-                    if view == "config" {
-                        AccountBookConfigView(self.store.scope(state: \.accountBookConfig, action: AccountBooklistStore.Action.accountBookConfig))
-                    }
-                })
                 .navigationTitle("Account Books")
                 .toolbar {
                     EditButton()
@@ -68,6 +59,17 @@ public struct AccountBookListView: View {
             }
             .onAppear {
                 viewStore.send(.onAppear)
+            }
+            .sheet(isPresented: viewStore.binding(
+                get: \.isShouldPresent,
+                send: AccountBooklistStore.Action.setPresent
+            )) {
+                AccountBookConfigView(
+                    self.store.scope(
+                        state: \.accountBookConfig,
+                        action: AccountBooklistStore.Action.accountBookConfig
+                    )
+                )
             }
         }
     }
