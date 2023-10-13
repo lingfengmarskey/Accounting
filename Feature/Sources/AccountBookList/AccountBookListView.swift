@@ -17,14 +17,15 @@ public struct AccountBookListView: View {
 
     @State var mode: EditMode = .inactive
     
+    @State private var path = NavigationPath()
+    
     public init(_ store: StoreOf<AccountBooklistStore>) {
         self.store = store
     }
 
     public var body: some View {
         WithViewStore(self.store, observe: { $0 }) { viewStore in
-            NavigationView {
-                
+            NavigationStack(path: $path) {
                 ZStack {
                     List {
                         ForEach(viewStore.books) {
@@ -42,17 +43,21 @@ public struct AccountBookListView: View {
                     .listStyle(.plain)
                     VStack {
                         Spacer()
-                        NavigationLink {
-                            AccountBookConfigView(self.store.scope(state: \.accountBookConfig, action: AccountBooklistStore.Action.accountBookConfig))
-                        } label: {
-                            PlusButton(disable: viewStore.$saveDisable) {
-                                viewStore.send(.selectDone)
-                            } onAdd: {
-                                viewStore.send(.addBook)
-                            }
+                        FooterButton {
+                            viewStore.send(.selectDone)
+                            path.append("config")
+                        } onAdd: {
+                            viewStore.send(.addBook)
+                            path.append("config")
                         }
                     }
+                    .disabled(mode.isEditing ? false : viewStore.saveDisable)
                 }
+                .navigationDestination(for: String.self, destination: { view in
+                    if view == "config" {
+                        AccountBookConfigView(self.store.scope(state: \.accountBookConfig, action: AccountBooklistStore.Action.accountBookConfig))
+                    }
+                })
                 .navigationTitle("Account Books")
                 .toolbar {
                     EditButton()

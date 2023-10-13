@@ -8,62 +8,56 @@
 import Foundation
 import SwiftUI
 
-public struct PlusButton: View {
-    
-    var onSave: (() -> Void)
-    var onAdd: (() -> Void)
-
-    @Binding var saveDisable: Bool
+public struct FooterButton: View {
 
     @Environment(\.editMode) private var editMode
+    @Environment(\.isEnabled) private var isEnabled
+    
+    var onOK: (() -> Void)
+    var onAdd: (() -> Void)
 
-    var backgroundColor: Color {
+    private var backgroundColor: Color {
         if isEditing {
             return .black
         }
-        return saveDisable ? Color.gray : Color.black
+        return isEnabled ? Color.black : .gray
     }
     
     private var isEditing: Bool {
         editMode?.wrappedValue.isEditing == true
     }
 
-    public init(disable: Binding<Bool>, 
-                onTap: @escaping () -> Void,
+    public init(onOK: @escaping () -> Void,
                 onAdd: @escaping () -> Void) {
-        self.onSave = onTap
+        self.onOK = onOK
         self.onAdd = onAdd
-        _saveDisable = disable
     }
-    
+
     public var body: some View {
-        Button {
+        Button(action: {
             if isEditing {
-               onAdd()
+                onAdd()
             } else {
-                if !saveDisable {
-                    onSave()
-                }
+                onOK()
             }
-        } label: {
+        }, label: {
             Text(isEditing ? "Add" : "OK")
                 .fontWeight(.heavy)
                 .padding(EdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 10))
                 .foregroundColor(.white)
                 .background(backgroundColor)
-        }
-        .cornerRadius(25)
-        .animation(.easeInOut, value: editMode?.wrappedValue)
+                .cornerRadius(25)
+                .animation(.easeInOut, value: editMode?.wrappedValue)
+        })
     }
 }
 
 struct PlusButton_Previews: PreviewProvider {
     static var previews: some View {
-        PlusButton(disable: .constant(true)) {
-        
+        FooterButton {
+            
         } onAdd: {
-                
+            
         }
-
     }
 }

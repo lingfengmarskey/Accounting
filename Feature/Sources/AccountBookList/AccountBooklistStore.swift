@@ -15,7 +15,7 @@ public struct AccountBooklistStore: Reducer {
     public struct State: Equatable {
         
         var books: [AccountBookModel] = .stub()
-        @BindingState var saveDisable: Bool = true
+        var saveDisable: Bool = true
         @BindingState var selected: String?
 
         var accountBookConfig: AccountBookConfigStore.State = .init()
@@ -45,9 +45,17 @@ public struct AccountBooklistStore: Reducer {
                 // TODO: move to addBook
                 state.accountBookConfig = .init()
                 return .none
+            case .selectDone:
+                if let selected = state.selected,
+                   let book = state.books.first(where: { $0.id == selected }) {
+                    state.accountBookConfig.book = book
+                }
+                return .none
             case .removeItem(let index):
                 // TODO: remove item
                 state.selected = nil
+                state.saveDisable = true
+                state.books.remove(atOffsets: index)
                 return .none
             case .binding(\.$selected):
                 state.saveDisable = state.selected == nil

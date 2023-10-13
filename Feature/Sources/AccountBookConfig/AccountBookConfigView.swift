@@ -24,33 +24,35 @@ public struct AccountBookConfigView: View {
     
     public var body: some View {
         WithViewStore(self.store, observe: { $0 }) { viewStore in
-
-                ScrollView {
-                    VStack(alignment: .leading) {
-                        Text("Account Name")
-                            .font(.headline)
-                        TextField("Name Your Account Book", text: viewStore.$name)
-                            .textFieldStyle(.roundedBorder)
-                        Text("Participators")
-                            .font(.headline)
-                        LazyVGrid(columns: gridItems) {
-                            ForEach((0...viewStore.paticipators.count), id:\.self) {
-                                let model = $0 == viewStore.paticipators.count ? nil : viewStore.paticipators[$0]
-                                ParticipatorView(user: model) { user in
-                                    viewStore.send(.tapUser(user?.id))
-                                }
+            ScrollView {
+                VStack(alignment: .leading) {
+                    Text("Account Name")
+                        .font(.headline)
+                    TextField("Name Your Account Book", text: viewStore.$name)
+                        .textFieldStyle(.roundedBorder)
+                    Text("Participators")
+                        .font(.headline)
+                    LazyVGrid(columns: gridItems) {
+                        ForEach((0...viewStore.paticipators.count), id:\.self) {
+                            let model = $0 == viewStore.paticipators.count ? nil : viewStore.paticipators[$0]
+                            ParticipatorView(user: model) { user in
+                                viewStore.send(.tapUser(user?.id))
                             }
                         }
-                        Spacer()
                     }
-                    .padding()
+                    Spacer()
                 }
-                .navigationTitle("Account Book")
-                .toolbar {
-                    Button("Save") {
-                        
-                    }
+                .padding()
+            }
+            .navigationTitle("Account Book")
+            .toolbar {
+                Button("Save") {
+                    
                 }
+            }
+            .onAppear {
+                viewStore.send(.onAppear)
+            }
         }
     }
 }

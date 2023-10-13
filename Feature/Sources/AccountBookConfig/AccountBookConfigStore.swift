@@ -16,9 +16,15 @@ public struct AccountBookConfigStore: Reducer {
 
         @BindingState var name: String = ""
 
+        public var book: AccountBookModel?
+        
         var paticipators: [ParticipacerModel] = .stub()
 
-        public init() {}
+        public init(
+            book: AccountBookModel? = nil
+        ) {
+            self.book = book
+        }
     }
 
     public enum Action: BindableAction, Equatable {
@@ -36,6 +42,10 @@ public struct AccountBookConfigStore: Reducer {
         Reduce { state, action in
             switch action {
             case .onAppear:
+                if let book = state.book {
+                    state.name = book.name
+                    state.paticipators = book.participacer
+                }
                 return .none
             case .binding:
               return .none
