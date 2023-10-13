@@ -13,13 +13,11 @@ import UIComponents
 public struct AccountBookConfigView: View {
     let store: StoreOf<AccountBookConfigStore>
 
+    private var gridItems: [GridItem] = [GridItem(.adaptive(minimum: 50), spacing: 10)]
+
     public init(_ store: StoreOf<AccountBookConfigStore>) {
         self.store = store
     }
-
-    var gridItems: [GridItem] = [GridItem(.adaptive(minimum: 50), spacing: 10)]
-
-    private var colors: [Color] = [.yellow, .purple, .green]
 
     public var body: some View {
         WithViewStore(self.store, observe: { $0 }) { viewStore in
