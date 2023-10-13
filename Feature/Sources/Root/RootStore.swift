@@ -1,13 +1,13 @@
 //
 //  RootStore.swift
-//  
+//
 //
 //  Created by Marcos Meng on 2023/08/31.
 //
 
-import Foundation
-import ComposableArchitecture
 import AccountBookList
+import ComposableArchitecture
+import Foundation
 
 public struct RootStore: Reducer {
     public struct State: Equatable {
@@ -23,10 +23,10 @@ public struct RootStore: Reducer {
         case accountBooklistAction(AccountBooklistStore.Action)
     }
 
-    public init(){}
-    
+    public init() {}
+
     public var body: some Reducer<State, Action> {
-        Reduce { state, action in
+        Reduce { _, action in
             switch action {
             case .onAppear:
                 return .none
@@ -38,5 +38,4 @@ public struct RootStore: Reducer {
             AccountBooklistStore()
         }
     }
-    
 }

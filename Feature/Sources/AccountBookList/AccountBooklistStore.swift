@@ -1,19 +1,17 @@
 //
 //  ViewModel.swift
-//  
+//
 //
 //  Created by Marcos Meng on 2022/08/04.
 //
 
-import Foundation
+import AccountBookConfig
 import ComposableArchitecture
 import Core
-import AccountBookConfig
+import Foundation
 
 public struct AccountBooklistStore: Reducer {
-    
     public struct State: Equatable {
-        
         var books: [AccountBookModel] = .stub()
         var saveDisable: Bool = true
         @BindingState var selected: String?
@@ -32,7 +30,7 @@ public struct AccountBooklistStore: Reducer {
         case binding(BindingAction<State>)
         case accountBookConfig(AccountBookConfigStore.Action)
     }
-    
+
     public init() {}
 
     public var body: some Reducer<State, Action> {
@@ -47,11 +45,12 @@ public struct AccountBooklistStore: Reducer {
                 return .none
             case .selectDone:
                 if let selected = state.selected,
-                   let book = state.books.first(where: { $0.id == selected }) {
+                   let book = state.books.first(where: { $0.id == selected })
+                {
                     state.accountBookConfig.book = book
                 }
                 return .none
-            case .removeItem(let index):
+            case let .removeItem(index):
                 // TODO: remove item
                 state.selected = nil
                 state.saveDisable = true
@@ -61,7 +60,7 @@ public struct AccountBooklistStore: Reducer {
                 state.saveDisable = state.selected == nil
                 return .none
             case .binding:
-              return .none
+                return .none
             case .accountBookConfig:
                 return .none
             default:

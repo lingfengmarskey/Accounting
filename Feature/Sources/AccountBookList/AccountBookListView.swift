@@ -1,24 +1,23 @@
 //
 //  AccountBookListView.swift
-//  
+//
 //
 //  Created by Marcos Meng on 2022/08/04.
 //
 
+import AccountBookConfig
+import ComposableArchitecture
 import Foundation
 import SwiftUI
 import UIComponents
-import ComposableArchitecture
-import AccountBookConfig
 
 public struct AccountBookListView: View {
-
     let store: StoreOf<AccountBooklistStore>
 
     @State var mode: EditMode = .inactive
-    
+
     @State private var path = NavigationPath()
-    
+
     public init(_ store: StoreOf<AccountBooklistStore>) {
         self.store = store
     }
@@ -78,7 +77,8 @@ struct AccountBooklistView_Previews: PreviewProvider {
                 initialState: AccountBooklistStore.State(),
                 reducer: {
                     AccountBooklistStore()
-                })
+                }
+            )
         )
     }
 }

@@ -1,23 +1,21 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Marcos Meng on 2023/10/06.
 //
 
-import Foundation
 import ComposableArchitecture
 import Core
+import Foundation
 import SwiftUI
 
 public struct AccountBookConfigStore: Reducer {
-
     public struct State: Equatable {
-
         @BindingState var name: String = ""
 
         public var book: AccountBookModel?
-        
+
         var paticipators: [ParticipacerModel] = .stub()
 
         public init(
@@ -48,8 +46,8 @@ public struct AccountBookConfigStore: Reducer {
                 }
                 return .none
             case .binding:
-              return .none
-            case .tapUser(let id):
+                return .none
+            case let .tapUser(id):
                 // TODO: add or select
                 return .none
             default:
@@ -58,4 +56,3 @@ public struct AccountBookConfigStore: Reducer {
         }
     }
 }
-

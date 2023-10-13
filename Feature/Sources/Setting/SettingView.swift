@@ -1,13 +1,13 @@
 //
 //  SettingView.swift
-//  
+//
 //
 //  Created by Marcos Meng on 2022/08/22.
 //
 
+import ComposableArchitecture
 import Foundation
 import SwiftUI
-import ComposableArchitecture
 
 public struct SettingView: View {
     let store: Store<SettingStore.State, SettingStore.Action>
@@ -15,6 +15,7 @@ public struct SettingView: View {
     public init(store: Store<SettingStore.State, SettingStore.Action>) {
         self.store = store
     }
+
     public var body: some View {
         WithViewStore(store) { viewStore in
             VStack {

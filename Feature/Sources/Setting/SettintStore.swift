@@ -1,20 +1,20 @@
 //
 //  SettintStore.swift
-//  
+//
 //
 //  Created by Marcos Meng on 2022/08/22.
 //
 
-import Foundation
 import ComposableArchitecture
-import UIKit
 import Core
+import Foundation
+import UIKit
 
 public enum SettingStore {
     public struct Environment {
         public var backgroundQueue: AnySchedulerOf<DispatchQueue>
         public var preferences: PreferencesProtocol
-        
+
         public init(
             backgroundQueue: AnySchedulerOf<DispatchQueue>,
             preferences: PreferencesProtocol
@@ -28,7 +28,7 @@ public enum SettingStore {
             preferences: Preferences()
         )
     }
-    
+
     public enum Action: Equatable {
         case tapBook
         case none
@@ -51,7 +51,7 @@ public enum SettingStore {
 
         public var text: String {
             switch self {
-            case .normal(let string):
+            case let .normal(string):
                 return string
             case .error:
                 return "Error"
@@ -60,8 +60,7 @@ public enum SettingStore {
             }
         }
     }
-    
-    
+
     public static let reducer = Reducer<
         State, Action, Environment
     > { state, action, env in
@@ -69,7 +68,7 @@ public enum SettingStore {
         case .onAppear:
             if let currentBookId = env.preferences.value(forKey: "currentBook") as? String {
                 // check current book id is validate
-                
+
             } else {
                 state.bookState = .notChoosen
             }

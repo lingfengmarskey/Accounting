@@ -1,17 +1,17 @@
-import SwiftUI
 import AccountBookList
 import ComposableArchitecture
+import SwiftUI
 public struct RootView: View {
     @State var present: Bool = false
-    
+
     let store: StoreOf<RootStore>
-    
+
     public init(_ store: StoreOf<RootStore>) {
         self.store = store
     }
 
     public var body: some View {
-        WithViewStore(store, observe: { $0 }) { viewStore in
+        WithViewStore(store, observe: { $0 }) { _ in
             VStack {
                 Text("Root")
                 Button {
@@ -40,9 +40,7 @@ struct RootView_Previews: PreviewProvider {
     static var previews: some View {
         RootView(Store(
             initialState: RootStore.State(),
-            reducer: {
-                
-            }))
+            reducer: {}
+        ))
     }
 }
-
