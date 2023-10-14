@@ -17,6 +17,8 @@ public struct AccountBookConfigStore: Reducer {
         public var book: AccountBookModel?
 
         var paticipators: [ParticipacerModel] = .stub()
+        
+        var saveDisable: Bool = true
 
         public init(
             book: AccountBookModel? = nil

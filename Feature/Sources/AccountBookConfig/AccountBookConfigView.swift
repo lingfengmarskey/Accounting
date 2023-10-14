@@ -55,8 +55,9 @@ public struct AccountBookConfigView: View {
                         Button(action: {
                             viewStore.send(.tapTopDone)
                         }, label: {
-                            Text("Done")
+                            Text("Save")
                         })
+                        .disabled(viewStore.saveDisable)
                     }
                 }
             }

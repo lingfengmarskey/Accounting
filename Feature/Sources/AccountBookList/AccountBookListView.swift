@@ -44,7 +44,7 @@ public struct AccountBookListView: View {
                     VStack {
                         Spacer()
                         FooterButton {
-
+                            viewStore.send(.selectDone)
                         } onAdd: {
                             viewStore.send(.addBook)
                         }

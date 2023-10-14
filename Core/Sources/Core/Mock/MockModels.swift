@@ -53,7 +53,7 @@ public extension [ParticipacerModel] {
 }
 
 
-extension ParticipacerModel {
+public extension ParticipacerModel {
     static func stub() -> ParticipacerModel {
         .init(
             permission: .init(rawValue: modelFaker.number.randomInt(min: 0, max: 2))!,
