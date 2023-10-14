@@ -54,7 +54,7 @@ public struct BookView: View {
                         .font(.system(size: 14, weight: .ultraLight, design: .serif))
                         .foregroundColor(.black)
                 }
-            }.background(.red)
+            }
             .onTapGesture {
                 if editMode?.wrappedValue.isEditing == false {
                     selectedId = id

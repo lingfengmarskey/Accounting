@@ -74,7 +74,14 @@ public struct AccountBooklistStore: Reducer {
                 return .none
             case .binding:
                 return .none
-            case .accountBookConfig:
+            case .accountBookConfig(.tapTopCancel):
+                state.isShouldPresent = false
+                // config cancel
+                return .none
+            case .accountBookConfig(.tapTopDone):
+                state.isShouldPresent = false
+                // config Done
+                // TODO: save action need be add
                 return .none
             default:
                 return .none

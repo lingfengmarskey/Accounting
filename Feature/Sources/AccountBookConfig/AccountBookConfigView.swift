@@ -21,29 +21,44 @@ public struct AccountBookConfigView: View {
 
     public var body: some View {
         WithViewStore(self.store, observe: { $0 }) { viewStore in
-            ScrollView {
-                VStack(alignment: .leading) {
-                    Text("Account Name")
-                        .font(.headline)
-                    TextField("Name Your Account Book", text: viewStore.$name)
-                        .textFieldStyle(.roundedBorder)
-                    Text("Participators")
-                        .font(.headline)
-                    LazyVGrid(columns: gridItems) {
-                        ForEach(0 ... viewStore.paticipators.count, id: \.self) {
-                            let model = $0 == viewStore.paticipators.count ? nil : viewStore.paticipators[$0]
-                            ParticipatorView(user: model) { user in
-                                viewStore.send(.tapUser(user?.id))
+            NavigationView {
+                ScrollView {
+                    VStack(alignment: .leading) {
+                        Text("Account Name")
+                            .font(.headline)
+                        TextField("Name Your Account Book", text: viewStore.$name)
+                            .textFieldStyle(.roundedBorder)
+                        Text("Participators")
+                            .font(.headline)
+                        LazyVGrid(columns: gridItems) {
+                            ForEach(0 ... viewStore.paticipators.count, id: \.self) {
+                                let model = $0 == viewStore.paticipators.count ? nil : viewStore.paticipators[$0]
+                                ParticipatorView(user: model) { user in
+                                    viewStore.send(.tapUser(user?.id))
+                                }
                             }
                         }
+                        Spacer()
                     }
-                    Spacer()
+                    .padding()
                 }
-                .padding()
-            }
-            .navigationTitle("Account Book")
-            .toolbar {
-                Button("Save") {}
+                .navigationTitle("Account Book")
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button(action: {
+                            viewStore.send(.tapTopCancel)
+                        }, label: {
+                            Text("Cancel")
+                        })
+                    }
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button(action: {
+                            viewStore.send(.tapTopDone)
+                        }, label: {
+                            Text("Done")
+                        })
+                    }
+                }
             }
             .onAppear {
                 viewStore.send(.onAppear)

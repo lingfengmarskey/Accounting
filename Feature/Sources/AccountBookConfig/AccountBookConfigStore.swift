@@ -29,7 +29,8 @@ public struct AccountBookConfigStore: Reducer {
         case onAppear
         case addMember
         case tapUser(String?)
-        case save
+        case tapTopDone
+        case tapTopCancel
         case binding(BindingAction<State>)
     }
 
