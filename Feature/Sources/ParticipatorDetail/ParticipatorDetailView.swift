@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import ComposableArchitecture
 import Core
+import UIComponents
 
 public struct ParticipatorDetailView: View {
 
@@ -17,14 +18,14 @@ public struct ParticipatorDetailView: View {
     public init(_ store: StoreOf<ParticipatorDetaolStore>) {
         self.store = store
     }
-    
+
     public var body: some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             List(content: {
                 Section {
                     HStack {
                         Image(systemName: "person.fill")
-                        Text("Name")
+                        Text(viewStore.participatorModel.name)
                     }
                     VStack(alignment: .leading) {
                         Text("Contact")
@@ -32,10 +33,36 @@ public struct ParticipatorDetailView: View {
                     }
                 }
                 Section {
-                    
+                    SingleSelectView(
+                        title: "Read Only",
+                        isSelected: viewStore.$isReadOnly
+                    ) {
+                        viewStore.send(.tapReadOnly)
+                    }
+                    SingleSelectView(
+                        title: "Read & Write",
+                        isSelected: viewStore.$isReadWrite
+                    ) {
+                        viewStore.send(.tapReadWrite)
+                    }
+                } header: {
+                    Text("Authority")
+                        .bold()
+                }
+                Section {
+                    Button(action: {
+                        viewStore.send(.delete)
+                    }, label: {
+                        HStack() {
+                            Spacer()
+                            Text("Delete")
+                                .foregroundStyle(.red)
+                            Spacer()
+                        }
+                    })
                 }
             })
-                .navigationTitle("Participator Detail")
+            .navigationTitle("Participator Detail")
         }
     }
 }

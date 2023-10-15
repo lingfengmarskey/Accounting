@@ -9,6 +9,7 @@ import ComposableArchitecture
 import Foundation
 import SwiftUI
 import UIComponents
+import ParticipatorDetail
 
 public struct AccountBookConfigView: View {
     let store: StoreOf<AccountBookConfigStore>
@@ -18,10 +19,12 @@ public struct AccountBookConfigView: View {
     public init(_ store: StoreOf<AccountBookConfigStore>) {
         self.store = store
     }
+    
+    @State private var path = NavigationPath()
 
     public var body: some View {
         WithViewStore(self.store, observe: { $0 }) { viewStore in
-            NavigationView {
+            NavigationStack(path: $path) {
                 ScrollView {
                     VStack(alignment: .leading) {
                         Text("Account Name")
@@ -60,6 +63,11 @@ public struct AccountBookConfigView: View {
                         .disabled(viewStore.saveDisable)
                     }
                 }
+                .navigationDestination(for: String.self) { view in
+                                if view == "NewView" {
+                                    Text("This is NewView")
+                                }
+                            }
             }
             .onAppear {
                 viewStore.send(.onAppear)

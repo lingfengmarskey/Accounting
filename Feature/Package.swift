@@ -48,7 +48,9 @@ let package = Package(
                dependencies:coreDependencies
                ),
         .target(name: "AccountBookConfig",
-               dependencies:coreDependencies
+               dependencies:coreDependencies + [
+                "ParticipatorDetail",
+               ]
                ),
         .target(name: "ParticipatorDetail",
                dependencies:coreDependencies
