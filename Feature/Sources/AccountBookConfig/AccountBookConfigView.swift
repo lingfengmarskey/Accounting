@@ -19,12 +19,10 @@ public struct AccountBookConfigView: View {
     public init(_ store: StoreOf<AccountBookConfigStore>) {
         self.store = store
     }
-    
-    @State private var path = NavigationPath()
 
     public var body: some View {
         WithViewStore(self.store, observe: { $0 }) { viewStore in
-            NavigationStack(path: $path) {
+            NavigationStack {
                 ScrollView {
                     VStack(alignment: .leading) {
                         Text("Account Name")
@@ -63,11 +61,13 @@ public struct AccountBookConfigView: View {
                         .disabled(viewStore.saveDisable)
                     }
                 }
-                .navigationDestination(for: String.self) { view in
-                                if view == "NewView" {
-                                    Text("This is NewView")
-                                }
-                            }
+                .navigationDestination(
+                  store: self.store.scope(state: \.$destination, action: { .destination($0) }),
+                  state: /AccountBookConfigStore.Destination.State.participatorDetail,
+                  action: AccountBookConfigStore.Destination.Action.participatorDetail
+                ) { store in
+                    ParticipatorDetailView(store)
+                }
             }
             .onAppear {
                 viewStore.send(.onAppear)

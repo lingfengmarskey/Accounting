@@ -13,9 +13,9 @@ import UIComponents
 
 public struct ParticipatorDetailView: View {
 
-    let store: StoreOf<ParticipatorDetaolStore>
+    let store: StoreOf<ParticipatorDetailStore>
 
-    public init(_ store: StoreOf<ParticipatorDetaolStore>) {
+    public init(_ store: StoreOf<ParticipatorDetailStore>) {
         self.store = store
     }
 
@@ -69,8 +69,8 @@ public struct ParticipatorDetailView: View {
 
 #Preview {
     ParticipatorDetailView(
-        Store(initialState: ParticipatorDetaolStore.State.init(participator: .stub()), reducer: {
-            ParticipatorDetaolStore()
+        Store(initialState: ParticipatorDetailStore.State.init(participator: .stub()), reducer: {
+            ParticipatorDetailStore()
         })
     )
 }

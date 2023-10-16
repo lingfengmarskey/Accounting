@@ -9,6 +9,7 @@ import ComposableArchitecture
 import Core
 import Foundation
 import SwiftUI
+import ParticipatorDetail
 
 public struct AccountBookConfigStore: Reducer {
     public struct State: Equatable {
@@ -20,6 +21,8 @@ public struct AccountBookConfigStore: Reducer {
         
         var saveDisable: Bool = true
 
+        @PresentationState var destination: Destination.State?
+
         public init(
             book: AccountBookModel? = nil
         ) {
@@ -28,6 +31,7 @@ public struct AccountBookConfigStore: Reducer {
     }
 
     public enum Action: BindableAction, Equatable {
+        case destination(PresentationAction<Destination.Action>)
         case onAppear
         case addMember
         case tapUser(String?)
@@ -51,10 +55,31 @@ public struct AccountBookConfigStore: Reducer {
             case .binding:
                 return .none
             case let .tapUser(id):
-                // TODO: add or select
+                if let id = id,
+                   let model = state.paticipators.first(where: { $0.id == id }) {
+                    // to participator detail
+                    state.destination = .participatorDetail(.init(participator: model))
+                } else {
+//                    state.destination =
+                    // to sharelink
+                }
                 return .none
             default:
                 return .none
+            }
+        }
+    }
+
+    public struct Destination: Reducer {
+        public enum State: Equatable {
+            case participatorDetail(ParticipatorDetailStore.State)
+        }
+        public enum Action: Equatable {
+            case participatorDetail(ParticipatorDetailStore.Action)
+        }
+        public var body: some ReducerOf<Self> {
+            Scope(state: /State.participatorDetail, action: /Action.participatorDetail) {
+                ParticipatorDetailStore()
             }
         }
     }

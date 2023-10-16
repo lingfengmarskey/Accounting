@@ -1,5 +1,5 @@
 //
-//  ParticipatorDetaolStore.swift
+//  ParticipatorDetailStore.swift
 //  
 //
 //  Created by Marcos Meng on 2023/10/14.
@@ -9,7 +9,7 @@ import Foundation
 import ComposableArchitecture
 import Core
 
-public struct ParticipatorDetaolStore: Reducer {
+public struct ParticipatorDetailStore: Reducer {
     public struct State: Equatable {
         
         var participatorModel: ParticipacerModel
