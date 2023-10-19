@@ -78,6 +78,9 @@ public struct AccountBookConfigStore: Reducer {
                 return .none
             }
         }
+        .ifLet(\.$destination, action: /Action.destination) {
+          Destination()
+        }
     }
 
     public struct Destination: Reducer {
