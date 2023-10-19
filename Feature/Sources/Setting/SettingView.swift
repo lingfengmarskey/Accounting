@@ -8,29 +8,38 @@
 import ComposableArchitecture
 import Foundation
 import SwiftUI
+import AccountBookList
 
 public struct SettingView: View {
-    let store: Store<SettingStore.State, SettingStore.Action>
+    let store: StoreOf<SettingStore>
 
-    public init(store: Store<SettingStore.State, SettingStore.Action>) {
+    public init(_ store: StoreOf<SettingStore>) {
         self.store = store
     }
 
     public var body: some View {
-        WithViewStore(store) { viewStore in
-            VStack {
-                HStack {
-                    Text("当前账本")
-                    Spacer()
-                    Button {
-                        viewStore.send(.tapBook)
-                    } label: {
-                        Text(viewStore.state.bookState.text)
+        WithViewStore(store, observe: { $0 }) { viewStore in
+            NavigationStack {
+                List {
+                    HStack {
+                        Text("当前账本")
+                        Spacer()
+                        Button {
+                            viewStore.send(.tapBook)
+                        } label: {
+                            Text(viewStore.state.bookState.text)
+                        }
                     }
                 }
-                Spacer()
+                .navigationTitle("Setting")
+                .navigationDestination(
+                  store: self.store.scope(state: \.$destination, action: { .destination($0) }),
+                  state: /SettingStore.Destination.State.selectBook,
+                  action: SettingStore.Destination.Action.selectBook
+                ) { store in
+                    AccountBookListView(store)
+                }
             }
-            .padding()
             .onAppear {
                 viewStore.send(.onAppear)
             }
@@ -40,10 +49,10 @@ public struct SettingView: View {
 
 struct SettingView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingView(store: .init(
-            initialState: .init(bookState: .notChoosen),
-            reducer: SettingStore.reducer,
-            environment: .live
+        SettingView(Store(
+            initialState: SettingStore.State(
+                bookState: .notChoosen),
+            reducer: { SettingStore() }
         ))
     }
 }

@@ -42,7 +42,9 @@ let package = Package(
                 "AccountBookConfig",
                ]),
         .target(name: "Setting",
-               dependencies: coreDependencies
+               dependencies: coreDependencies + [
+                "AccountBookList",
+               ]
                ),
         .target(name: "Booklist",
                dependencies:coreDependencies

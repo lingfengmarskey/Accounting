@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import ComposableArchitecture
 
 public protocol PreferencesProtocol {
     func set(_ obj: Any?, forKey: String)
@@ -41,4 +42,15 @@ public class MockPreferences: PreferencesProtocol {
         }
         return nil
     }
+}
+
+private enum PreferencesKey: DependencyKey {
+    static let liveValue :PreferencesProtocol = Preferences()
+}
+
+public extension DependencyValues {
+  var preferences: PreferencesProtocol {
+    get { self[PreferencesKey.self] }
+    set { self[PreferencesKey.self] = newValue }
+  }
 }

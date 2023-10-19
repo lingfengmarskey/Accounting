@@ -14,6 +14,14 @@ public struct AccountBooklistStore: Reducer {
     public struct State: Equatable {
         var books: [AccountBookModel] = .stub()
         var saveDisable: Bool = true
+
+        public var selectedBook: AccountBookModel? {
+            if let book = books.first(where: { selected == $0.id  }) {
+                return book
+            }
+            return nil
+        }
+        
         @BindingState var selected: String?
 
         var accountBookConfig: AccountBookConfigStore.State = .init()
@@ -34,7 +42,9 @@ public struct AccountBooklistStore: Reducer {
         case binding(BindingAction<State>)
         case accountBookConfig(AccountBookConfigStore.Action)
     }
-
+    
+    @Dependency(\.dismiss) var dismiss
+    
     public init() {}
 
     public var body: some Reducer<State, Action> {
@@ -62,7 +72,8 @@ public struct AccountBooklistStore: Reducer {
                 return .none
             case .selectDone:
                 // TODO:
-                return .none
+//                return .none
+                return .run { _ in await self.dismiss() }
             case let .removeItem(index):
                 // TODO: remove item
                 state.selected = nil
