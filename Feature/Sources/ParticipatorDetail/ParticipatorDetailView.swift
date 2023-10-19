@@ -35,13 +35,13 @@ public struct ParticipatorDetailView: View {
                 Section {
                     SingleSelectView(
                         title: "Read Only",
-                        isSelected: viewStore.$isReadOnly
+                        isSelected: viewStore.binding(get: \.isReadOnly, send: ParticipatorDetailStore.Action.setReadOnly)
                     ) {
                         viewStore.send(.tapReadOnly)
                     }
                     SingleSelectView(
                         title: "Read & Write",
-                        isSelected: viewStore.$isReadWrite
+                        isSelected: viewStore.binding(get: \.isReadWrite, send: ParticipatorDetailStore.Action.setReadWrite)
                     ) {
                         viewStore.send(.tapReadWrite)
                     }
@@ -63,6 +63,19 @@ public struct ParticipatorDetailView: View {
                 }
             })
             .navigationTitle("Participator Detail")
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(action: {
+                        viewStore.send(.tapBack)
+                    }, label: {
+                        Image(systemName: "arrow.backward")
+                    })
+                }
+            }
+            .onAppear(perform: {
+                viewStore.send(.onAppear)
+            })
         }
     }
 }

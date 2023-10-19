@@ -35,4 +35,8 @@ public extension String {
         let value = String(prefix(1))
         return value
     }
+
+    var asUrl: URL? {
+        URL(string: self)
+    }
 }

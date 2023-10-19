@@ -20,6 +20,10 @@ public struct AccountBookConfigStore: Reducer {
         var paticipators: [ParticipacerModel] = .stub()
         
         var saveDisable: Bool = true
+        
+        var sharedLink: String = ""
+        
+        @BindingState var shouldShared: Bool = false
 
         @PresentationState var destination: Destination.State?
 
@@ -31,12 +35,12 @@ public struct AccountBookConfigStore: Reducer {
     }
 
     public enum Action: BindableAction, Equatable {
-        case destination(PresentationAction<Destination.Action>)
         case onAppear
         case addMember
         case tapUser(String?)
         case tapTopDone
         case tapTopCancel
+        case destination(PresentationAction<Destination.Action>)
         case binding(BindingAction<State>)
     }
 
@@ -51,18 +55,24 @@ public struct AccountBookConfigStore: Reducer {
                     state.name = book.name
                     state.paticipators = book.participacer
                 }
+                state.destination = nil
                 return .none
             case .binding:
                 return .none
             case let .tapUser(id):
                 if let id = id,
                    let model = state.paticipators.first(where: { $0.id == id }) {
-                    // to participator detail
                     state.destination = .participatorDetail(.init(participator: model))
+                    state.shouldShared = false
                 } else {
-//                    state.destination =
-                    // to sharelink
+                    state.destination = nil
+                    // TODO: config sharelink
+                    state.sharedLink = "www.baidu.com"
+                    state.shouldShared = true
                 }
+                return .none
+            case .destination(.presented(.participatorDetail(.tapBack))):
+                state.destination = nil
                 return .none
             default:
                 return .none
@@ -77,7 +87,7 @@ public struct AccountBookConfigStore: Reducer {
         public enum Action: Equatable {
             case participatorDetail(ParticipatorDetailStore.Action)
         }
-        public var body: some ReducerOf<Self> {
+        public var body: some Reducer<State, Action> {
             Scope(state: /State.participatorDetail, action: /Action.participatorDetail) {
                 ParticipatorDetailStore()
             }

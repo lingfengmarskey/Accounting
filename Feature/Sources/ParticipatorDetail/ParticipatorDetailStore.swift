@@ -14,27 +14,27 @@ public struct ParticipatorDetailStore: Reducer {
         
         var participatorModel: ParticipacerModel
 
-        @BindingState var isReadOnly: Bool = false
-        @BindingState var isReadWrite: Bool = false
+        var isReadOnly: Bool = false
+        var isReadWrite: Bool = false
 
         public init(participator: ParticipacerModel) {
             self.participatorModel = participator
         }
     }
 
-    public enum Action: BindableAction, Equatable {
+    public enum Action: Equatable {
         case onAppear
-        case something //TODO: update here
         case delete
         case tapReadOnly
         case tapReadWrite
-        case binding(BindingAction<State>)
+        case tapBack
+        case setReadOnly(Bool)
+        case setReadWrite(Bool)
     }
 
     public init() {}
 
     public var body: some Reducer<State, Action> {
-        BindingReducer()
         Reduce { state, action in
             switch action {
             case .onAppear:
@@ -46,8 +46,17 @@ public struct ParticipatorDetailStore: Reducer {
             case .tapReadWrite:
                 state.isReadOnly = false
                 state.isReadWrite = true
+                print("test isisisisis>")
                 return .none
-            default:
+            case .setReadWrite(let value):
+                state.isReadWrite = value
+                return .none
+            case .setReadOnly(let value):
+                state.isReadOnly = value
+                return .none
+            case .delete:
+                return .none
+            case .tapBack:
                 return .none
             }
         }

@@ -68,6 +68,9 @@ public struct AccountBookConfigView: View {
                 ) { store in
                     ParticipatorDetailView(store)
                 }
+//                .sheet(isPresented: viewStore.$shouldShared) {
+//                    // make icloudSharedController
+//                }
             }
             .onAppear {
                 viewStore.send(.onAppear)
