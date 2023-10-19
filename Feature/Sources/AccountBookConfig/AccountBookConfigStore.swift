@@ -8,8 +8,8 @@
 import ComposableArchitecture
 import Core
 import Foundation
-import SwiftUI
 import ParticipatorDetail
+import SwiftUI
 
 public struct AccountBookConfigStore: Reducer {
     public struct State: Equatable {
@@ -18,11 +18,11 @@ public struct AccountBookConfigStore: Reducer {
         public var book: AccountBookModel?
 
         var paticipators: [ParticipacerModel] = .stub()
-        
+
         var saveDisable: Bool = true
-        
+
         var sharedLink: String = ""
-        
+
         @BindingState var shouldShared: Bool = false
 
         @PresentationState var destination: Destination.State?
@@ -61,7 +61,8 @@ public struct AccountBookConfigStore: Reducer {
                 return .none
             case let .tapUser(id):
                 if let id = id,
-                   let model = state.paticipators.first(where: { $0.id == id }) {
+                   let model = state.paticipators.first(where: { $0.id == id })
+                {
                     state.destination = .participatorDetail(.init(participator: model))
                     state.shouldShared = false
                 } else {
@@ -79,7 +80,7 @@ public struct AccountBookConfigStore: Reducer {
             }
         }
         .ifLet(\.$destination, action: /Action.destination) {
-          Destination()
+            Destination()
         }
     }
 
@@ -87,9 +88,11 @@ public struct AccountBookConfigStore: Reducer {
         public enum State: Equatable {
             case participatorDetail(ParticipatorDetailStore.State)
         }
+
         public enum Action: Equatable {
             case participatorDetail(ParticipatorDetailStore.Action)
         }
+
         public var body: some Reducer<State, Action> {
             Scope(state: /State.participatorDetail, action: /Action.participatorDetail) {
                 ParticipatorDetailStore()

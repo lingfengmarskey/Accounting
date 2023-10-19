@@ -1,24 +1,23 @@
 //
 //  ParticipatorDetailStore.swift
-//  
+//
 //
 //  Created by Marcos Meng on 2023/10/14.
 //
 
-import Foundation
 import ComposableArchitecture
 import Core
+import Foundation
 
 public struct ParticipatorDetailStore: Reducer {
     public struct State: Equatable {
-        
         var participatorModel: ParticipacerModel
 
         var isReadOnly: Bool = false
         var isReadWrite: Bool = false
 
         public init(participator: ParticipacerModel) {
-            self.participatorModel = participator
+            participatorModel = participator
         }
     }
 
@@ -48,10 +47,10 @@ public struct ParticipatorDetailStore: Reducer {
                 state.isReadWrite = true
                 print("test isisisisis>")
                 return .none
-            case .setReadWrite(let value):
+            case let .setReadWrite(value):
                 state.isReadWrite = value
                 return .none
-            case .setReadOnly(let value):
+            case let .setReadOnly(value):
                 state.isReadOnly = value
                 return .none
             case .delete:

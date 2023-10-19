@@ -5,11 +5,11 @@
 //  Created by Marcos Meng on 2022/08/22.
 //
 
+import AccountBookList
 import ComposableArchitecture
 import Core
 import Foundation
 import UIKit
-import AccountBookList
 
 public struct SettingStore: Reducer {
     public struct State: Equatable {
@@ -53,16 +53,17 @@ public struct SettingStore: Reducer {
         public enum State: Equatable {
             case selectBook(AccountBooklistStore.State)
         }
+
         public enum Action: Equatable {
             case selectBook(AccountBooklistStore.Action)
         }
+
         public var body: some Reducer<State, Action> {
             Scope(state: /State.selectBook, action: /Action.selectBook) {
                 AccountBooklistStore()
             }
         }
     }
-    
 
     @Dependency(\.preferences) var preferences
 
@@ -85,7 +86,7 @@ public struct SettingStore: Reducer {
                 return .none
             case .destination(.presented(.selectBook(.selectDone))):
                 switch state.destination {
-                case .selectBook(let bookState):
+                case let .selectBook(bookState):
                     if let value = bookState.selectedBook {
                         state.bookState = .normal(value.name)
                     }
@@ -99,7 +100,7 @@ public struct SettingStore: Reducer {
             }
         }
         .ifLet(\.$destination, action: /Action.destination) {
-          Destination()
+            Destination()
         }
     }
 }

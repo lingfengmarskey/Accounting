@@ -5,10 +5,10 @@
 //  Created by Marcos Meng on 2022/08/22.
 //
 
+import AccountBookList
 import ComposableArchitecture
 import Foundation
 import SwiftUI
-import AccountBookList
 
 public struct SettingView: View {
     let store: StoreOf<SettingStore>
@@ -33,9 +33,9 @@ public struct SettingView: View {
                 }
                 .navigationTitle("Setting")
                 .navigationDestination(
-                  store: self.store.scope(state: \.$destination, action: { .destination($0) }),
-                  state: /SettingStore.Destination.State.selectBook,
-                  action: SettingStore.Destination.Action.selectBook
+                    store: self.store.scope(state: \.$destination, action: { .destination($0) }),
+                    state: /SettingStore.Destination.State.selectBook,
+                    action: SettingStore.Destination.Action.selectBook
                 ) { store in
                     AccountBookListView(store)
                 }

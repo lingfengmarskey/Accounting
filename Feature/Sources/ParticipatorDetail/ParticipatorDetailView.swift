@@ -5,14 +5,13 @@
 //  Created by Marcos Meng on 2023/10/14.
 //
 
-import Foundation
-import SwiftUI
 import ComposableArchitecture
 import Core
+import Foundation
+import SwiftUI
 import UIComponents
 
 public struct ParticipatorDetailView: View {
-
     let store: StoreOf<ParticipatorDetailStore>
 
     public init(_ store: StoreOf<ParticipatorDetailStore>) {
@@ -53,7 +52,7 @@ public struct ParticipatorDetailView: View {
                     Button(action: {
                         viewStore.send(.delete)
                     }, label: {
-                        HStack() {
+                        HStack {
                             Spacer()
                             Text("Delete")
                                 .foregroundStyle(.red)
@@ -82,7 +81,7 @@ public struct ParticipatorDetailView: View {
 
 #Preview {
     ParticipatorDetailView(
-        Store(initialState: ParticipatorDetailStore.State.init(participator: .stub()), reducer: {
+        Store(initialState: ParticipatorDetailStore.State(participator: .stub()), reducer: {
             ParticipatorDetailStore()
         })
     )

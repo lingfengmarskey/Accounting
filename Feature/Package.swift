@@ -16,7 +16,8 @@ let package = Package(
         .library(name: "Root",targets: ["Root"]),
         .library(name: "AccountBookList",targets: ["AccountBookList"]),
         .library(name: "Setting",targets: ["Setting"]),
-        .library(name: "Booklist",targets: ["Booklist"]),
+        .library(name: "Billslist",targets: ["Billslist"]),
+        .library(name: "BillDetail",targets: ["BillDetail"]),
         .library(name: "AccountBookConfig",targets: ["AccountBookConfig"]),
         .library(name: "ParticipatorDetail", targets: ["ParticipatorDetail"])
     ],
@@ -46,7 +47,7 @@ let package = Package(
                 "AccountBookList",
                ]
                ),
-        .target(name: "Booklist",
+        .target(name: "Billslist",
                dependencies:coreDependencies
                ),
         .target(name: "AccountBookConfig",
@@ -55,6 +56,9 @@ let package = Package(
                ]
                ),
         .target(name: "ParticipatorDetail",
+               dependencies:coreDependencies
+               ),
+        .target(name: "BillDetail",
                dependencies:coreDependencies
                ),
     ]

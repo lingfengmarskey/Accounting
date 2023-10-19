@@ -7,9 +7,9 @@
 
 import ComposableArchitecture
 import Foundation
+import ParticipatorDetail
 import SwiftUI
 import UIComponents
-import ParticipatorDetail
 
 public struct AccountBookConfigView: View {
     let store: StoreOf<AccountBookConfigStore>
@@ -62,9 +62,9 @@ public struct AccountBookConfigView: View {
                     }
                 }
                 .navigationDestination(
-                  store: self.store.scope(state: \.$destination, action: { .destination($0) }),
-                  state: /AccountBookConfigStore.Destination.State.participatorDetail,
-                  action: AccountBookConfigStore.Destination.Action.participatorDetail
+                    store: self.store.scope(state: \.$destination, action: { .destination($0) }),
+                    state: /AccountBookConfigStore.Destination.State.participatorDetail,
+                    action: AccountBookConfigStore.Destination.Action.participatorDetail
                 ) { store in
                     ParticipatorDetailView(store)
                 }

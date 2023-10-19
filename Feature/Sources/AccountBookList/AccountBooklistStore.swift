@@ -16,18 +16,18 @@ public struct AccountBooklistStore: Reducer {
         var saveDisable: Bool = true
 
         public var selectedBook: AccountBookModel? {
-            if let book = books.first(where: { selected == $0.id  }) {
+            if let book = books.first(where: { selected == $0.id }) {
                 return book
             }
             return nil
         }
-        
+
         @BindingState var selected: String?
 
         var accountBookConfig: AccountBookConfigStore.State = .init()
 
         var isShouldPresent = false
-        
+
         public init() {}
     }
 
@@ -42,9 +42,9 @@ public struct AccountBooklistStore: Reducer {
         case binding(BindingAction<State>)
         case accountBookConfig(AccountBookConfigStore.Action)
     }
-    
+
     @Dependency(\.dismiss) var dismiss
-    
+
     public init() {}
 
     public var body: some Reducer<State, Action> {
@@ -58,16 +58,15 @@ public struct AccountBooklistStore: Reducer {
                 return .run { send in
                     await send(.setPresent(true))
                 }
-            case .tapDetail(bookID: let id):
-                if let book = state.books.first(where: { $0.id == id })
-                {
+            case let .tapDetail(bookID: id):
+                if let book = state.books.first(where: { $0.id == id }) {
                     state.accountBookConfig.book = book
                     return .run { send in
                         await send(.setPresent(true))
                     }
                 }
                 return .none
-            case .setPresent(let value):
+            case let .setPresent(value):
                 state.isShouldPresent = value
                 return .none
             case .selectDone:
