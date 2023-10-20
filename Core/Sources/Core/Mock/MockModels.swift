@@ -72,7 +72,7 @@ extension UserModel {
     }
 }
 
-extension BillModel {
+public extension BillModel {
     static func stub() -> BillModel {
         BillModel(
             id: modelFaker.number.increasingUniqueId().stringValue,

@@ -7,16 +7,21 @@
 
 import ComposableArchitecture
 import Foundation
-
+import Core
 import ComposableArchitecture
 
 public struct BillDetailStore: Reducer {
     public struct State: Equatable {
-        public init() {}
+        var billModel: BillModel
+
+        public init(billModel: BillModel) {
+            self.billModel = billModel
+        }
     }
 
     public enum Action: Equatable {
         case onAppear
+        case edit
     }
 
     public init() {}
