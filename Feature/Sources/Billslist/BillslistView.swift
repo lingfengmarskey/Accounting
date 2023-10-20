@@ -11,6 +11,7 @@ import Core
 import Foundation
 import SwiftUI
 import UIComponents
+import Setting
 
 public struct BillslistView: View {
     let store: StoreOf<BillslistStore>
@@ -40,10 +41,36 @@ public struct BillslistView: View {
                     }
                 }
                 .navigationTitle("Bills")
-                .navigationDestination(store: self.store.scope(state: \.$detail, action: BillslistStore.Action.detail)) { store in
+                .toolbar(content: {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button(action: {
+                            viewStore.send(.tapSetting)
+                        }, label: {
+                            Image(systemName: "book.closed.fill")
+                                .renderingMode(.template)
+                                .foregroundStyle(Color.black)
+                        })
+                    }
+                })
+                .navigationDestination(
+                    store: self.store.scope(state: \.$destination, action: { .destination($0) } ),
+                    state: /BillslistStore.Destination.State.billDetail,
+                    action: BillslistStore.Destination.Action.billDetail
+                ) { store in
                     BillDetailView(store)
                 }
+                .navigationDestination(
+                    store: self.store.scope(state: \.$destination, action: { .destination($0) } ),
+                    state: /BillslistStore.Destination.State.setting,
+                    action: BillslistStore.Destination.Action.setting
+                ) { store in
+                    SettingView(store)
+                }
+                
             }
+            .onAppear(perform: {
+                viewStore.send(.onAppear)
+            })
         }
     }
 

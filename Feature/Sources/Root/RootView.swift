@@ -1,6 +1,8 @@
 import AccountBookList
 import ComposableArchitecture
 import SwiftUI
+import Billslist
+
 public struct RootView: View {
     @State var present: Bool = false
 
@@ -25,12 +27,18 @@ public struct RootView: View {
                 .cornerRadius(12)
             }
             .fullScreenCover(isPresented: $present) {
-                AccountBookListView(
+                BillslistView(
                     self.store.scope(
-                        state: \.accountBooklistState,
-                        action: RootStore.Action.accountBooklistAction
+                        state: \.bills,
+                        action: RootStore.Action.bills
                     )
                 )
+//                AccountBookListView(
+//                    self.store.scope(
+//                        state: \.accountBooklistState,
+//                        action: RootStore.Action.accountBooklistAction
+//                    )
+//                )
             }
         }
     }

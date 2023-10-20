@@ -10,21 +10,24 @@ import ComposableArchitecture
 import Core
 import Domain
 import Foundation
+import Setting
 
 public struct BillslistStore: Reducer {
     public struct State: Equatable {
         var bills: [BillSectionData] = .stub()
 
-        @PresentationState var detail: BillDetailStore.State?
+        @PresentationState var destination: Destination.State?
+        
 
         public init() {}
     }
 
     public enum Action: Equatable {
         case onAppear
+        case tapSetting
         case tapAdd(BillType?)
         case onTap(BillModel)
-        case detail(PresentationAction<BillDetailStore.Action>)
+        case destination(PresentationAction<Destination.Action>)
     }
 
     public init() {}
@@ -35,14 +38,38 @@ public struct BillslistStore: Reducer {
             case .onAppear:
                 return .none
             case let .onTap(bill):
-                state.detail = .init(billModel: bill)
+                state.destination = .billDetail(.init(billModel: bill))
+                return .none
+            case .tapSetting:
+                state.destination = .setting(.init())
                 return .none
             default:
                 return .none
             }
         }
-        .ifLet(\.$detail, action: /Action.detail) {
-            BillDetailStore()
+        .ifLet(\.$destination, action: /Action.destination) {
+            Destination()
+        }
+    }
+    
+    public struct Destination: Reducer {
+        public enum State: Equatable {
+            case billDetail(BillDetailStore.State)
+            case setting(SettingStore.State)
+        }
+
+        public enum Action: Equatable {
+            case billDetail(BillDetailStore.Action)
+            case setting(SettingStore.Action)
+        }
+        
+        public var body: some Reducer<State, Action> {
+            Scope(state: /State.billDetail, action: /Action.billDetail) {
+                BillDetailStore()
+            }
+            Scope(state: /State.setting, action: /Action.setting) {
+                SettingStore()
+            }
         }
     }
 }

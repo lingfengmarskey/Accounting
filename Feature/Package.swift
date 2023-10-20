@@ -34,6 +34,7 @@ let package = Package(
             name: "Root",
             dependencies: coreDependencies + [
                 "AccountBookList",
+                "Billslist",
             ]),
         .testTarget(
             name: "RootTests",
@@ -50,6 +51,7 @@ let package = Package(
         .target(name: "Billslist",
                dependencies:coreDependencies + [
                     "BillDetail",
+                    "Setting",
                ]
                ),
         .target(name: "AccountBookConfig",

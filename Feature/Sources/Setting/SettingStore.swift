@@ -18,7 +18,7 @@ public struct SettingStore: Reducer {
         @PresentationState var destination: Destination.State?
 
         public init(
-            bookState: BookState
+            bookState: BookState = .notChoosen
         ) {
             self.bookState = bookState
         }
@@ -66,7 +66,9 @@ public struct SettingStore: Reducer {
     }
 
     @Dependency(\.preferences) var preferences
-
+// TODO: depedency config
+    public init() {}
+    
     public var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {

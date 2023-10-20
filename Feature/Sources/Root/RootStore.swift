@@ -8,11 +8,14 @@
 import AccountBookList
 import ComposableArchitecture
 import Foundation
+import Billslist
 
 public struct RootStore: Reducer {
     public struct State: Equatable {
         public var accountBooklistState = AccountBooklistStore.State()
 
+        var bills: BillslistStore.State = .init()
+        
         public init(accountBooklistState: AccountBooklistStore.State = .init()) {
             self.accountBooklistState = accountBooklistState
         }
@@ -21,6 +24,7 @@ public struct RootStore: Reducer {
     public enum Action: Equatable {
         case onAppear
         case accountBooklistAction(AccountBooklistStore.Action)
+        case bills(BillslistStore.Action)
     }
 
     public init() {}
@@ -36,6 +40,9 @@ public struct RootStore: Reducer {
         }
         Scope(state: \.accountBooklistState, action: /Action.accountBooklistAction) {
             AccountBooklistStore()
+        }
+        Scope(state: \.bills, action: /Action.bills) {
+            BillslistStore()
         }
     }
 }
