@@ -5,6 +5,7 @@
 //  Created by Marcos Meng on 2022/08/22.
 //
 
+import BillDetail
 import ComposableArchitecture
 import Core
 import Foundation
@@ -20,21 +21,27 @@ public struct BillslistView: View {
 
     public var body: some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
-            ZStack {
-                listView(viewStore: viewStore)
-                VStack {
-                    Spacer()
-                    HStack {
+            NavigationStack {
+                ZStack {
+                    listView(viewStore: viewStore)
+                    VStack {
                         Spacer()
-                        XButton {
-                            viewStore.send(.tapAdd(nil))
-                        } onPlus: {
-                            viewStore.send(.tapAdd(.income))
-                        } onMinus: {
-                            viewStore.send(.tapAdd(.payment))
+                        HStack {
+                            Spacer()
+                            XButton {
+                                viewStore.send(.tapAdd(nil))
+                            } onPlus: {
+                                viewStore.send(.tapAdd(.income))
+                            } onMinus: {
+                                viewStore.send(.tapAdd(.payment))
+                            }
+                            .padding()
                         }
-                        .padding()
                     }
+                }
+                .navigationTitle("Bills")
+                .navigationDestination(store: self.store.scope(state: \.$detail, action: BillslistStore.Action.detail)) { store in
+                    BillDetailView(store)
                 }
             }
         }

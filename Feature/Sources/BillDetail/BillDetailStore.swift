@@ -6,9 +6,8 @@
 //
 
 import ComposableArchitecture
-import Foundation
 import Core
-import ComposableArchitecture
+import Foundation
 
 public struct BillDetailStore: Reducer {
     public struct State: Equatable {

@@ -6,9 +6,9 @@
 //
 
 import ComposableArchitecture
+import Core
 import Foundation
 import SwiftUI
-import Core
 
 public struct BillDetailView: View {
     let store: StoreOf<BillDetailStore>
@@ -25,7 +25,7 @@ public struct BillDetailView: View {
                 HStack {
                     Spacer()
                     Text(viewStore.billModel.type == .income ? "+" : "-")
-                    Text(String(format: "%.2f", viewStore.billModel.value) )
+                    Text(String(format: "%.2f", viewStore.billModel.value))
                     Spacer()
                 }
                 .font(.largeTitle)
@@ -51,7 +51,6 @@ public struct BillDetailView: View {
                     } label: {
                         Text("Edit")
                     }
-
                 }
             })
         }

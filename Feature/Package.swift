@@ -48,7 +48,9 @@ let package = Package(
                ]
                ),
         .target(name: "Billslist",
-               dependencies:coreDependencies
+               dependencies:coreDependencies + [
+                    "BillDetail",
+               ]
                ),
         .target(name: "AccountBookConfig",
                dependencies:coreDependencies + [
