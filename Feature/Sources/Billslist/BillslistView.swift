@@ -9,6 +9,7 @@ import ComposableArchitecture
 import Core
 import Foundation
 import SwiftUI
+import UIComponents
 
 public struct BillslistView: View {
     let store: StoreOf<BillslistStore>
@@ -19,36 +20,56 @@ public struct BillslistView: View {
 
     public var body: some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
-            List(viewStore.bills, id: \.id) { bill in
-                Section {
-                    ForEach(bill.cells) { tup in
-                        HStack {
-                            VStack(alignment: .leading) {
-                                HStack {
-                                    Text(tup.type == .income ? "+" : "-")
-                                    Text(String(format: "%.2f", tup.value))
-                                    Spacer()
-                                }
-                                .font(.title2)
-                                .fontWeight(.bold)
-                                .foregroundStyle(tup.type == .income ? Color.green : Color.red)
-                                Text(tup.updatedAt)
-                                    .font(.footnote)
-                                    .fontWeight(.ultraLight)
-                            }
-                            Spacer()
-                            Text(tup.mainCategory.name.firstValue)
-                                .fontWeight(.bold)
-                                .frame(width: 40, height: 40)
-                                .background(Color.mint)
-                                .clipShape(Circle())
+            ZStack {
+                listView(viewStore: viewStore)
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        XButton {
+                            viewStore.send(.tapAdd(nil))
+                        } onPlus: {
+                            viewStore.send(.tapAdd(.income))
+                        } onMinus: {
+                            viewStore.send(.tapAdd(.payment))
                         }
+                        .padding()
                     }
-                } header: {
-                    Text(bill.header ?? "66")
-                        .font(.title3)
-                        .fontWeight(.black)
                 }
+            }
+        }
+    }
+
+    func listView(viewStore: ViewStore<BillslistStore.State, BillslistStore.Action>) -> some View {
+        List(viewStore.bills, id: \.id) { bill in
+            Section {
+                ForEach(bill.cells) { tup in
+                    HStack {
+                        VStack(alignment: .leading) {
+                            HStack {
+                                Text(tup.type == .income ? "+" : "-")
+                                Text(String(format: "%.2f", tup.value))
+                                Spacer()
+                            }
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundStyle(tup.type == .income ? Color.green : Color.red)
+                            Text(tup.updatedAt)
+                                .font(.footnote)
+                                .fontWeight(.ultraLight)
+                        }
+                        Spacer()
+                        Text(tup.mainCategory.name.firstValue)
+                            .fontWeight(.bold)
+                            .frame(width: 40, height: 40)
+                            .background(Color.mint)
+                            .clipShape(Circle())
+                    }
+                }
+            } header: {
+                Text(bill.header ?? "")
+                    .font(.title3)
+                    .fontWeight(.black)
             }
         }
     }

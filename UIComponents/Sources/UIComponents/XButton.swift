@@ -17,11 +17,9 @@ public struct XButton: View {
     public var onPlus: (() -> Void)?
     public var onMinus: (() -> Void)?
 
-    public init(detailMode: Bool = false,
-                onTap: @escaping () -> Void,
+    public init(onTap: @escaping () -> Void,
                 onPlus: (() -> Void)? = nil,
                 onMinus: (() -> Void)? = nil) {
-        self.detailMode = detailMode
         self.onTap = onTap
         self.onPlus = onPlus
         self.onMinus = onMinus
@@ -130,6 +128,10 @@ struct LongPressButton<Label>: View where Label: View {
 
 #Preview {
     XButton {
+        
+    } onPlus: {
+        
+    } onMinus: {
         
     }
 }

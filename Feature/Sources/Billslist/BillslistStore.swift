@@ -6,8 +6,9 @@
 //
 
 import ComposableArchitecture
-import Foundation
 import Core
+import Domain
+import Foundation
 
 public struct BillslistStore: Reducer {
     public struct State: Equatable {
@@ -17,6 +18,7 @@ public struct BillslistStore: Reducer {
 
     public enum Action: Equatable {
         case onAppear
+        case tapAdd(BillType?)
         case onTap(BillModel)
     }
 
