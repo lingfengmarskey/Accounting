@@ -66,3 +66,16 @@ public protocol BillSubCategory {
     var id: String { get }
     var name: String { get }
 }
+
+
+@available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
+public protocol SectionDataProtocol {
+    associatedtype CellData: Identifiable
+    associatedtype HeaderData
+    associatedtype FooterData
+    
+    var id: String { get }
+    var header: HeaderData? { get }
+    var footer: FooterData? { get }
+    var cells: [CellData] { get }
+}

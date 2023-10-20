@@ -77,7 +77,7 @@ extension BillModel {
         BillModel(
             id: modelFaker.number.increasingUniqueId().stringValue,
             value: modelFaker.number.randomDouble(),
-            type: .init(rawValue: modelFaker.number.randomInt(min: 0, max: 1))!,
+            type: .init(rawValue: modelFaker.number.randomInt(min: 0, max: 2))!,
             mainCategory: .stub(),
             subCategory: .stub(),
             createdAt: modelFaker.date.between(.init(timeIntervalSince1970: 1661906440), .init()).systemFormatDate,
@@ -107,5 +107,36 @@ extension BillSubCategoryModel {
         .init(id: modelFaker.number.increasingUniqueId().stringValue,
               name: modelFaker.name.title()
         )
+    }
+}
+
+public extension [BillModel] {
+    static func stub() -> [BillModel] {
+        let number = modelFaker.number.randomInt(min: 0, max: 15)
+        var result: [BillModel] = []
+        for _ in 0...number {
+            result.append(.stub())
+        }
+        return result
+    }
+}
+
+extension BillSectionData {
+    static func stub() -> BillSectionData {
+        .init(id: modelFaker.number.increasingUniqueId().stringValue,
+              header: modelFaker.date.between(.init(timeIntervalSince1970: 1661906440), .init()).systemFormatDate,
+              cells: .stub()
+        )
+    }
+}
+
+public extension [BillSectionData] {
+    static func stub() -> [BillSectionData] {
+        let number = modelFaker.number.randomInt(min: 0, max: 15)
+        var result: [BillSectionData] = []
+        for _ in 0...number {
+            result.append(.stub())
+        }
+        return result
     }
 }

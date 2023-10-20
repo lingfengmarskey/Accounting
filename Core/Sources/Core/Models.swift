@@ -145,6 +145,32 @@ public struct BillSubCategoryModel: BillSubCategory, Equatable {
 }
 
 
+public struct BillSectionData: SectionDataProtocol, Equatable, Identifiable {
+    public typealias CellData = BillModel
+    
+    public typealias HeaderData = String
+    
+    public typealias FooterData = String
+
+    public var id: String
+    
+    public var header: String?
+    
+    public var footer: String?
+    
+    public var cells: [BillModel]
+
+    public init(id: String, header: String? = nil, footer: String? = nil, cells: [BillModel]) {
+        self.id = id
+        self.header = header
+        self.footer = footer
+        self.cells = cells
+    }
+}
+
+
+
+
 /**
  open class Participant : NSObject, NSSecureCoding, NSCopying {
 
