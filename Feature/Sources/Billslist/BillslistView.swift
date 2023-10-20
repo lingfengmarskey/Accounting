@@ -44,26 +44,14 @@ public struct BillslistView: View {
         List(viewStore.bills, id: \.id) { bill in
             Section {
                 ForEach(bill.cells) { tup in
-                    HStack {
-                        VStack(alignment: .leading) {
-                            HStack {
-                                Text(tup.type == .income ? "+" : "-")
-                                Text(String(format: "%.2f", tup.value))
-                                Spacer()
-                            }
-                            .font(.title2)
-                            .fontWeight(.bold)
-                            .foregroundStyle(tup.type == .income ? Color.green : Color.red)
-                            Text(tup.updatedAt)
-                                .font(.footnote)
-                                .fontWeight(.ultraLight)
-                        }
-                        Spacer()
-                        Text(tup.mainCategory.name.firstValue)
-                            .fontWeight(.bold)
-                            .frame(width: 40, height: 40)
-                            .background(Color.mint)
-                            .clipShape(Circle())
+                    BillSingleView(
+                        isIncome: tup.type == .income,
+                        value: tup.value,
+                        updatedAt: tup.updatedAt,
+                        mainCategory: tup.mainCategory.name.firstValue
+                    )
+                    .onTapGesture {
+                        viewStore.send(.onTap(tup))
                     }
                 }
             } header: {
