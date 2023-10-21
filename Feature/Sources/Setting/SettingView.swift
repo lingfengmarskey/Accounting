@@ -19,26 +19,24 @@ public struct SettingView: View {
 
     public var body: some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
-            NavigationStack {
-                List {
-                    HStack {
-                        Text("当前账本")
-                        Spacer()
-                        Button {
-                            viewStore.send(.tapBook)
-                        } label: {
-                            Text(viewStore.state.bookState.text)
-                        }
+            List {
+                HStack {
+                    Text("当前账本")
+                    Spacer()
+                    Button {
+                        viewStore.send(.tapBook)
+                    } label: {
+                        Text(viewStore.state.bookState.text)
                     }
                 }
-                .navigationTitle("Setting")
-                .navigationDestination(
-                    store: self.store.scope(state: \.$destination, action: { .destination($0) }),
-                    state: /SettingStore.Destination.State.selectBook,
-                    action: SettingStore.Destination.Action.selectBook
-                ) { store in
-                    AccountBookListView(store)
-                }
+            }
+            .navigationTitle("Setting")
+            .navigationDestination(
+                store: self.store.scope(state: \.$destination, action: { .destination($0) }),
+                state: /SettingStore.Destination.State.selectBook,
+                action: SettingStore.Destination.Action.selectBook
+            ) { store in
+                AccountBookListView(store)
             }
             .onAppear {
                 viewStore.send(.onAppear)

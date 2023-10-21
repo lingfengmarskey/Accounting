@@ -9,9 +9,9 @@ import BillDetail
 import ComposableArchitecture
 import Core
 import Foundation
+import Setting
 import SwiftUI
 import UIComponents
-import Setting
 
 public struct BillslistView: View {
     let store: StoreOf<BillslistStore>
@@ -47,26 +47,23 @@ public struct BillslistView: View {
                             viewStore.send(.tapSetting)
                         }, label: {
                             Image(systemName: "book.closed.fill")
-                                .renderingMode(.template)
-                                .foregroundStyle(Color.black)
                         })
                     }
                 })
                 .navigationDestination(
-                    store: self.store.scope(state: \.$destination, action: { .destination($0) } ),
+                    store: self.store.scope(state: \.$destination, action: { .destination($0) }),
                     state: /BillslistStore.Destination.State.billDetail,
                     action: BillslistStore.Destination.Action.billDetail
                 ) { store in
                     BillDetailView(store)
                 }
                 .navigationDestination(
-                    store: self.store.scope(state: \.$destination, action: { .destination($0) } ),
+                    store: self.store.scope(state: \.$destination, action: { .destination($0) }),
                     state: /BillslistStore.Destination.State.setting,
                     action: BillslistStore.Destination.Action.setting
                 ) { store in
                     SettingView(store)
                 }
-                
             }
             .onAppear(perform: {
                 viewStore.send(.onAppear)

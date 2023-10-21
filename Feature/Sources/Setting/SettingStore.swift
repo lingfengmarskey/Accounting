@@ -28,7 +28,7 @@ public struct SettingStore: Reducer {
         case tapBook
         case none
         case onAppear
-        case selectBook(AccountBooklistStore.Action)
+//        case selectBook(AccountBooklistStore.Action)
         case destination(PresentationAction<Destination.Action>)
     }
 
@@ -66,9 +66,9 @@ public struct SettingStore: Reducer {
     }
 
     @Dependency(\.preferences) var preferences
-// TODO: depedency config
+    // TODO: depedency config
     public init() {}
-    
+
     public var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {

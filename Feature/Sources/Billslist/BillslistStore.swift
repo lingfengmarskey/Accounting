@@ -17,7 +17,6 @@ public struct BillslistStore: Reducer {
         var bills: [BillSectionData] = .stub()
 
         @PresentationState var destination: Destination.State?
-        
 
         public init() {}
     }
@@ -51,7 +50,7 @@ public struct BillslistStore: Reducer {
             Destination()
         }
     }
-    
+
     public struct Destination: Reducer {
         public enum State: Equatable {
             case billDetail(BillDetailStore.State)
@@ -62,7 +61,7 @@ public struct BillslistStore: Reducer {
             case billDetail(BillDetailStore.Action)
             case setting(SettingStore.Action)
         }
-        
+
         public var body: some Reducer<State, Action> {
             Scope(state: /State.billDetail, action: /Action.billDetail) {
                 BillDetailStore()
