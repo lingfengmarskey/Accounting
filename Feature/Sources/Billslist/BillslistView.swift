@@ -9,6 +9,7 @@ import BillDetail
 import ComposableArchitecture
 import Core
 import Foundation
+import InputAccounts
 import Setting
 import SwiftUI
 import UIComponents
@@ -63,6 +64,13 @@ public struct BillslistView: View {
                     action: BillslistStore.Destination.Action.setting
                 ) { store in
                     SettingView(store)
+                }
+                .fullScreenCover(
+                    store: self.store.scope(state: \.$destination, action: { .destination($0) }),
+                    state: /BillslistStore.Destination.State.addAccounts,
+                    action: BillslistStore.Destination.Action.addAccounts
+                ) { store in
+                    InputAccountsView(store)
                 }
             }
             .onAppear(perform: {

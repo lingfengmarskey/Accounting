@@ -10,6 +10,7 @@ import ComposableArchitecture
 import Core
 import Domain
 import Foundation
+import InputAccounts
 import Setting
 
 public struct BillslistStore: Reducer {
@@ -42,6 +43,9 @@ public struct BillslistStore: Reducer {
             case .tapSetting:
                 state.destination = .setting(.init())
                 return .none
+            case .tapAdd(nil):
+                state.destination = .addAccounts(.init())
+                return .none
             default:
                 return .none
             }
@@ -55,11 +59,13 @@ public struct BillslistStore: Reducer {
         public enum State: Equatable {
             case billDetail(BillDetailStore.State)
             case setting(SettingStore.State)
+            case addAccounts(InputAccountsStore.State)
         }
 
         public enum Action: Equatable {
             case billDetail(BillDetailStore.Action)
             case setting(SettingStore.Action)
+            case addAccounts(InputAccountsStore.Action)
         }
 
         public var body: some Reducer<State, Action> {
@@ -68,6 +74,9 @@ public struct BillslistStore: Reducer {
             }
             Scope(state: /State.setting, action: /Action.setting) {
                 SettingStore()
+            }
+            Scope(state: /State.addAccounts, action: /Action.addAccounts) {
+                InputAccountsStore()
             }
         }
     }
