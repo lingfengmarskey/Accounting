@@ -30,25 +30,46 @@ public struct AccountsInputKeyboard: View {
 //        GridItem(.fixed(60), spacing: 5),
 //        GridItem(.fixed(60), spacing: 5),
     ]
+    
+    public init() {
+        
+    }
+    
     public var body: some View {
-        HStack(alignment: .top, spacing: 5) {
-            LazyVGrid(columns: gridItems, spacing: 5,  content: {
-                ForEach(items, id: \.self) { value in
-                    Text(value)
-                        .frame(maxWidth:.infinity, maxHeight: .infinity)
-                        .padding()
-                        .background(Color.random)
-                }
-            })
-            VStack(alignment: .trailing, spacing: 5) {
-                Text("<=")
-                    .frame(width: 55, height: 50)
-                    .background(Color.random)
-                Text("OK")
-                    .frame(width: 55, height: 170)
-                    .background(Color.random)
+        Grid {
+            GridRow(alignment: .bottom) {
+                Text("Row 1")
+                ForEach(0..<2) { _ in Color.red }
+            }
+            GridRow {
+                Text("Row 2")
+                ForEach(0..<5) { _ in Color.green }
+            }
+            GridRow {
+                Text("Row 3")
+                ForEach(0..<4) { _ in Color.blue }
             }
         }
+//        HStack(spacing: 5) {
+//            LazyVGrid(columns: gridItems, spacing: 5,  content: {
+//                ForEach(items, id: \.self) { value in
+//                    Text(value)
+//                        .frame(maxWidth:.infinity, maxHeight: .infinity)
+//                        .padding()
+//                        .background(Color.random)
+//                }
+//            })
+//            Spacer()
+//            Text("helo")
+//            VStack(alignment: .trailing, spacing: 5) {
+//                Text("<=")
+//                    .frame(width: 55, height: 50)
+//                    .background(Color.random)
+//                Text("OK")
+//                    .frame(width: 55, height: 170)
+//                    .background(Color.random)
+//            }
+//        }
     }
 }
 

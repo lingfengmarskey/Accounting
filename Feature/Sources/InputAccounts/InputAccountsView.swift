@@ -46,8 +46,10 @@ public struct InputAccountsView: View {
                     // asist buttons
                     Group {}
                     // input numbers
-                    Group {}
                     Spacer()
+                    Group {
+                        AccountsInputKeyboard()
+                    }
                 }
                 .padding()
                 .navigationTitle(viewStore.title)
