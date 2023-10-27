@@ -24,7 +24,11 @@ let package = Package(
             name: "UIComponents",
             dependencies: [
                 .product(name: "Domain", package: "Domain"),
-            ]),
+            ],
+            resources: [
+                .process("Assets")
+            ]
+        ),
         .testTarget(
             name: "UIComponentsTests",
             dependencies: ["UIComponents"]),

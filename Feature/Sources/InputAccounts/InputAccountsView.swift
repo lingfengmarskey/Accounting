@@ -32,8 +32,10 @@ public struct InputAccountsView: View {
                                     .fontWeight(.heavy)
                             })
                             .clipShape(RoundedRectangle(cornerRadius: 15))
-                            Text(viewStore.inputValue)
+                            TextFieldView(text: viewStore.$inputValue)
+//                            Text(viewStore.inputValue)
                                 .frame(maxWidth: .infinity, alignment: .leading)
+                                .frame(height: 40)
                                 .padding()
                                 .font(.largeTitle)
                                 .fontWeight(.heavy)
@@ -48,7 +50,7 @@ public struct InputAccountsView: View {
                     // input numbers
                     Spacer()
                     Group {
-                        AccountsInputKeyboard()
+                        
                     }
                 }
                 .padding()

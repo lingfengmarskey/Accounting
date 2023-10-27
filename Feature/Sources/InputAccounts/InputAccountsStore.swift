@@ -13,14 +13,15 @@ public struct InputAccountsStore: Reducer {
     public struct State: Equatable {
         // payment or income or others in the futrue.
         var title: String = "Payment"
-        var inputValue: String = "0"
+        @BindingState var inputValue: String?
         public init() {}
     }
 
-    public enum Action: Equatable {
+    public enum Action: Equatable, BindableAction {
         case onAppear
         case tapClose
         case setInputValue(String)
+        case binding(BindingAction<State>)
     }
 
     @Dependency(\.dismiss) var dismiss
@@ -28,6 +29,7 @@ public struct InputAccountsStore: Reducer {
     public init() {}
 
     public var body: some Reducer<State, Action> {
+        BindingReducer()
         Reduce { _, action in
             switch action {
             case .onAppear:
