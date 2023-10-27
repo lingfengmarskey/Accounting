@@ -20,8 +20,9 @@ public struct InputAccountsView: View {
     public var body: some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             NavigationStack {
-                VStack {
+                VStack(spacing: 0) {
                     // display
+                    Spacer(minLength: 20)
                     Group {
                         HStack {
                             Button(action: {}, label: {
@@ -32,8 +33,7 @@ public struct InputAccountsView: View {
                                     .fontWeight(.heavy)
                             })
                             .clipShape(RoundedRectangle(cornerRadius: 15))
-                            TextFieldView(text: viewStore.$inputValue)
-//                            Text(viewStore.inputValue)
+                            Text(viewStore.inputValue)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .frame(height: 40)
                                 .padding()
@@ -43,17 +43,35 @@ public struct InputAccountsView: View {
                                 .clipShape(RoundedRectangle(cornerRadius: 15))
                         }
                     }
+                    .padding()
                     // category
-                    Group {}
+                    Group {
+                        AccountCategoriesView()
+                    }
+                    .padding()
                     // asist buttons
-                    Group {}
-                    // input numbers
                     Spacer()
                     Group {
-                        
+                        HStack {
+                            AsistButton(title: "Date") {
+                                
+                            }
+                            AsistButton(title: "Type") {
+                                
+                            }
+                            AsistButton(title: "Note") {
+                                
+                            }
+                        }.padding(EdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10))
+                    }
+                    
+                    // input numbers
+                    Group {
+                        AccountsInputKeyboard { value in
+                            viewStore.send(.input(value))
+                        }
                     }
                 }
-                .padding()
                 .navigationTitle(viewStore.title)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar(content: {
@@ -73,6 +91,29 @@ public struct InputAccountsView: View {
         }
     }
 }
+
+
+struct AsistButton: View {
+    let title: String
+    let onTap: () -> ()
+    
+    var body: some View {
+        Button {
+            onTap()
+        } label: {
+            Text(title)
+                .font(.system(size: 20, weight: .bold))
+                .foregroundStyle(Color.white)
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background {
+                    Color.green
+                }
+                .clipShape(RoundedRectangle(cornerRadius: 5))
+        }
+    }
+}
+
 
 #Preview {
     InputAccountsView(

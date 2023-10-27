@@ -9,14 +9,14 @@ import Foundation
 import SwiftUI
 
 public struct AccountsInputKeyboard: View {
-    enum Input: Equatable {
+    public enum Input: Equatable {
         case one, two, three, four, five, six, seven, eight, nine, zero
         case plus
         case point
         case delete
         case equal
         
-        var text: String {
+        public var text: String {
             switch self {
             case .one:
                 return "1"
@@ -49,36 +49,38 @@ public struct AccountsInputKeyboard: View {
             }
         }
     }
+
+    var onTap: (Input) -> Void
     
-    public init() {
-        
+    public init(onTap: @escaping (Input) -> ()) {
+        self.onTap = onTap
     }
     
     public var body: some View {
         HStack(spacing: 0) {
             VStack(spacing: 0) {
-                InputButton(type: .one)
-                InputButton(type: .four)
-                InputButton(type: .seven)
-                InputButton(type: .zero)
+                InputButton(type: .one, onTap: onTap)
+                InputButton(type: .four, onTap: onTap)
+                InputButton(type: .seven, onTap: onTap)
+                InputButton(type: .zero, onTap: onTap)
             }
             
             VStack(spacing: 0) {
-                InputButton(type: .two)
-                InputButton(type: .five)
-                InputButton(type: .eight)
-                InputButton(type: .point)
+                InputButton(type: .two, onTap: onTap)
+                InputButton(type: .five, onTap: onTap)
+                InputButton(type: .eight, onTap: onTap)
+                InputButton(type: .point, onTap: onTap)
             }
             VStack(spacing: 0) {
-                InputButton(type: .three)
-                InputButton(type: .six)
-                InputButton(type: .nine)
-                InputButton(type: .plus)
+                InputButton(type: .three, onTap: onTap)
+                InputButton(type: .six, onTap: onTap)
+                InputButton(type: .nine, onTap: onTap)
+                InputButton(type: .plus, onTap: onTap)
             }
             VStack(spacing: 0) {
-                    InputButton(type: .delete)
+                    InputButton(type: .delete, onTap: onTap)
                         .relativeProposed(height: 0.5)
-                    InputButton(type: .equal)
+                    InputButton(type: .equal, onTap: onTap)
                 }
         }
         .frame(height: 300)
@@ -86,9 +88,11 @@ public struct AccountsInputKeyboard: View {
     
     struct InputButton: View {
         var type: Input
-        
+        var onTap: (Input) -> ()
         var body: some View {
-            Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
+            Button(action: {
+                onTap(type)
+            }, label: {
                 Text(type.text)
                     .font(.largeTitle)
                     .fontWeight(.bold)
@@ -109,7 +113,9 @@ public struct AccountsInputKeyboard: View {
 }
 
 #Preview {
-    AccountsInputKeyboard()
+    AccountsInputKeyboard { _ in
+        
+    }
 }
 
 
@@ -122,28 +128,7 @@ extension Color {
         )
     }
 }
-import UIKit
 
-public struct TextFieldView: UIViewRepresentable {
-
-    public init(text: Binding<String?>, placeHolder: String? = nil) {
-        _text = text
-        self.placeHolder = placeHolder
-    }
-
-    @Binding var text: String?
-    var placeHolder: String?
-    
-    public func makeUIView(context: Context) -> UITextField {
-        let textFiled = UITextField()
-        return textFiled
-    }
-
-    public func updateUIView(_ uiView: UITextField, context: Context) {
-        uiView.text = text
-        uiView.placeholder = placeHolder
-    }
-}
 
 extension View {
     /// Proposes a percentage of its received proposed size to `self`.

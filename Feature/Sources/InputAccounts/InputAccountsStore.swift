@@ -8,20 +8,22 @@
 import ComposableArchitecture
 import Core
 import Foundation
+import UIComponents
 
 public struct InputAccountsStore: Reducer {
     public struct State: Equatable {
         // payment or income or others in the futrue.
         var title: String = "Payment"
-        @BindingState var inputValue: String?
+        var inputValue: String = "0"
         public init() {}
     }
 
-    public enum Action: Equatable, BindableAction {
+    public enum Action: Equatable {
         case onAppear
         case tapClose
         case setInputValue(String)
-        case binding(BindingAction<State>)
+        case input(AccountsInputKeyboard.Input)
+//        case binding(BindingAction<State>)
     }
 
     @Dependency(\.dismiss) var dismiss
@@ -29,8 +31,8 @@ public struct InputAccountsStore: Reducer {
     public init() {}
 
     public var body: some Reducer<State, Action> {
-        BindingReducer()
-        Reduce { _, action in
+//        BindingReducer()
+        Reduce { state, action in
             switch action {
             case .onAppear:
                 return .none
@@ -38,6 +40,10 @@ public struct InputAccountsStore: Reducer {
                 return .run { _ in
                     await self.dismiss()
                 }
+            case .input(let value):
+                // TODO: complete here
+                state.inputValue.append(value.text)
+                return .none
             default:
                 return .none
             }
