@@ -7,88 +7,49 @@
 
 import Foundation
 import SwiftUI
+import Domain
 
 public struct AccountsInputKeyboard: View {
-    public enum Input: Equatable {
-        case one, two, three, four, five, six, seven, eight, nine, zero
-        case plus
-        case point
-        case delete
-        case equal
-        
-        public var text: String {
-            switch self {
-            case .one:
-                return "1"
-            case .two:
-                return "2"
-            case .three:
-                return "3"
-            case .four:
-                return "4"
-            case .five:
-                return "5"
-            case .six:
-                return "6"
-            case .seven:
-                return "7"
-            case .eight:
-                return "8"
-            case .nine:
-                return "9"
-            case .zero:
-                return "0"
-            case .plus:
-                return "+"
-            case .delete:
-                return "〈"
-            case .equal:
-                return "="
-            case .point:
-                return "⚫︎"
-            }
-        }
-    }
 
-    var onTap: (Input) -> Void
+    var onTap: (AccountInput) -> Void
     
-    public init(onTap: @escaping (Input) -> ()) {
+    public init(onTap: @escaping (AccountInput) -> ()) {
         self.onTap = onTap
     }
     
     public var body: some View {
-        HStack(spacing: 0) {
-            VStack(spacing: 0) {
+        HStack(spacing: 5) {
+            VStack(spacing: 5) {
                 InputButton(type: .one, onTap: onTap)
                 InputButton(type: .four, onTap: onTap)
                 InputButton(type: .seven, onTap: onTap)
                 InputButton(type: .zero, onTap: onTap)
             }
             
-            VStack(spacing: 0) {
+            VStack(spacing: 5) {
                 InputButton(type: .two, onTap: onTap)
                 InputButton(type: .five, onTap: onTap)
                 InputButton(type: .eight, onTap: onTap)
                 InputButton(type: .point, onTap: onTap)
             }
-            VStack(spacing: 0) {
+            VStack(spacing: 5) {
                 InputButton(type: .three, onTap: onTap)
                 InputButton(type: .six, onTap: onTap)
                 InputButton(type: .nine, onTap: onTap)
                 InputButton(type: .plus, onTap: onTap)
             }
-            VStack(spacing: 0) {
+            VStack(spacing: 5) {
                     InputButton(type: .delete, onTap: onTap)
                         .relativeProposed(height: 0.5)
                     InputButton(type: .equal, onTap: onTap)
-                }
+            }
         }
         .frame(height: 300)
     }
     
     struct InputButton: View {
-        var type: Input
-        var onTap: (Input) -> ()
+        var type: AccountInput
+        var onTap: (AccountInput) -> ()
         var body: some View {
             Button(action: {
                 onTap(type)
@@ -113,9 +74,13 @@ public struct AccountsInputKeyboard: View {
 }
 
 #Preview {
-    AccountsInputKeyboard { _ in
-        
+    VStack {
+        Spacer()
+        AccountsInputKeyboard { _ in
+            
+        }
     }
+    .padding()
 }
 
 
