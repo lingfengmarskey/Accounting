@@ -22,7 +22,7 @@ public struct InputAccountsView: View {
             NavigationStack {
                 VStack(spacing: 0) {
                     // display
-                    Spacer(minLength: 20)
+//                    Spacer(minLength: 20)
                     Group {
                         HStack {
                             Button(action: {}, label: {
@@ -43,12 +43,12 @@ public struct InputAccountsView: View {
                                 .clipShape(RoundedRectangle(cornerRadius: 15))
                         }
                     }
-                    .padding()
+                    .padding(.bottom, 20)
+
                     // category
                     Group {
                         AccountCategoriesView()
                     }
-                    .padding()
                     // asist buttons
                     Spacer()
                     Group {
@@ -62,9 +62,9 @@ public struct InputAccountsView: View {
                             AsistButton(title: "Note") {
                                 
                             }
-                        }.padding(EdgeInsets(top: 0, leading: 10, bottom: 5, trailing: 10))
+                        }
                     }
-                    
+                    .padding(.bottom, 3)
                     // input numbers
                     Group {
                         AccountsInputKeyboard { value in
@@ -72,6 +72,7 @@ public struct InputAccountsView: View {
                         }
                     }
                 }
+                .padding()
                 .navigationTitle(viewStore.title)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar(content: {
