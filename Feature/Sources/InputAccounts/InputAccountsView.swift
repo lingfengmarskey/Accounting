@@ -22,29 +22,28 @@ public struct InputAccountsView: View {
             NavigationStack {
                 VStack(spacing: 0) {
                     // display
-//                    Spacer(minLength: 20)
+                    Group {
+                        HStack {
+                            Text(viewStore.inputValue)
+                                .font(.system(size: 48, weight: .bold))
+                            Spacer()
+                        }
+                    }
+                    // currency
                     Group {
                         HStack {
                             Button(action: {}, label: {
-                                Text("USD")
-                                    .padding()
-                                    .background(Color.green)
-                                    .font(.largeTitle)
-                                    .fontWeight(.heavy)
+                                HStack {
+                                    Text("USD")
+                                        .font(.system(size: 20, weight: .bold))
+                                    Image(systemName: "chevron.down")
+                                }
+                                .foregroundStyle(Color.black)
                             })
-                            .clipShape(RoundedRectangle(cornerRadius: 15))
-                            Text(viewStore.inputValue)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .frame(height: 40)
-                                .padding()
-                                .font(.largeTitle)
-                                .fontWeight(.heavy)
-                                .background(Color.red)
-                                .clipShape(RoundedRectangle(cornerRadius: 15))
+                            Spacer()
                         }
                     }
-                    .padding(.bottom, 20)
-
+                    .padding(.bottom, 13)
                     // category
                     Group {
                         AccountCategoriesView()
@@ -66,13 +65,14 @@ public struct InputAccountsView: View {
                     }
                     .padding(.bottom, 3)
                     // input numbers
-                    Group {
-                        AccountsInputKeyboard { value in
-                            viewStore.send(.input(value))
-                        }
-                    }
+//                    Group {
+//                        AccountsInputKeyboard { value in
+//                            viewStore.send(.input(value))
+//                        }
+//                    }
                 }
-                .padding()
+                .padding(.leading, 25)
+                .padding(.trailing, 25)
                 .navigationTitle(viewStore.title)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar(content: {

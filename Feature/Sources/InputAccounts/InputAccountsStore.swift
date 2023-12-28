@@ -14,11 +14,18 @@ import Domain
 public struct InputAccountsStore: Reducer {
     public struct State: Equatable {
         // payment or income or others in the futrue.
-        var title: String = "Payment"
-        var inputValue: String = ""
+        var title: String
+        var inputValue: String
         var lastInput: AccountInput?
-        var tapPlus: Bool = false
-        public init() {}
+        var tapPlus: Bool
+        public init(title: String = "Payment", inputValue: String = "0.00", lastInput: AccountInput? = nil, tapPlus: Bool = false) {
+            self.title = title
+            self.inputValue = inputValue
+            self.lastInput = lastInput
+            self.tapPlus = tapPlus
+        }
+//        public init(
+//        ) {}
     }
 
     public enum Action: Equatable {
