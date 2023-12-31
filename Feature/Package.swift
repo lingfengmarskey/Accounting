@@ -21,6 +21,7 @@ let package = Package(
         .library(name: "AccountBookConfig",targets: ["AccountBookConfig"]),
         .library(name: "ParticipatorDetail", targets: ["ParticipatorDetail"]),
         .library(name: "InputAccounts", targets: ["InputAccounts"]),
+        .library(name: "Categories", targets: ["Categories"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -68,6 +69,10 @@ let package = Package(
                dependencies:coreDependencies
                ),
         .target(name: "InputAccounts",
+               dependencies:coreDependencies + [
+                "Categories"
+               ]),
+        .target(name: "Categories",
                dependencies:coreDependencies
                ),
     ]

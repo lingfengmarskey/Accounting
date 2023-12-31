@@ -9,6 +9,7 @@ import ComposableArchitecture
 import Foundation
 import SwiftUI
 import UIComponents
+import Categories
 
 public struct InputAccountsView: View {
     let store: StoreOf<InputAccountsStore>
@@ -45,7 +46,6 @@ public struct InputAccountsView: View {
                                 Spacer()
                             }
                         }
-//                        .padding(.bottom, 13)
                         // type
                         ScrollView(
                             .horizontal,
@@ -71,13 +71,13 @@ public struct InputAccountsView: View {
                                 }
                             }
                             .frame(height: 50)
-                        //                    .padding(.bottom, 15)
                         
-                        //                    // big category
+                        // big category
                         Group {
                             HStack {
                                 Button {
-                                    
+                                    // TODO: add real params.
+                                    viewStore.send(.tapBigCategory(nil))
                                 } label: {
                                     HStack {
                                         VStack {
@@ -98,8 +98,6 @@ public struct InputAccountsView: View {
                                 .clipShape(RoundedRectangle(cornerRadius: 8))
                                 Spacer()
                             }
-                            
-                            //                        AccountCategoriesView()
                         }
                         // sub category
                         Group {
@@ -140,7 +138,7 @@ public struct InputAccountsView: View {
                                     }
                                     .padding(.leading, 15)
                                 }
-                                .frame(width: .infinity, height: 50)
+                                .frame(height: 50)
                                 .background(Color.lightGray)
                                 .foregroundStyle(Color.black)
                                 .clipShape(RoundedRectangle(cornerRadius: 8))
@@ -163,14 +161,14 @@ public struct InputAccountsView: View {
                                     .padding(.leading, 15)
                                     .padding(.top, 15)
                                 }
-                                .frame(width: .infinity, height: 150)
+                                .frame(height: 150)
                                 .background(Color.lightGray)
                                 .foregroundStyle(Color.black)
                                 .clipShape(RoundedRectangle(cornerRadius: 8))
                             }
                         }
                         
-                        // asist buttons
+                        // submit buttons
                         Spacer()
                         Group {
                             Button {
@@ -183,36 +181,13 @@ public struct InputAccountsView: View {
                                     Spacer()
                                 }
                             }
-                            .frame(width: .infinity, height: 68)
+                            .frame(height: 68)
                             .background(Color.black)
                             .foregroundStyle(Color.white)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
                                                         
                         }
-
-                        
-
                     }
-//                    Group {
-//                        HStack {
-//                            AsistButton(title: "Date") {
-//                                
-//                            }
-//                            AsistButton(title: "Type") {
-//                                
-//                            }
-//                            AsistButton(title: "Note") {
-//                                
-//                            }
-//                        }
-//                    }
-//                    .padding(.bottom, 3)
-                    // input numbers
-//                    Group {
-//                        AccountsInputKeyboard { value in
-//                            viewStore.send(.input(value))
-//                        }
-//                    }
                 }
                 .padding(.leading, 25)
                 .padding(.trailing, 25)
@@ -227,6 +202,14 @@ public struct InputAccountsView: View {
                         })
                     }
                 })
+                .navigationDestination(
+                    store: self.store.scope(state: \.$destination, action: { .destination($0) }),
+                    state: /InputAccountsStore.Destination.State.selectCategory,
+                    action: InputAccountsStore.Destination.Action.selectCategory
+                ) { store in
+                    //                BillDetailView(store)
+                    CategoriesView(store)
+                }
             }
 
             .onAppear(perform: {
