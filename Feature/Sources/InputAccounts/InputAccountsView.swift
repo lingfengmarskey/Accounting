@@ -50,22 +50,22 @@ public struct InputAccountsView: View {
                         ScrollView(
                             .horizontal,
                             showsIndicators: false) {
-                                LazyHStack {
-                                    ForEach(1...10, id: \.self) { value in
+                                LazyHStack(spacing: 20) {
+                                    ForEach(viewStore.billsType, id: \.self) { value in
+                                        
                                         Button {
-                                            
+                                            viewStore.send(.billsType(value))
                                         } label: {
                                             HStack {
-                                                // TODO: add real image
-                                                Image(systemName: "pencil.circle")
-                                                // TODO: add real type
-                                                Text("Row \(value)")
+                                                value.icon
+                                                    .renderingMode(.template)
+                                                Text(value.title)
                                                     .font(.system(size: 20, weight: .bold))
                                             }
                                             .padding()
                                         }
-                                        .foregroundStyle(Color.black)
-                                        .background(Color.lightGray)
+                                        .foregroundStyle(viewStore.selectedBillType == value ? Color.white : Color.black)
+                                        .background(viewStore.selectedBillType == value ? Color.flatGreen : Color.lightGray)
                                         .clipShape(RoundedRectangle(cornerRadius: 12))
                                     }
                                 }

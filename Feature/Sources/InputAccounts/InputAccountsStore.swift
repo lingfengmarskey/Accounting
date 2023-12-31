@@ -10,6 +10,7 @@ import Core
 import Foundation
 import UIComponents
 import Domain
+import SwiftUI
 
 public struct InputAccountsStore: Reducer {
     public struct State: Equatable {
@@ -18,11 +19,16 @@ public struct InputAccountsStore: Reducer {
         var inputValue: String
         var lastInput: AccountInput?
         var tapPlus: Bool
-        public init(title: String = "Payment", inputValue: String = "0.00", lastInput: AccountInput? = nil, tapPlus: Bool = false) {
+        var billsType: [BillType]
+        var selectedBillType: BillType
+
+        public init(title: String = "Payment", inputValue: String = "0.00", lastInput: AccountInput? = nil, tapPlus: Bool = false, billsType: [BillType] = [.income, .payment], selectedBillType: BillType = .payment) {
             self.title = title
             self.inputValue = inputValue
             self.lastInput = lastInput
             self.tapPlus = tapPlus
+            self.billsType = billsType
+            self.selectedBillType = selectedBillType
         }
 //        public init(
 //        ) {}
@@ -31,6 +37,7 @@ public struct InputAccountsStore: Reducer {
     public enum Action: Equatable {
         case onAppear
         case tapClose
+        case billsType(BillType)
         case setInputValue(String)
         case input(AccountInput)
 //        case binding(BindingAction<State>)
@@ -50,6 +57,9 @@ public struct InputAccountsStore: Reducer {
                 return .run { _ in
                     await self.dismiss()
                 }
+            case .billsType(let value):
+                state.selectedBillType = value
+                return .none
             case .input(let value):
                 // has last input
                 if let lastInput = state.lastInput {
@@ -93,4 +103,15 @@ public struct InputAccountsStore: Reducer {
         state.lastInput = value
         return .none
       }
+}
+
+extension BillType {
+    var icon: Image {
+        switch self {
+        case .income:
+                .incomeTypeImage
+        case .payment:
+                .paymentTypeImage
+        }
+    }
 }

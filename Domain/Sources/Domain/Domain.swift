@@ -56,6 +56,17 @@ public enum BillType: Int {
     case income
 }
 
+public extension BillType {
+    var title: String {
+        switch self {
+        case .payment:
+            "支出"
+        case .income:
+            "収入"
+        }
+    }
+}
+
 //public protocol BillMainCategory {
 //    var id: String { get }
 //    var name: String { get }
