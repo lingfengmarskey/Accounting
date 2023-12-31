@@ -44,6 +44,30 @@ public struct InputAccountsView: View {
                         }
                     }
                     .padding(.bottom, 13)
+                    // type
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        LazyHStack {
+                            ForEach(1...100, id: \.self) { value in
+                                Button {
+                                    
+                                } label: {
+                                    HStack {
+                                        // TODO: add real image
+                                        Image(systemName: "pencil.circle")
+                                        // TODO: add real type
+                                        Text("Row \(value)")
+                                            .font(.system(size: 20, weight: .bold))
+                                    }
+                                    .padding()
+                                }
+                                .foregroundStyle(Color.black)
+                                .background(Color.lightGray)
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                            }
+                        }
+                    }
+                    .frame(height: 50)
+                    .padding(.bottom, 15)
                     // category
                     Group {
                         AccountCategoriesView()
