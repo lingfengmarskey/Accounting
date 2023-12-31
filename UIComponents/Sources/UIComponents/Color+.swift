@@ -13,4 +13,8 @@ public extension Color {
     static var lightGray: Color {
         return Color("lightGray", bundle: .module)
     }
+    
+    static var submitColor: Color {
+        return Color("submitButtonColor", bundle: .module)
+    }
 }

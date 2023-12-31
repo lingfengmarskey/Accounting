@@ -61,7 +61,7 @@ public struct AccountsInputKeyboard: View {
                     .frame(maxHeight: .infinity)
                     .foregroundStyle(Color.white)
                     .background {
-                        Color(.inputButttonBackground)
+                        Color.submitColor
                     }
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                     .overlay {

@@ -20,74 +20,193 @@ public struct InputAccountsView: View {
     public var body: some View {
         WithViewStore(store, observe: { $0 }) { viewStore in
             NavigationStack {
-                VStack(spacing: 0) {
-                    // display
-                    Group {
-                        HStack {
-                            Text(viewStore.inputValue)
-                                .font(.system(size: 48, weight: .bold))
-                            Spacer()
+                ScrollView {
+                    VStack(spacing: 15) {
+                        
+                        // display
+                        Group {
+                            HStack {
+                                Text(viewStore.inputValue)
+                                    .font(.system(size: 48, weight: .bold))
+                                Spacer()
+                            }
                         }
-                    }
-                    // currency
-                    Group {
-                        HStack {
-                            Button(action: {}, label: {
-                                HStack {
-                                    Text("USD")
-                                        .font(.system(size: 20, weight: .bold))
-                                    Image(systemName: "chevron.down")
+                        // currency
+                        Group {
+                            HStack {
+                                Button(action: {}, label: {
+                                    HStack {
+                                        Text("USD")
+                                            .font(.system(size: 20, weight: .bold))
+                                        Image(systemName: "chevron.down")
+                                    }
+                                    .foregroundStyle(Color.black)
+                                })
+                                Spacer()
+                            }
+                        }
+//                        .padding(.bottom, 13)
+                        // type
+                        ScrollView(
+                            .horizontal,
+                            showsIndicators: false) {
+                                LazyHStack {
+                                    ForEach(1...10, id: \.self) { value in
+                                        Button {
+                                            
+                                        } label: {
+                                            HStack {
+                                                // TODO: add real image
+                                                Image(systemName: "pencil.circle")
+                                                // TODO: add real type
+                                                Text("Row \(value)")
+                                                    .font(.system(size: 20, weight: .bold))
+                                            }
+                                            .padding()
+                                        }
+                                        .foregroundStyle(Color.black)
+                                        .background(Color.lightGray)
+                                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                                    }
                                 }
-                                .foregroundStyle(Color.black)
-                            })
-                            Spacer()
-                        }
-                    }
-                    .padding(.bottom, 13)
-                    // type
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        LazyHStack {
-                            ForEach(1...100, id: \.self) { value in
+                            }
+                            .frame(height: 50)
+                        //                    .padding(.bottom, 15)
+                        
+                        //                    // big category
+                        Group {
+                            HStack {
                                 Button {
                                     
                                 } label: {
                                     HStack {
-                                        // TODO: add real image
-                                        Image(systemName: "pencil.circle")
-                                        // TODO: add real type
-                                        Text("Row \(value)")
-                                            .font(.system(size: 20, weight: .bold))
+                                        VStack {
+                                            Text("大分類")
+                                                .font(.system(size: 20))
+                                            Spacer()
+                                        }
+                                        .padding(.top, 15)
+                                        .padding(.leading, 15)
+                                        Spacer()
+                                        Image(systemName: "chevron.forward")
+                                            .frame(width: 28)
                                     }
-                                    .padding()
                                 }
-                                .foregroundStyle(Color.black)
+                                .frame(width: 150, height: 90)
                                 .background(Color.lightGray)
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                                .foregroundStyle(Color.black)
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                                Spacer()
+                            }
+                            
+                            //                        AccountCategoriesView()
+                        }
+                        // sub category
+                        Group {
+                            HStack {
+                                Button {
+                                    
+                                } label: {
+                                    HStack {
+                                        VStack {
+                                            Text("小分類")
+                                                .font(.system(size: 20))
+                                            Spacer()
+                                        }
+                                        .padding(.top, 15)
+                                        .padding(.leading, 15)
+                                        Spacer()
+                                        Image(systemName: "chevron.forward")
+                                            .frame(width: 28)
+                                    }
+                                }
+                                .frame(width: 200, height: 65)
+                                .background(Color.lightGray)
+                                .foregroundStyle(Color.black)
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                                Spacer()
                             }
                         }
-                    }
-                    .frame(height: 50)
-                    .padding(.bottom, 15)
-                    // category
-                    Group {
-                        AccountCategoriesView()
-                    }
-                    // asist buttons
-                    Spacer()
-                    Group {
-                        HStack {
-                            AsistButton(title: "Date") {
-                                
-                            }
-                            AsistButton(title: "Type") {
-                                
-                            }
-                            AsistButton(title: "Note") {
-                                
+                        // Date
+                        Group {
+                            HStack {
+                                Button {
+                                    
+                                } label: {
+                                    HStack(alignment: .center) {
+                                        Text("時間")
+                                            .font(.system(size: 20))
+                                        Spacer()
+                                    }
+                                    .padding(.leading, 15)
+                                }
+                                .frame(width: .infinity, height: 50)
+                                .background(Color.lightGray)
+                                .foregroundStyle(Color.black)
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
                             }
                         }
+                        // photoes
+                        Group {
+                            HStack {
+                                Button {
+                                    
+                                } label: {
+                                    VStack {
+                                        HStack(alignment: .center) {
+                                            Text("写真")
+                                                .font(.system(size: 20))
+                                            Spacer()
+                                        }
+                                        Spacer()
+                                    }
+                                    .padding(.leading, 15)
+                                    .padding(.top, 15)
+                                }
+                                .frame(width: .infinity, height: 150)
+                                .background(Color.lightGray)
+                                .foregroundStyle(Color.black)
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                            }
+                        }
+                        
+                        // asist buttons
+                        Spacer()
+                        Group {
+                            Button {
+                                
+                            } label: {
+                                HStack {
+                                    Spacer()
+                                    Text("Record")
+                                        .font(.system(size: 24, weight: .bold))
+                                    Spacer()
+                                }
+                            }
+                            .frame(width: .infinity, height: 68)
+                            .background(Color.black)
+                            .foregroundStyle(Color.white)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                                                        
+                        }
+
+                        
+
                     }
-                    .padding(.bottom, 3)
+//                    Group {
+//                        HStack {
+//                            AsistButton(title: "Date") {
+//                                
+//                            }
+//                            AsistButton(title: "Type") {
+//                                
+//                            }
+//                            AsistButton(title: "Note") {
+//                                
+//                            }
+//                        }
+//                    }
+//                    .padding(.bottom, 3)
                     // input numbers
 //                    Group {
 //                        AccountsInputKeyboard { value in
