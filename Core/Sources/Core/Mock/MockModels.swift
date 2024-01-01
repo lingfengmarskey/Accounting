@@ -102,6 +102,17 @@ extension BillMainCategoryModel {
     }
 }
 
+public extension [BillMainCategoryModel] {
+    static func stub() -> [BillMainCategoryModel] {
+        let number = modelFaker.number.randomInt(min: 10, max: 15)
+        var result: [BillMainCategoryModel] = []
+        for _ in 0...number {
+            result.append(.stub())
+        }
+        return result
+    }
+}
+
 extension BillSubCategoryModel {
     static func stub() -> BillSubCategoryModel {
         .init(id: modelFaker.number.increasingUniqueId().stringValue,

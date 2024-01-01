@@ -17,4 +17,8 @@ public extension Image {
         Image("income", bundle: .module)
     }
     
+    static var foodIcon: Image {
+        Image("food", bundle: .module)
+    }
+    
 }

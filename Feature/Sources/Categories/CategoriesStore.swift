@@ -15,7 +15,9 @@ public struct CategoriesStore: Reducer {
         var categories: [BillMainCategoryModel]
         var selectedCategory: BillMainCategoryModel?
 
-        public init(categories: [BillMainCategoryModel] = [], selectedCategory: BillMainCategoryModel? = nil) {
+        public init(categories: [BillMainCategoryModel] = .stub(), 
+                    selectedCategory: BillMainCategoryModel? = nil
+        ) {
             self.categories = categories
             self.selectedCategory = selectedCategory
         }
@@ -23,7 +25,7 @@ public struct CategoriesStore: Reducer {
 
     public enum Action: Equatable {
         case onAppear
-        case onTap(BillModel)
+        case onTap(BillMainCategoryModel)
     }
 
     public init() {}
@@ -33,10 +35,8 @@ public struct CategoriesStore: Reducer {
             switch action {
             case .onAppear:
                 return .none
-            case let .onTap(bill):
-                
-                return .none
-            default:
+            case let .onTap(category):
+                state.selectedCategory = category
                 return .none
             }
         }

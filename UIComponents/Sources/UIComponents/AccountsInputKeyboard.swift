@@ -83,18 +83,6 @@ public struct AccountsInputKeyboard: View {
     .padding()
 }
 
-
-extension Color {
-    static var random: Color {
-        return Color(
-            red: .random(in: 0...1),
-            green: .random(in: 0...1),
-            blue: .random(in: 0...1)
-        )
-    }
-}
-
-
 extension View {
     /// Proposes a percentage of its received proposed size to `self`.
     ///
