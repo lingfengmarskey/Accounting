@@ -12,6 +12,7 @@ import UIComponents
 import Domain
 import SwiftUI
 import Categories
+import SubCategories
 
 public struct InputAccountsStore: Reducer {
     public struct State: Equatable {
@@ -43,6 +44,7 @@ public struct InputAccountsStore: Reducer {
         case billsType(BillType)
         case setInputValue(String)
         case tapBigCategory(BillMainCategoryModel?)
+        case tapSubCategory(BillSubCategoryModel?)
         case input(AccountInput)
 //        case binding(BindingAction<State>)
         case destination(PresentationAction<Destination.Action>)
@@ -67,6 +69,9 @@ public struct InputAccountsStore: Reducer {
                 return .none
             case .tapBigCategory(let category):
                 state.destination = .selectCategory(.init(selectedCategory: category))
+                return .none
+            case .tapSubCategory(let category):
+                state.destination = .selectSubCategory(.init(selectedSubCategory: category))
                 return .none
             case .input(let value):
                 // has last input
@@ -118,15 +123,20 @@ public struct InputAccountsStore: Reducer {
     public struct Destination: Reducer {
         public enum State: Equatable {
             case selectCategory(CategoriesStore.State)
+            case selectSubCategory(SubCategoriesStore.State)
         }
 
         public enum Action: Equatable {
             case selectCategory(CategoriesStore.Action)
+            case selectSubCategory(SubCategoriesStore.Action)
         }
 
         public var body: some Reducer<State, Action> {
             Scope(state: /State.selectCategory, action: /Action.selectCategory) {
                 CategoriesStore()
+            }
+            Scope(state: /State.selectSubCategory, action: /Action.selectSubCategory) {
+                SubCategoriesStore()
             }
         }
     }

@@ -10,6 +10,7 @@ import Foundation
 import SwiftUI
 import UIComponents
 import Categories
+import SubCategories
 
 public struct InputAccountsView: View {
     let store: StoreOf<InputAccountsStore>
@@ -103,7 +104,8 @@ public struct InputAccountsView: View {
                         Group {
                             HStack {
                                 Button {
-                                    
+                                    // TODO: add real params.
+                                    viewStore.send(.tapSubCategory(nil))
                                 } label: {
                                     HStack {
                                         VStack {
@@ -207,8 +209,14 @@ public struct InputAccountsView: View {
                     state: /InputAccountsStore.Destination.State.selectCategory,
                     action: InputAccountsStore.Destination.Action.selectCategory
                 ) { store in
-                    //                BillDetailView(store)
                     CategoriesView(store)
+                }
+                .navigationDestination(
+                    store: self.store.scope(state: \.$destination, action: { .destination($0) }),
+                    state: /InputAccountsStore.Destination.State.selectSubCategory,
+                    action: InputAccountsStore.Destination.Action.selectSubCategory
+                ) { store in
+                    SubCategoriesView(store)
                 }
             }
 
