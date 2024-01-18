@@ -182,7 +182,14 @@ class CustomTextField: UITextField {
         let height = itemLength * 4 + 50
         customInputView = CalculatorKeyboardView.init(frame: .init(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: height))
         inputView = customInputView
-        inputAccessoryView = UIButton.systemButton(with: .add, target: self, action: #selector(doneAction))
+        let toolbar = UIToolbar(frame: .init(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 40))
+        let doneBarButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneAction))
+        let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        toolbar.setItems([
+            spacer,
+            doneBarButton,
+        ], animated: true)
+        inputAccessoryView = toolbar
     }
     
     @objc func doneAction() {
