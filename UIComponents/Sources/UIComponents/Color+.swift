@@ -21,6 +21,19 @@ public extension Color {
     static var flatGreen: Color {
         return Color("flatGreen", bundle: .module)
     }
+    
+    static var keyboardInput: Color {
+        return Color("KeyboardInputButtonColor", bundle: .module)
+    }
+}
+
+public extension UIColor {
+    static var keyboardInputColor: UIColor {
+        return UIColor(named: "KeyboardInputButtonColor", in: .module, compatibleWith: nil)!
+    }
+    static var flatGreenColor: UIColor {
+        return UIColor(named: "flatGreen", in: .module, compatibleWith: nil)!
+    }
 }
 
 public extension Color {

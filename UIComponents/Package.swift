@@ -14,6 +14,7 @@ let package = Package(
     ],
     dependencies: [
         .package(name: "Domain", path: "../Domain"),
+        .package(url: "https://github.com/SnapKit/SnapKit.git", .upToNextMajor(from: "5.0.1")),
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
     ],
@@ -24,6 +25,7 @@ let package = Package(
             name: "UIComponents",
             dependencies: [
                 .product(name: "Domain", package: "Domain"),
+                .product(name: "SnapKit", package: "SnapKit"),
             ],
             resources: [
                 .process("Assets")
