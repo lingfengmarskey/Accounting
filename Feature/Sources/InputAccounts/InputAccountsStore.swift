@@ -19,6 +19,7 @@ public struct InputAccountsStore: Reducer {
         // payment or income or others in the futrue.
         var title: String
         var inputValue: String
+        var inputPlaceholder: String
         var lastInput: AccountInput?
         var tapPlus: Bool
         var billsType: [BillType]
@@ -26,21 +27,21 @@ public struct InputAccountsStore: Reducer {
         
         @PresentationState var destination: Destination.State?
 
-        public init(title: String = "Payment", inputValue: String = "0.00", lastInput: AccountInput? = nil, tapPlus: Bool = false, billsType: [BillType] = [.income, .payment], selectedBillType: BillType = .payment) {
+        public init(title: String = "Payment", inputValue: String = "", inputPlaceholder: String = "0.00", lastInput: AccountInput? = nil, tapPlus: Bool = false, billsType: [BillType] = [.income, .payment], selectedBillType: BillType = .payment) {
             self.title = title
             self.inputValue = inputValue
             self.lastInput = lastInput
             self.tapPlus = tapPlus
             self.billsType = billsType
+            self.inputPlaceholder = inputPlaceholder
             self.selectedBillType = selectedBillType
         }
-//        public init(
-//        ) {}
     }
 
     public enum Action: Equatable {
         case onAppear
         case tapClose
+        case textChanged(String)
         case billsType(BillType)
         case setInputValue(String)
         case tapBigCategory(BillMainCategoryModel?)

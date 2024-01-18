@@ -28,8 +28,12 @@ public struct InputAccountsView: View {
                         // display
                         Group {
                             HStack {
-                                Text(viewStore.inputValue)
-                                    .font(.system(size: 48, weight: .bold))
+                                BoldTextField(
+                                    textValue: viewStore.binding(get: \.inputValue, send: InputAccountsStore.Action.textChanged),
+                                    placeholderText: viewStore.state.inputPlaceholder,
+                                    fontSize: 48
+                                )
+                                .font(.system(size: 48, weight: .bold))
                                 Spacer()
                             }
                         }
