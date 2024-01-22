@@ -24,6 +24,8 @@ class CalculatorKeyboardView: UIView {
         [.delete, .equal],
     ]
 
+    var onTap: ((AccountInput) -> Void)?
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         configSubViews()
@@ -114,6 +116,9 @@ extension CalculatorKeyboardView: UICollectionViewDataSource, UICollectionViewDe
     func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
         if let cell = collectionView.cellForItem(at: indexPath) {
             cell.contentView.backgroundColor = UIColor.flatGreenColor
+            let items = inputItems[indexPath.section]
+            let item = items[indexPath.row]
+            onTap?(item)
         }
     }
 
@@ -164,6 +169,8 @@ class CalculatorInputView: UICollectionViewCell {
 
 class CustomTextField: UITextField {
 
+    var onTap: ((AccountInput) -> Void)?
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         configKeyboard()
@@ -174,13 +181,14 @@ class CustomTextField: UITextField {
         configKeyboard()
     }
 
-    var customInputView: UIView?
-    
     private func configKeyboard() {
         
         let itemLength = (UIScreen.main.bounds.size.width - 80) / 4.0
         let height = itemLength * 4 + 50
-        customInputView = CalculatorKeyboardView.init(frame: .init(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: height))
+        let customInputView = CalculatorKeyboardView.init(frame: .init(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: height))
+        customInputView.onTap = {[weak self] item in
+            self?.onTap?(item)
+        }
         inputView = customInputView
         let toolbar = UIToolbar(frame: .init(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 40))
         let doneBarButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneAction))
@@ -204,11 +212,14 @@ public struct BoldTextField: UIViewRepresentable {
     var placeholderText: String?
 
     var fontSize: CGFloat
+    
+    var onTap: ((AccountInput) -> Void)?
 
-    public init(textValue: Binding<String>, placeholderText: String? = nil, fontSize: CGFloat = 17) {
+    public init(textValue: Binding<String>, placeholderText: String? = nil, fontSize: CGFloat = 17, onTap: ((AccountInput) -> Void)? = nil) {
         _textValue = textValue
         self.placeholderText = placeholderText
         self.fontSize = fontSize
+        self.onTap = onTap
     }
 
     public func updateUIView(_ uiView: UITextField, context: Context) {
@@ -219,6 +230,9 @@ public struct BoldTextField: UIViewRepresentable {
         let result = CustomTextField()
         result.placeholder = placeholderText
         result.font = UIFont.systemFont(ofSize: fontSize, weight: .bold)
+        result.onTap = { item in
+            onTap?(item)
+        }
         return result
     }
 }

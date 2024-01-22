@@ -32,7 +32,9 @@ public struct InputAccountsView: View {
                                     textValue: viewStore.binding(get: \.inputValue, send: InputAccountsStore.Action.textChanged),
                                     placeholderText: viewStore.state.inputPlaceholder,
                                     fontSize: 48
-                                )
+                                ) { item in
+                                    viewStore.send(.input(item))
+                                }
                                 .font(.system(size: 48, weight: .bold))
                                 Spacer()
                             }
