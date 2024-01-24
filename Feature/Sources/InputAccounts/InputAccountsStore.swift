@@ -28,10 +28,11 @@ public struct InputAccountsStore: Reducer {
         var selectedBillType: BillType
         
         @PresentationState var destination: Destination.State?
+        @PresentationState var choosePhotoDialog: ConfirmationDialogState<Action.ChoosePhotoDialog>?
 
         public init(title: String = "Payment", 
                     inputValue: String = "",
-                    inputDate: Date = .now,
+                    inputDate: Date = .now, // TODO: add date to env DI.
                     inputPlaceholder: String = "0.00",
                     lastInput: AccountInput? = nil,
                     tapPlus: Bool = false,
@@ -62,6 +63,12 @@ public struct InputAccountsStore: Reducer {
         case input(AccountInput)
 //        case binding(BindingAction<State>)
         case destination(PresentationAction<Destination.Action>)
+        case tapChoosePhoto
+        case choosePhotoDialog(PresentationAction<ChoosePhotoDialog>)
+        public enum ChoosePhotoDialog: Equatable {
+          case fromCamera
+          case fromLibrary
+        }
     }
 
     @Dependency(\.dismiss) var dismiss
@@ -89,6 +96,31 @@ public struct InputAccountsStore: Reducer {
                 return .none
             case .tapCurrency(let currency):
                 state.destination = .selectCurrency(.init(selectedCurrency: currency))
+                return .none
+            case .tapChoosePhoto:
+                state.choosePhotoDialog = .init(title: {
+                    TextState("写真の選択")
+                }, actions: {
+                    ButtonState(role: .cancel) {
+                      TextState("キャンセル")
+                    }
+                    ButtonState(action: .fromCamera) {
+                      TextState("カメラ")
+                    }
+                    ButtonState(action: .fromLibrary) {
+                      TextState("ライブラリー")
+                    }
+                }, message: {
+                    TextState("选择照片吧")
+                })
+                return .none
+            case .choosePhotoDialog(.presented(.fromCamera)):
+                // TODO:
+                // present imagepicker
+                return .none
+            case .choosePhotoDialog(.presented(.fromLibrary)):
+                // TODO:
+                // present photo picker
                 return .none
             case .input(let value):
                 // has last input
@@ -130,6 +162,7 @@ public struct InputAccountsStore: Reducer {
         .ifLet(\.$destination, action: /Action.destination) {
             Destination()
         }
+        .ifLet(\.$choosePhotoDialog, action: /Action.choosePhotoDialog)
     }
 
     func setLastInput(state: inout State, value: AccountInput?) -> Effect<Action> {

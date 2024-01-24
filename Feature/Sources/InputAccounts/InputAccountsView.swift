@@ -59,11 +59,13 @@ public struct InputAccountsView: View {
                     CurrencyView(store)
                 }
             }
-
             .onAppear(perform: {
                 viewStore.send(.onAppear)
             })
         }
+        .confirmationDialog(
+          store: self.store.scope(state: \.$choosePhotoDialog, action: { .choosePhotoDialog($0) })
+        )
     }
     
     func makeScrollView(_ viewStore: ViewStore<InputAccountsStore.State, InputAccountsStore.Action>) -> some View {
@@ -91,7 +93,7 @@ public struct InputAccountsView: View {
                             viewStore.send(.tapCurrency(nil))
                         }, label: {
                             HStack {
-                                Text("USD")
+                                Text("USD") // TODO: update here to real data.
                                     .font(.system(size: 20, weight: .bold))
                                 Image(systemName: "chevron.down")
                             }
@@ -192,7 +194,7 @@ public struct InputAccountsView: View {
                 Group {
                     HStack {
                         Button {
-                            
+                            viewStore.send(.tapChoosePhoto)
                         } label: {
                             VStack {
                                 HStack(alignment: .center) {
