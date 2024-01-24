@@ -183,20 +183,9 @@ public struct InputAccountsView: View {
                 // Date
                 Group {
                     HStack {
-                        Button {
-                            
-                        } label: {
-                            HStack(alignment: .center) {
-                                Text("時間")
-                                    .font(.system(size: 20))
-                                Spacer()
-                            }
-                            .padding(.leading, 15)
-                        }
-                        .frame(height: 50)
-                        .background(Color.lightGray)
-                        .foregroundStyle(Color.black)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        DatePicker("", selection: viewStore.binding(get: \.inputDate, send: InputAccountsStore.Action.dateChanged), displayedComponents: [.date, .hourAndMinute])
+                            .labelsHidden()
+                        Spacer()
                     }
                 }
                 // photoes

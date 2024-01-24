@@ -20,6 +20,7 @@ public struct InputAccountsStore: Reducer {
         // payment or income or others in the futrue.
         var title: String
         var inputValue: String
+        var inputDate: Date
         var inputPlaceholder: String
         var lastInput: AccountInput?
         var tapPlus: Bool
@@ -28,9 +29,18 @@ public struct InputAccountsStore: Reducer {
         
         @PresentationState var destination: Destination.State?
 
-        public init(title: String = "Payment", inputValue: String = "", inputPlaceholder: String = "0.00", lastInput: AccountInput? = nil, tapPlus: Bool = false, billsType: [BillType] = [.income, .payment], selectedBillType: BillType = .payment) {
+        public init(title: String = "Payment", 
+                    inputValue: String = "",
+                    inputDate: Date = .now,
+                    inputPlaceholder: String = "0.00",
+                    lastInput: AccountInput? = nil,
+                    tapPlus: Bool = false,
+                    billsType: [BillType] = [.income, .payment],
+                    selectedBillType: BillType = .payment
+        ) {
             self.title = title
             self.inputValue = inputValue
+            self.inputDate = inputDate
             self.lastInput = lastInput
             self.tapPlus = tapPlus
             self.billsType = billsType
@@ -43,6 +53,7 @@ public struct InputAccountsStore: Reducer {
         case onAppear
         case tapClose
         case textChanged(String)
+        case dateChanged(Date)
         case billsType(BillType)
         case setInputValue(String)
         case tapBigCategory(BillMainCategoryModel?)
