@@ -13,6 +13,7 @@ import Domain
 import SwiftUI
 import Categories
 import SubCategories
+import Currency
 
 public struct InputAccountsStore: Reducer {
     public struct State: Equatable {
@@ -46,6 +47,7 @@ public struct InputAccountsStore: Reducer {
         case setInputValue(String)
         case tapBigCategory(BillMainCategoryModel?)
         case tapSubCategory(BillSubCategoryModel?)
+        case tapCurrency(CurrencyModel?)
         case input(AccountInput)
 //        case binding(BindingAction<State>)
         case destination(PresentationAction<Destination.Action>)
@@ -73,6 +75,9 @@ public struct InputAccountsStore: Reducer {
                 return .none
             case .tapSubCategory(let category):
                 state.destination = .selectSubCategory(.init(selectedSubCategory: category))
+                return .none
+            case .tapCurrency(let currency):
+                state.destination = .selectCurrency(.init(selectedCurrency: currency))
                 return .none
             case .input(let value):
                 // has last input
@@ -125,11 +130,13 @@ public struct InputAccountsStore: Reducer {
         public enum State: Equatable {
             case selectCategory(CategoriesStore.State)
             case selectSubCategory(SubCategoriesStore.State)
+            case selectCurrency(CurrencyStore.State)
         }
 
         public enum Action: Equatable {
             case selectCategory(CategoriesStore.Action)
             case selectSubCategory(SubCategoriesStore.Action)
+            case selectCurrency(CurrencyStore.Action)
         }
 
         public var body: some Reducer<State, Action> {
@@ -138,6 +145,9 @@ public struct InputAccountsStore: Reducer {
             }
             Scope(state: /State.selectSubCategory, action: /Action.selectSubCategory) {
                 SubCategoriesStore()
+            }
+            Scope(state: /State.selectCurrency, action: /Action.selectCurrency) {
+                CurrencyStore()
             }
         }
     }

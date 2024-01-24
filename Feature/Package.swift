@@ -23,6 +23,7 @@ let package = Package(
         .library(name: "InputAccounts", targets: ["InputAccounts"]),
         .library(name: "Categories", targets: ["Categories"]),
         .library(name: "SubCategories", targets: ["SubCategories"]),
+        .library(name: "Currency", targets: ["Currency"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -73,11 +74,15 @@ let package = Package(
                dependencies:coreDependencies + [
                 "Categories",
                 "SubCategories",
+                "Currency",
                ]),
         .target(name: "Categories",
                dependencies:coreDependencies
                ),
         .target(name: "SubCategories",
+               dependencies:coreDependencies
+               ),
+        .target(name: "Currency",
                dependencies:coreDependencies
                ),
     ]

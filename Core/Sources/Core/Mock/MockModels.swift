@@ -121,6 +121,23 @@ extension BillSubCategoryModel {
     }
 }
 
+extension CurrencyModel {
+    static func stub() -> CurrencyModel {
+        .init(shortName: modelFaker.name.prefix(), fullName: modelFaker.name.firstName(), rate: modelFaker.number.randomCGFloat(min: 0, max: 2))
+    }
+}
+
+public extension [CurrencyModel] {
+    static func stub() -> [CurrencyModel] {
+        let number = modelFaker.number.randomInt(min: 10, max: 15)
+        var result: [CurrencyModel] = []
+        for _ in 0...number {
+            result.append(.stub())
+        }
+        return result
+    }
+}
+
 public extension [BillSubCategoryModel] {
     static func stub() -> [BillSubCategoryModel] {
         let number = modelFaker.number.randomInt(min: 10, max: 15)

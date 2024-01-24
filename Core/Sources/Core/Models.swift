@@ -144,6 +144,18 @@ public struct BillSubCategoryModel: BillSubCategory, Equatable {
     }
 }
 
+public struct CurrencyModel: Equatable {
+    public let shortName: String
+    public let fullName: String
+    public let rate: CGFloat
+    
+    public init(shortName: String, fullName: String, rate: CGFloat) {
+        self.shortName = shortName
+        self.fullName = fullName
+        self.rate = rate
+    }
+}
+
 
 public struct BillSectionData: SectionDataProtocol, Equatable, Identifiable {
     public typealias CellData = BillModel
