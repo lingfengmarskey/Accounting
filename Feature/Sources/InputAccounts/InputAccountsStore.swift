@@ -26,6 +26,7 @@ public struct InputAccountsStore: Reducer {
         var tapPlus: Bool
         var billsType: [BillType]
         var selectedBillType: BillType
+        var showPhotoLib = false
         
         @PresentationState var destination: Destination.State?
         @PresentationState var choosePhotoDialog: ConfirmationDialogState<Action.ChoosePhotoDialog>?
@@ -121,6 +122,7 @@ public struct InputAccountsStore: Reducer {
             case .choosePhotoDialog(.presented(.fromLibrary)):
                 // TODO:
                 // present photo picker
+                state.showPhotoLib = true
                 return .none
             case .input(let value):
                 // has last input

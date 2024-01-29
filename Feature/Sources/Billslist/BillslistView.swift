@@ -43,7 +43,7 @@ public struct BillslistView: View {
                 }
                 .navigationTitle("Bills")
                 .toolbar(content: {
-                    ToolbarItem(placement: .topBarLeading) {
+                    ToolbarItem(placement: .topBarTrailing) {
                         Button(action: {
                             viewStore.send(.tapSetting)
                         }, label: {

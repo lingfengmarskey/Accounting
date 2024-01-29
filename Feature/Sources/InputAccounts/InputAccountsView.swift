@@ -122,11 +122,11 @@ public struct InputAccountsView: View {
                                 }
                                 .foregroundStyle(viewStore.selectedBillType == value ? Color.white : Color.black)
                                 .background(viewStore.selectedBillType == value ? Color.flatGreen : Color.lightGray)
+                                .frame(height: 50)
                                 .clipShape(RoundedRectangle(cornerRadius: 12))
                             }
                         }
                     }
-                    .frame(height: 50)
                 
                 // big category
                 Group {
