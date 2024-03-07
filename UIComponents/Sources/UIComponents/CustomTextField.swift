@@ -181,15 +181,27 @@ class CustomTextField: UITextField {
         configKeyboard()
     }
 
+    func getSafeAreaBottomSize() -> CGFloat {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene else {
+            return 0
+        }
+        let window = windowScene.windows.first
+        return window?.safeAreaInsets.bottom ?? 0
+    }
+    
     private func configKeyboard() {
         
         let itemLength = (UIScreen.main.bounds.size.width - 80) / 4.0
         let height = itemLength * 4 + 50
+        let bottom = getSafeAreaBottomSize()
+        let backgroundView = UIView(frame:  .init(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: height + bottom))
+        backgroundView.backgroundColor = .white
         let customInputView = CalculatorKeyboardView.init(frame: .init(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: height))
         customInputView.onTap = {[weak self] item in
             self?.onTap?(item)
         }
-        inputView = customInputView
+        backgroundView.addSubview(customInputView)
+        inputView = backgroundView
         let toolbar = UIToolbar(frame: .init(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 40))
         let doneBarButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneAction))
         let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
