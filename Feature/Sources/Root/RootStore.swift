@@ -33,6 +33,9 @@ public struct RootStore: Reducer {
         Reduce { _, action in
             switch action {
             case .onAppear:
+                // check local wheather choosed a book
+                // if has to book list
+                // else to settingq
                 return .none
             default:
                 return .none

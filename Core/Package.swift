@@ -30,6 +30,13 @@ let package = Package(
                 .product(name: "Domain", package: "Domain"),
             ],
             resources: nil),
+        .target(
+            name: "DataManager",
+            dependencies: [
+                .product(name: "Fakery", package: "Fakery"),
+                .product(name: "Domain", package: "Domain"),
+            ],
+            resources: nil),
         .testTarget(
             name: "CoreTests",
             dependencies: ["Core"]),
