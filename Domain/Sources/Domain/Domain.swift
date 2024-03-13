@@ -96,6 +96,7 @@ public enum AccountInput: Equatable {
     case plus
     case point
     case delete
+    case allClear
     case equal
 
     public enum InputType: Equatable {
@@ -105,7 +106,7 @@ public enum AccountInput: Equatable {
 
     public var type: InputType {
         switch self {
-        case .plus, .delete, .equal, .point:
+        case .plus, .delete, .equal, .point, .allClear:
             return .symbols
         default:
             return .numbers
@@ -142,6 +143,8 @@ public enum AccountInput: Equatable {
             return "="
         case .point:
             return "⚫︎"
+        case .allClear:
+            return "AC"
         }
     }
 }

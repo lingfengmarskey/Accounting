@@ -22,11 +22,12 @@ public struct InputAccountsStore: Reducer {
         var inputValue: String
         var inputDate: Date
         var inputPlaceholder: String
-        var lastInput: AccountInput?
         var tapPlus: Bool
         var billsType: [BillType]
         var selectedBillType: BillType
         var showPhotoLib = false
+        var currentOperator: Operator?
+        var currentOperand: String?
         
         @PresentationState var destination: Destination.State?
         @PresentationState var choosePhotoDialog: ConfirmationDialogState<Action.ChoosePhotoDialog>?
@@ -35,7 +36,6 @@ public struct InputAccountsStore: Reducer {
                     inputValue: String = "",
                     inputDate: Date = .now, // TODO: add date to env DI.
                     inputPlaceholder: String = "0.00",
-                    lastInput: AccountInput? = nil,
                     tapPlus: Bool = false,
                     billsType: [BillType] = [.income, .payment],
                     selectedBillType: BillType = .payment
@@ -43,11 +43,19 @@ public struct InputAccountsStore: Reducer {
             self.title = title
             self.inputValue = inputValue
             self.inputDate = inputDate
-            self.lastInput = lastInput
             self.tapPlus = tapPlus
             self.billsType = billsType
             self.inputPlaceholder = inputPlaceholder
             self.selectedBillType = selectedBillType
+        }
+    }
+
+    public enum Operator: String, Equatable, CaseIterable {
+        case add = "+"
+        case subtract = "-"
+        
+        static var allCasesValue: Set<String> {
+            ["+", "-"]
         }
     }
 
@@ -71,7 +79,7 @@ public struct InputAccountsStore: Reducer {
           case fromLibrary
         }
     }
-
+    
     @Dependency(\.dismiss) var dismiss
 
     public init() {}
@@ -125,37 +133,32 @@ public struct InputAccountsStore: Reducer {
                 state.showPhotoLib = true
                 return .none
             case .input(let value):
-                // has last input
-                if let lastInput = state.lastInput {
-                    guard state.inputValue.count < 9 else {
-                        // abandon input value, disinputable
-                        return .none
+                switch value {
+                case .equal:
+                    return makeCalculate(state: &state, value: value)
+                case .delete:
+                    if value == .delete,
+                       !state.inputValue.isEmpty {
+                        state.inputValue.removeLast()
                     }
-                    
-                    switch lastInput.type {
-                    case .symbols:
-                        print("symbols")
-                        
-                        
-                        
-                    case .numbers:
-                        // if it's zero replace it
-                        if state.inputValue.hasPrefix("0") {
-                            state.inputValue = value.text
-                        } else {
-                            // append it
-                            state.inputValue += value.text
-                        }
-                        return setLastInput(state: &state, value: value)
-                    }
-                }
-                // has not last input
-                switch value.type {
-                case .symbols:
                     return .none
-                case .numbers:
-                    state.inputValue = value.text
-                    return setLastInput(state: &state, value: value)
+                case .point:
+                    if value == .point,
+                       state.inputValue.pointable {
+                        state.inputValue += "."
+                    }
+                    return .none
+                case .allClear:
+                    if value == .allClear {
+                        state.inputValue = ""
+                        state.currentOperator = nil
+                        state.currentOperand = nil
+                    }
+                    return .none
+                case .plus:
+                    return setOperator(state: &state, op: .add)
+                default:
+                    return setNumber(state: &state, value: value)
                 }
             default:
                 return .none
@@ -166,11 +169,39 @@ public struct InputAccountsStore: Reducer {
         }
         .ifLet(\.$choosePhotoDialog, action: /Action.choosePhotoDialog)
     }
-
-    func setLastInput(state: inout State, value: AccountInput?) -> Effect<Action> {
-        state.lastInput = value
+    
+    func setNumber(state: inout State, value: AccountInput) -> Effect<Action> {
+        if Operator.allCasesValue.contains(state.inputValue) {
+            state.inputValue = ""
+        }
+        if state.inputValue.count > 8 { return .none }
+        state.inputValue += value.text
         return .none
       }
+
+    func setOperator(state: inout State, op: Operator) -> Effect<Action> {
+        state.currentOperator = op
+        state.currentOperand = state.inputValue
+        state.inputValue = op.rawValue
+        return .none
+    }
+
+    func makeCalculate(state: inout State, value: AccountInput) -> Effect<Action> {
+        guard let op = state.currentOperator,
+              let operand = Double(state.currentOperand ?? ""),
+              let inputValue = Double(state.inputValue) else {
+            return .none
+        }
+        switch op {
+        case .add:
+            state.inputValue = String(operand + inputValue)
+        case .subtract:
+            state.inputValue = String(operand - inputValue)
+        }
+        state.currentOperand = nil
+        state.currentOperator = nil
+        return .none
+    }
 
     public struct Destination: Reducer {
         public enum State: Equatable {
@@ -207,5 +238,13 @@ extension BillType {
         case .payment:
                 .paymentTypeImage
         }
+    }
+}
+
+extension String {
+    var pointable: Bool {
+        if isEmpty { return false }
+        if contains(".") { return false }
+        return Double(self) != nil
     }
 }

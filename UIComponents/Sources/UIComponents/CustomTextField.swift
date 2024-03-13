@@ -21,7 +21,7 @@ class CalculatorKeyboardView: UIView {
         [.one, .four, .seven, .zero],
         [.two, .five, .eight, .point],
         [.three, .six, .nine, .plus],
-        [.delete, .equal],
+        [.delete, .allClear, .equal],
     ]
 
     var onTap: ((AccountInput) -> Void)?
@@ -104,9 +104,9 @@ extension CalculatorKeyboardView: UICollectionViewDataSource, UICollectionViewDe
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let itemLength = (collectionView.frame.size.width - 80) / 4.0
-        let bigItemLength = itemLength * 3 + 20
+        let bigItemLength = itemLength * 2 + 10
         switch indexPath {
-        case [3, 1]:
+        case [3, 2]:
             return CGSize(width:itemLength, height: bigItemLength)
         default:
             return CGSize(width: itemLength, height: itemLength)
