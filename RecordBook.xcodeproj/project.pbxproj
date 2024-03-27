@@ -35,6 +35,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8D0F74D82BB4425200D1EEE2 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		8D537DDB2AA06BCA00103745 /* Domain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Domain; sourceTree = "<group>"; };
 		8D537DDC2AA0A38E00103745 /* UIComponents */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = UIComponents; sourceTree = "<group>"; };
 		8D59E5FF288BDC69007C86A7 /* RecordBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecordBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -109,6 +110,7 @@
 			children = (
 				8D59E62C288BDCC9007C86A7 /* RecordBook.entitlements */,
 				8D59E602288BDC69007C86A7 /* RecordBookApp.swift */,
+				8D0F74D72BB4425200D1EEE2 /* Model.xcdatamodeld */,
 				8D59E606288BDC69007C86A7 /* Assets.xcassets */,
 				8D59E608288BDC69007C86A7 /* Preview Content */,
 			);
@@ -215,7 +217,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1340;
-				LastUpgradeCheck = 1340;
+				LastUpgradeCheck = 1530;
 				TargetAttributes = {
 					8D59E5FE288BDC69007C86A7 = {
 						CreatedOnToolsVersion = 13.4.1;
@@ -357,6 +359,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -417,6 +420,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -631,6 +635,20 @@
 			productName = Root;
 		};
 /* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		8D0F74D72BB4425200D1EEE2 /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				8D0F74D82BB4425200D1EEE2 /* Model.xcdatamodel */,
+			);
+			currentVersion = 8D0F74D82BB4425200D1EEE2 /* Model.xcdatamodel */;
+			name = Model.xcdatamodeld;
+			path = "/Users/marcos/Documents/Projects/Indie/not publish/RecordBook/RecordBook/Model.xcdatamodeld";
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 8D59E5F7288BDC69007C86A7 /* Project object */;
 }

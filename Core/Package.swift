@@ -29,7 +29,10 @@ let package = Package(
                 .product(name: "Fakery", package: "Fakery"),
                 .product(name: "Domain", package: "Domain"),
             ],
-            resources: nil),
+            resources: [
+                .process("Resources")
+            ]
+        ),
         .target(
             name: "DataManager",
             dependencies: [
