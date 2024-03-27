@@ -14,7 +14,12 @@ class PersistenceController {
     let container: NSPersistentCloudKitContainer
 
     init() {
-        container = NSPersistentCloudKitContainer(name: "RecordBookData")
+        guard let modelURL = Bundle.module.url(forResource: "RecordBookData", withExtension: "momd"),
+              let model = NSManagedObjectModel(contentsOf: modelURL) else {
+            fatalError("Failed to find data model")
+        }
+        
+        container = NSPersistentCloudKitContainer(name: "RecordBookData", managedObjectModel: model)
         
         container.loadPersistentStores { (storeDescription, error) in
             if let error = error {
@@ -31,7 +36,7 @@ class PersistenceController {
 public struct DataManager {
     public static let shared = DataManager()
     
-    func createAccountBook(name: String, completion: @escaping (Error?) -> Void) {
+    public func createAccountBook(name: String, completion: @escaping (Error?) -> Void) {
         let context = PersistenceController.shared.container.viewContext
         let accountBook = AccountBookModel(context: context)
         accountBook.name = name

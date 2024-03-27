@@ -10,6 +10,7 @@ import Core
 import Foundation
 import ParticipatorDetail
 import SwiftUI
+import CoreData
 
 public struct AccountBookConfigStore: Reducer {
     public struct State: Equatable {
@@ -19,7 +20,9 @@ public struct AccountBookConfigStore: Reducer {
 
         var paticipators: [Participacer] = .stub()
 
-        var saveDisable: Bool = true
+        var saveDisable: Bool {
+            name.isEmpty
+        }
 
         var sharedLink: String = ""
 
@@ -74,6 +77,12 @@ public struct AccountBookConfigStore: Reducer {
                 return .none
             case .destination(.presented(.participatorDetail(.tapBack))):
                 state.destination = nil
+                return .none
+            case .tapTopDone:
+                DataManager.shared.createAccountBook(name: state.name) { error in
+                    print("result is \(error)")
+                }
+                // TODO: safe logics
                 return .none
             default:
                 return .none
