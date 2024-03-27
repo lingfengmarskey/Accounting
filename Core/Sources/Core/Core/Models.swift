@@ -1,5 +1,5 @@
 //
-//  Models.swift
+//  s.swift
 //  
 //
 //  Created by Marcos Meng on 2022/08/04.
@@ -15,18 +15,18 @@ import Foundation
 ///
 /// Record:
 /// private
-public struct AccountBookModel: Equatable, Identifiable {
-    public var owner: UserModel
+public struct AccountBook: Equatable, Identifiable {
+    public var owner: User
     
-    public var participacer: [ParticipacerModel]
+    public var participacer: [Participacer]
     
-    public var bills: [BillModel]
+    public var bills: [Bill]
     
     public var id: String
     public var name: String
     public var createdAt: String
     
-    public init(owner: UserModel, participacer: [ParticipacerModel], bills: [BillModel], id: String, name: String, createdAt: String) {
+    public init(owner: User, participacer: [Participacer], bills: [Bill], id: String, name: String, createdAt: String) {
         self.owner = owner
         self.participacer = participacer
         self.bills = bills
@@ -37,7 +37,7 @@ public struct AccountBookModel: Equatable, Identifiable {
 }
 
 
-public struct UserModel: Equatable, Identifiable {
+public struct User: Equatable, Identifiable, UserProtocol {
     public var id: String
     
     public var name: String
@@ -48,7 +48,7 @@ public struct UserModel: Equatable, Identifiable {
     }
 }
 
-public struct ParticipacerModel: Equatable, Identifiable, User {
+public struct Participacer: Equatable, Identifiable, UserProtocol {
     public var permission: Permission
     
     public var id: String
@@ -71,28 +71,28 @@ public struct ParticipacerModel: Equatable, Identifiable, User {
 ///
 /// Record:
 /// private
-public struct BillModel: Equatable, Identifiable {
+public struct Bill: Equatable, Identifiable {
     public var id: String
     
     public var value: Double
     
     public var type: BillType
     
-    public var mainCategory: BillMainCategoryModel
+    public var mainCategory: BillMainCategory
     
-    public var subCategory: BillSubCategoryModel
+    public var subCategory: BillSubCategory
     
     public var createdAt: String
     
     public var updatedAt: String
     
-    public var createdByUser: UserModel
+    public var createdByUser: User
     
-    public var updatedByUser: UserModel
+    public var updatedByUser: User
     
     public var description: String
    
-    public init(id: String, value: Double, type: BillType, mainCategory: BillMainCategoryModel, subCategory: BillSubCategoryModel, createdAt: String, updatedAt: String, createdByUser: UserModel, updatedByUser: UserModel, description: String) {
+    public init(id: String, value: Double, type: BillType, mainCategory: BillMainCategory, subCategory: BillSubCategory, createdAt: String, updatedAt: String, createdByUser: User, updatedByUser: User, description: String) {
         self.id = id
         self.value = value
         self.type = type
@@ -114,12 +114,12 @@ public struct BillModel: Equatable, Identifiable {
 ///
 /// Record:
 /// public
-public struct BillMainCategoryModel: Equatable, Identifiable {
+public struct BillMainCategory: Equatable, Identifiable {
     public let id: String
     public let name: String
-    public let subCategories: [BillSubCategoryModel]
+    public let subCategories: [BillSubCategory]
     
-    public init(id: String, name: String, subCategories: [BillSubCategoryModel]) {
+    public init(id: String, name: String, subCategories: [BillSubCategory]) {
         self.id = id
         self.name = name
         self.subCategories = subCategories
@@ -134,7 +134,7 @@ public struct BillMainCategoryModel: Equatable, Identifiable {
 ///
 /// Record:
 /// public
-public struct BillSubCategoryModel: BillSubCategory, Equatable {
+public struct BillSubCategory: Equatable {
     public let id: String
     public let name: String
     
@@ -158,7 +158,7 @@ public struct CurrencyModel: Equatable {
 
 
 public struct BillSectionData: SectionDataProtocol, Equatable, Identifiable {
-    public typealias CellData = BillModel
+    public typealias CellData = Bill
     
     public typealias HeaderData = String
     
@@ -170,9 +170,9 @@ public struct BillSectionData: SectionDataProtocol, Equatable, Identifiable {
     
     public var footer: String?
     
-    public var cells: [BillModel]
+    public var cells: [Bill]
 
-    public init(id: String, header: String? = nil, footer: String? = nil, cells: [BillModel]) {
+    public init(id: String, header: String? = nil, footer: String? = nil, cells: [Bill]) {
         self.id = id
         self.header = header
         self.footer = footer
