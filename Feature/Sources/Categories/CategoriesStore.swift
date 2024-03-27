@@ -12,11 +12,11 @@ import Domain
 
 public struct CategoriesStore: Reducer {
     public struct State: Equatable {
-        var categories: [BillMainCategoryModel]
-        var selectedCategory: BillMainCategoryModel?
+        var categories: [BillMainCategory]
+        var selectedCategory: BillMainCategory?
 
-        public init(categories: [BillMainCategoryModel] = .stub(), 
-                    selectedCategory: BillMainCategoryModel? = nil
+        public init(categories: [BillMainCategory] = .stub(), 
+                    selectedCategory: BillMainCategory? = nil
         ) {
             self.categories = categories
             self.selectedCategory = selectedCategory
@@ -25,7 +25,7 @@ public struct CategoriesStore: Reducer {
 
     public enum Action: Equatable {
         case onAppear
-        case onTap(BillMainCategoryModel)
+        case onTap(BillMainCategory)
     }
 
     public init() {}

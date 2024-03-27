@@ -12,11 +12,11 @@ import Core
 
 public struct SubCategoriesStore: Reducer {
     public struct State: Equatable {
-        var subCategories: [BillSubCategoryModel]
-        var selectedSubCategory: BillSubCategoryModel?
+        var subCategories: [BillSubCategory]
+        var selectedSubCategory: BillSubCategory?
 
-        public init(subCategories: [BillSubCategoryModel] = .stub(),
-                    selectedSubCategory: BillSubCategoryModel? = nil
+        public init(subCategories: [BillSubCategory] = .stub(),
+                    selectedSubCategory: BillSubCategory? = nil
         ) {
             self.subCategories = subCategories
             self.selectedSubCategory = selectedSubCategory
@@ -25,7 +25,7 @@ public struct SubCategoriesStore: Reducer {
 
     public enum Action: Equatable {
         case onAppear
-        case onTap(BillSubCategoryModel)
+        case onTap(BillSubCategory)
     }
 
     public init() {}

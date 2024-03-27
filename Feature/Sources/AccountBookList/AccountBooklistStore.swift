@@ -12,10 +12,10 @@ import Foundation
 
 public struct AccountBooklistStore: Reducer {
     public struct State: Equatable {
-        var books: [AccountBookModel] = .stub()
+        var books: [AccountBook] = .stub()
         var saveDisable: Bool = true
 
-        public var selectedBook: AccountBookModel? {
+        public var selectedBook: AccountBook? {
             if let book = books.first(where: { selected == $0.id }) {
                 return book
             }

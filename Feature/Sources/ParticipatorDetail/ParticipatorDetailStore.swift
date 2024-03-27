@@ -11,12 +11,12 @@ import Foundation
 
 public struct ParticipatorDetailStore: Reducer {
     public struct State: Equatable {
-        var participatorModel: ParticipacerModel
+        var participatorModel: Participacer
 
         var isReadOnly: Bool = false
         var isReadWrite: Bool = false
 
-        public init(participator: ParticipacerModel) {
+        public init(participator: Participacer) {
             participatorModel = participator
         }
     }

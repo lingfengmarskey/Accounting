@@ -26,7 +26,7 @@ public struct BillslistStore: Reducer {
         case onAppear
         case tapSetting
         case tapAdd(BillType?)
-        case onTap(BillModel)
+        case onTap(Bill)
         case destination(PresentationAction<Destination.Action>)
     }
 

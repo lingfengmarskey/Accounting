@@ -10,6 +10,8 @@ import Foundation
 import ParticipatorDetail
 import SwiftUI
 import UIComponents
+import Core
+import Domain
 
 public struct AccountBookConfigView: View {
     let store: StoreOf<AccountBookConfigStore>

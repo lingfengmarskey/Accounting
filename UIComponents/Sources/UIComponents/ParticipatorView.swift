@@ -10,11 +10,11 @@ import Domain
 
 public struct ParticipatorView: View {
 
-    var onTap: ((User?) -> Void)
+    var onTap: ((UserProtocol?) -> Void)
     
-    var user: User?
+    var user: UserProtocol?
 
-    public init(user: User? = nil, onTap: @escaping (User?) -> Void) {
+    public init(user: UserProtocol? = nil, onTap: @escaping (UserProtocol?) -> Void) {
         self.onTap = onTap
         self.user = user
     }
@@ -38,7 +38,7 @@ public struct ParticipatorView: View {
 }
 
 struct ParticipatorView_Previews: PreviewProvider {
-    struct MockUser: User {
+    struct MockUser: UserProtocol {
         var id: String
         
         var name: String

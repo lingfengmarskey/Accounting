@@ -9,10 +9,10 @@ import Foundation
 import Fakery
 
 public let modelFaker = Faker(locale: "ja")
-public extension [AccountBookModel] {
-    static func stub() -> [AccountBookModel] {
+public extension [AccountBook] {
+    static func stub() -> [AccountBook] {
         let number = modelFaker.number.randomInt(min: 0, max: 10)
-        var result: [AccountBookModel] = []
+        var result: [AccountBook] = []
         for _ in 0...number {
             result.append(.stub())
         }
@@ -21,9 +21,9 @@ public extension [AccountBookModel] {
 }
 
 
-extension AccountBookModel {
-    static func stub() -> AccountBookModel {
-        return AccountBookModel(
+extension AccountBook {
+    static func stub() -> AccountBook {
+        return AccountBook(
             owner: .stub(),
             participacer: [
                 .stub(),
@@ -41,10 +41,10 @@ extension AccountBookModel {
     }
 }
 
-public extension [ParticipacerModel] {
-    static func stub() -> [ParticipacerModel] {
+public extension [Participacer] {
+    static func stub() -> [Participacer] {
         let number = modelFaker.number.randomInt(min: 0, max: 15)
-        var result: [ParticipacerModel] = []
+        var result: [Participacer] = []
         for _ in 0...number {
             result.append(.stub())
         }
@@ -53,8 +53,8 @@ public extension [ParticipacerModel] {
 }
 
 
-public extension ParticipacerModel {
-    static func stub() -> ParticipacerModel {
+public extension Participacer {
+    static func stub() -> Participacer {
         .init(
             permission: .init(rawValue: modelFaker.number.randomInt(min: 0, max: 2))!,
             id: modelFaker.number.increasingUniqueId().stringValue,
@@ -63,18 +63,18 @@ public extension ParticipacerModel {
     }
 }
 
-extension UserModel {
-    static func stub() -> UserModel {
-        return UserModel(
+extension User {
+    static func stub() -> User {
+        return User(
             id: modelFaker.number.increasingUniqueId().stringValue,
             name: modelFaker.name.name()
         )
     }
 }
 
-public extension BillModel {
-    static func stub() -> BillModel {
-        BillModel(
+public extension Bill {
+    static func stub() -> Bill {
+        Bill(
             id: modelFaker.number.increasingUniqueId().stringValue,
             value: modelFaker.number.randomDouble(),
             type: .init(rawValue: modelFaker.number.randomInt(min: 0, max: 2))!,
@@ -89,8 +89,8 @@ public extension BillModel {
     }
 }
 
-extension BillMainCategoryModel {
-    static func stub() -> BillMainCategoryModel {
+extension BillMainCategory {
+    static func stub() -> BillMainCategory {
         .init(
             id: modelFaker.number.increasingUniqueId().stringValue,
             name: modelFaker.name.title(),
@@ -102,10 +102,10 @@ extension BillMainCategoryModel {
     }
 }
 
-public extension [BillMainCategoryModel] {
-    static func stub() -> [BillMainCategoryModel] {
+public extension [BillMainCategory] {
+    static func stub() -> [BillMainCategory] {
         let number = modelFaker.number.randomInt(min: 10, max: 15)
-        var result: [BillMainCategoryModel] = []
+        var result: [BillMainCategory] = []
         for _ in 0...number {
             result.append(.stub())
         }
@@ -113,8 +113,8 @@ public extension [BillMainCategoryModel] {
     }
 }
 
-extension BillSubCategoryModel {
-    static func stub() -> BillSubCategoryModel {
+extension BillSubCategory {
+    static func stub() -> BillSubCategory {
         .init(id: modelFaker.number.increasingUniqueId().stringValue,
               name: modelFaker.name.title()
         )
@@ -138,10 +138,10 @@ public extension [CurrencyModel] {
     }
 }
 
-public extension [BillSubCategoryModel] {
-    static func stub() -> [BillSubCategoryModel] {
+public extension [BillSubCategory] {
+    static func stub() -> [BillSubCategory] {
         let number = modelFaker.number.randomInt(min: 10, max: 15)
-        var result: [BillSubCategoryModel] = []
+        var result: [BillSubCategory] = []
         for _ in 0...number {
             result.append(.stub())
         }
@@ -149,10 +149,10 @@ public extension [BillSubCategoryModel] {
     }
 }
 
-public extension [BillModel] {
-    static func stub() -> [BillModel] {
+public extension [Bill] {
+    static func stub() -> [Bill] {
         let number = modelFaker.number.randomInt(min: 0, max: 15)
-        var result: [BillModel] = []
+        var result: [Bill] = []
         for _ in 0...number {
             result.append(.stub())
         }

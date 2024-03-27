@@ -11,9 +11,9 @@ import Foundation
 
 public struct BillDetailStore: Reducer {
     public struct State: Equatable {
-        var billModel: BillModel
+        var billModel: Bill
 
-        public init(billModel: BillModel) {
+        public init(billModel: Bill) {
             self.billModel = billModel
         }
     }

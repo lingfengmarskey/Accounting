@@ -16,7 +16,7 @@ import Foundation
 //    var createdAt: String { get }
 //}
 
-public protocol User {
+public protocol UserProtocol {
     var id: String  { get }
     var name: String { get }
 }
@@ -73,10 +73,10 @@ public extension BillType {
 //    var subCategories: [BillSubCategory] { get }
 //}
 
-public protocol BillSubCategory {
-    var id: String { get }
-    var name: String { get }
-}
+//public protocol BillSubCategory {
+//    var id: String { get }
+//    var name: String { get }
+//}
 
 
 @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)

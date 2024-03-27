@@ -15,9 +15,9 @@ public struct AccountBookConfigStore: Reducer {
     public struct State: Equatable {
         @BindingState var name: String = ""
 
-        public var book: AccountBookModel?
+        public var book: AccountBook?
 
-        var paticipators: [ParticipacerModel] = .stub()
+        var paticipators: [Participacer] = .stub()
 
         var saveDisable: Bool = true
 
@@ -28,7 +28,7 @@ public struct AccountBookConfigStore: Reducer {
         @PresentationState var destination: Destination.State?
 
         public init(
-            book: AccountBookModel? = nil
+            book: AccountBook? = nil
         ) {
             self.book = book
         }
