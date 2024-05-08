@@ -35,7 +35,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		8D0F74D82BB4425200D1EEE2 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		8D537DDB2AA06BCA00103745 /* Domain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Domain; sourceTree = "<group>"; };
 		8D537DDC2AA0A38E00103745 /* UIComponents */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = UIComponents; sourceTree = "<group>"; };
 		8D59E5FF288BDC69007C86A7 /* RecordBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RecordBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -51,6 +50,7 @@
 		8D59E62E288BDCD2007C86A7 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		8D953587289B88C70098CB78 /* Feature */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Feature; sourceTree = "<group>"; };
 		8D9535A0289BA0520098CB78 /* Core */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Core; sourceTree = "<group>"; };
+		8DA76E292BC5814A00733DFC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,9 +108,9 @@
 		8D59E601288BDC69007C86A7 /* RecordBook */ = {
 			isa = PBXGroup;
 			children = (
+				8DA76E292BC5814A00733DFC /* Info.plist */,
 				8D59E62C288BDCC9007C86A7 /* RecordBook.entitlements */,
 				8D59E602288BDC69007C86A7 /* RecordBookApp.swift */,
-				8D0F74D72BB4425200D1EEE2 /* Model.xcdatamodeld */,
 				8D59E606288BDC69007C86A7 /* Assets.xcassets */,
 				8D59E608288BDC69007C86A7 /* Preview Content */,
 			);
@@ -451,6 +451,7 @@
 				DEVELOPMENT_TEAM = E393H8D2JP;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RecordBook/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -482,6 +483,7 @@
 				DEVELOPMENT_TEAM = E393H8D2JP;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RecordBook/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -635,20 +637,6 @@
 			productName = Root;
 		};
 /* End XCSwiftPackageProductDependency section */
-
-/* Begin XCVersionGroup section */
-		8D0F74D72BB4425200D1EEE2 /* Model.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				8D0F74D82BB4425200D1EEE2 /* Model.xcdatamodel */,
-			);
-			currentVersion = 8D0F74D82BB4425200D1EEE2 /* Model.xcdatamodel */;
-			name = Model.xcdatamodeld;
-			path = "/Users/marcos/Documents/Projects/Indie/not publish/RecordBook/RecordBook/Model.xcdatamodeld";
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = 8D59E5F7288BDC69007C86A7 /* Project object */;
 }
