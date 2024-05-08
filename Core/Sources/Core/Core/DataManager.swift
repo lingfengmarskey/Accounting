@@ -8,29 +8,95 @@
 import Foundation
 import CoreData
 import CloudKit
+import UIKit
+
 class PersistenceController {
     static let shared = PersistenceController()
     
-    let container: NSPersistentCloudKitContainer
+    var documentsPath: URL {
+        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+    }
 
-    init() {
+    lazy var managedObjectModel: NSManagedObjectModel = {
         guard let modelURL = Bundle.module.url(forResource: "RecordBookData", withExtension: "momd"),
               let model = NSManagedObjectModel(contentsOf: modelURL) else {
             fatalError("Failed to find data model")
         }
+        return model
+    }()
+
+    lazy var container: NSPersistentCloudKitContainer = {
+        let container = NSPersistentCloudKitContainer(name: "RecordBookData", managedObjectModel: managedObjectModel)
+
         
-        container = NSPersistentCloudKitContainer(name: "RecordBookData", managedObjectModel: model)
+        let parentPath =  documentsPath
         
-        container.loadPersistentStores { (storeDescription, error) in
-            if let error = error {
-                // 处理错误
-                fatalError("Unresolved error \(error)")
+        // Create a store description for a local store
+        let localStoreLocation = parentPath.appendingPathComponent("local.sqlite")
+        let localStoreDescription =
+            NSPersistentStoreDescription(url: localStoreLocation)
+        localStoreDescription.configuration = "Local"
+        
+        // Create a store description for a CloudKit-backed local store
+        let cloudStoreLocation = parentPath.appendingPathComponent("cloud.sqlite")
+        let cloudStoreDescription =
+            NSPersistentStoreDescription(url: cloudStoreLocation)
+        cloudStoreDescription.configuration = "Cloud"
+
+
+        // Set the container options on the cloud store
+        cloudStoreDescription.cloudKitContainerOptions =
+            NSPersistentCloudKitContainerOptions(
+                containerIdentifier: "iCloud.com.marcos.meng.tests.cloudkit.sharing")
+        
+        // Update the container's list of store descriptions
+        container.persistentStoreDescriptions = [
+            cloudStoreDescription,
+            localStoreDescription
+        ]
+
+        if !checkiCloudAvailable() {
+            fatalError("iCloud is not available!")
+        }
+        
+        
+//    #if DEBUG
+//    do {
+//        try container.initializeCloudKitSchema(options: [])
+//    } catch {
+//        // Handle any errors.
+//        fatalError("Could not initializeCloudKitSchema. \(error)")
+//    }
+//    #endif
+        
+        // Load both stores
+        container.loadPersistentStores { storeDescription, error in
+            guard error == nil else {
+                fatalError("Could not load persistent stores. \(error!)")
             }
         }
         
-        // 启用远程更改通知，以便数据在 iCloud 更改时更新
+        return container
+    }()
+    
+    init() {
         container.viewContext.automaticallyMergesChangesFromParent = true
     }
+    
+    
+    func checkiCloudAvailable() -> Bool {
+        if let _ = FileManager.default.ubiquityIdentityToken {
+            // continue
+            return true
+        }
+        else {
+            // show alert
+            return false
+        }
+    }
+    
+    
+
 }
 
 public struct DataManager {
