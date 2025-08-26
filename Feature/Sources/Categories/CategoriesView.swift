@@ -24,52 +24,52 @@ public struct CategoriesView: View {
     ]
 
     public var body: some View {
-        WithViewStore(store, observe: { $0 }) { viewStore in
-            NavigationStack {
-                ScrollView {
-                    LazyVGrid(columns: items,
-                              alignment: .leading,
-                              spacing: 15,
-                              content: {
-                        ForEach(0..<viewStore.categories.count, id: \.self) { idx in
-                            Button(action: {
-                                viewStore.send(.onTap(viewStore.categories[idx]))
-                            }, label: {
-                                HStack {
-                                    // TODO: add real icon
-                                    Image.foodIcon
-                                        .renderingMode(.template)
-                                    // TODO: updated title
-                                    Text("\(viewStore.categories[idx].name.firstValue)")
-                                        .font(.system(size: 32, weight: .bold))
-                                    Spacer()
-                                }
-                                .foregroundStyle(viewStore.selectedCategory == viewStore.categories[idx] ? Color.white : Color.black)
-                                .padding()
-                                .frame(height: 80)
-                                .background(viewStore.selectedCategory == viewStore.categories[idx] ? Color.flatGreen : Color.lightGray)
-                                .clipShape(RoundedRectangle(cornerRadius: 8))
-                                
-                            })
-                        }
-                    })
-                    .padding()
-                }
-                .navigationTitle("大分類")
-                .toolbar(content: {
-                    ToolbarItem(placement: .topBarLeading) {
+        NavigationStack {
+            ScrollView {
+                LazyVGrid(columns: items,
+                          alignment: .leading,
+                          spacing: 15,
+                          content: {
+                    ForEach(0..<store.categories.count, id: \.self) { idx in
                         Button(action: {
-//                            viewStore.send(.tapSetting)
+                            store.send(.onTap(store.categories[idx]))
                         }, label: {
-                            Image(systemName: "book.closed.fill")
+                            HStack {
+                                // TODO: add real icon
+                                Image.foodIcon
+                                    .renderingMode(.template)
+                                // TODO: updated title
+                                Text("\(store.categories[idx].name.firstValue)")
+                                    .font(.system(size: 32, weight: .bold))
+                                Spacer()
+                            }
+                            .foregroundStyle(store.selectedCategory == store.categories[idx] ? Color.white : Color.black)
+                            .padding()
+                            .frame(height: 80)
+                            .background(store.selectedCategory == store.categories[idx] ? Color.flatGreen : Color.lightGray)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            
                         })
                     }
                 })
+                .padding()
             }
-            .onAppear(perform: {
-                viewStore.send(.onAppear)
+            .navigationTitle("大分類")
+            .toolbar(content: {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(action: {
+                        //                            viewStore.send(.tapSetting)
+                    }, label: {
+                        Image(systemName: "book.closed.fill")
+                    })
+                }
             })
         }
+        .onAppear(perform: {
+            store.send(.onAppear)
+        })
+        
+        
     }
 }
 

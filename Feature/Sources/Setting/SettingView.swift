@@ -11,38 +11,35 @@ import Foundation
 import SwiftUI
 
 public struct SettingView: View {
-    let store: StoreOf<SettingStore>
+    @Perception.Bindable var store: StoreOf<SettingStore>
 
     public init(_ store: StoreOf<SettingStore>) {
         self.store = store
     }
 
     public var body: some View {
-        WithViewStore(store, observe: { $0 }) { viewStore in
-            List {
-                HStack {
-                    Text("当前账本")
-                    Spacer()
-                    Button {
-                        viewStore.send(.tapBook)
-                    } label: {
-                        Text(viewStore.state.bookState.text)
-                    }
+        List {
+            HStack {
+                Text("当前账本")
+                Spacer()
+                Button {
+                    store.send(.tapBook)
+                } label: {
+                    Text(store.bookState.text)
                 }
             }
-            .navigationTitle("Setting")
-            .navigationDestination(
-                store: self.store.scope(state: \.$destination, action: { .destination($0) }),
-                state: /SettingStore.Destination.State.selectBook,
-                action: SettingStore.Destination.Action.selectBook
-            ) { store in
-                AccountBookListView(store)
-            }
-            .onAppear {
-                viewStore.send(.onAppear)
-            }
+        }
+        .navigationTitle("Setting")
+        .navigationDestination(
+          item: $store.scope(state: \.destination?.selectBook, action: \.destination.selectBook)
+        ) { store in
+            AccountBookListView(store)
+        }
+        .onAppear {
+            store.send(.onAppear)
         }
     }
+    
 }
 
 struct SettingView_Previews: PreviewProvider {

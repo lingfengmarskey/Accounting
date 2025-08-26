@@ -10,8 +10,10 @@ import ComposableArchitecture
 import Core
 import Foundation
 
-public struct AccountBooklistStore: Reducer {
-    public struct State: Equatable {
+@Reducer
+public struct AccountBooklistStore {
+    @ObservableState
+    public struct State {
         var books: [AccountBook] = .stub()
         var saveDisable: Bool = true
 
@@ -22,7 +24,7 @@ public struct AccountBooklistStore: Reducer {
             return nil
         }
 
-        @BindingState var selected: String?
+        var selected: String?
 
         var accountBookConfig: AccountBookConfigStore.State = .init()
 
@@ -31,7 +33,7 @@ public struct AccountBooklistStore: Reducer {
         public init() {}
     }
 
-    public enum Action: BindableAction, Equatable {
+    public enum Action: BindableAction {
         case onAppear
         case toTop
         case addBook
@@ -79,9 +81,10 @@ public struct AccountBooklistStore: Reducer {
                 state.saveDisable = true
                 state.books.remove(atOffsets: index)
                 return .none
-            case .binding(\.$selected):
-                state.saveDisable = state.selected == nil
-                return .none
+//            case .binding(let $dd):
+////                
+////                state.saveDisable = state.selected == nil
+//                return .none
             case .binding:
                 return .none
             case .accountBookConfig(.tapTopCancel):
@@ -97,7 +100,7 @@ public struct AccountBooklistStore: Reducer {
                 return .none
             }
         }
-        Scope(state: \.accountBookConfig, action: /Action.accountBookConfig) {
+        Scope(state: \.accountBookConfig, action: \.accountBookConfig) {
             AccountBookConfigStore()
         }
 //        .ifLet(\.accountBookConfig, action: /Action.accountBookConfig) {

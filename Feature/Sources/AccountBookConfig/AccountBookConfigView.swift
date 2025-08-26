@@ -14,7 +14,7 @@ import Core
 import Domain
 
 public struct AccountBookConfigView: View {
-    let store: StoreOf<AccountBookConfigStore>
+    @Perception.Bindable var store: StoreOf<AccountBookConfigStore>
 
     private var gridItems: [GridItem] = [GridItem(.adaptive(minimum: 50), spacing: 10)]
 
@@ -23,60 +23,60 @@ public struct AccountBookConfigView: View {
     }
 
     public var body: some View {
-        WithViewStore(self.store, observe: { $0 }) { viewStore in
-            NavigationStack {
-                ScrollView {
-                    VStack(alignment: .leading) {
-                        Text("Account Name")
-                            .font(.headline)
-                        TextField("Name Your Account Book", text: viewStore.$name)
-                            .textFieldStyle(.roundedBorder)
-                        Text("Participators")
-                            .font(.headline)
-                        LazyVGrid(columns: gridItems) {
-                            ForEach(0 ... viewStore.paticipators.count, id: \.self) {
-                                let model = $0 == viewStore.paticipators.count ? nil : viewStore.paticipators[$0]
-                                ParticipatorView(user: model) { user in
-                                    viewStore.send(.tapUser(user?.id))
-                                }
-                            }
+        NavigationStack {
+            scrollView
+            .navigationTitle("Account Book")
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(action: {
+                        store.send(.tapTopCancel)
+                    }, label: {
+                        Text("Cancel")
+                    })
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(action: {
+                        store.send(.tapTopDone)
+                    }, label: {
+                        Text("Save")
+                    })
+                    .disabled(store.saveDisable)
+                }
+            }
+            .navigationDestination(
+                item: $store.scope(state: \.destination?.participatorDetail, action: \.destination.participatorDetail)
+            ) { store in
+                ParticipatorDetailView(store)
+            }
+            //                .sheet(isPresented: viewStore.$shouldShared) {
+            //                    // make icloudSharedController
+            //                }
+        }
+        .onAppear {
+            store.send(.onAppear)
+        }
+    }
+    
+    var scrollView: some View {
+        ScrollView {
+            VStack(alignment: .leading) {
+                Text("Account Name")
+                    .font(.headline)
+                TextField("Name Your Account Book", text: $store.name)
+                    .textFieldStyle(.roundedBorder)
+                Text("Participators")
+                    .font(.headline)
+                LazyVGrid(columns: gridItems) {
+                    ForEach(0 ... store.paticipators.count, id: \.self) {
+                        let model = $0 == store.paticipators.count ? nil : store.paticipators[$0]
+                        ParticipatorView(user: model) { user in
+                            store.send(.tapUser(user?.id))
                         }
-                        Spacer()
-                    }
-                    .padding()
-                }
-                .navigationTitle("Account Book")
-                .toolbar {
-                    ToolbarItem(placement: .topBarLeading) {
-                        Button(action: {
-                            viewStore.send(.tapTopCancel)
-                        }, label: {
-                            Text("Cancel")
-                        })
-                    }
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button(action: {
-                            viewStore.send(.tapTopDone)
-                        }, label: {
-                            Text("Save")
-                        })
-                        .disabled(viewStore.saveDisable)
                     }
                 }
-                .navigationDestination(
-                    store: self.store.scope(state: \.$destination, action: { .destination($0) }),
-                    state: /AccountBookConfigStore.Destination.State.participatorDetail,
-                    action: AccountBookConfigStore.Destination.Action.participatorDetail
-                ) { store in
-                    ParticipatorDetailView(store)
-                }
-//                .sheet(isPresented: viewStore.$shouldShared) {
-//                    // make icloudSharedController
-//                }
+                Spacer()
             }
-            .onAppear {
-                viewStore.send(.onAppear)
-            }
+            .padding()
         }
     }
 }

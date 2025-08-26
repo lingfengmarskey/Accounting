@@ -9,8 +9,10 @@ import ComposableArchitecture
 import Core
 import Foundation
 
-public struct BillDetailStore: Reducer {
-    public struct State: Equatable {
+@Reducer
+public struct BillDetailStore {
+    @ObservableState
+    public struct State {
         var billModel: Bill
 
         public init(billModel: Bill) {
@@ -18,7 +20,7 @@ public struct BillDetailStore: Reducer {
         }
     }
 
-    public enum Action: Equatable {
+    public enum Action {
         case onAppear
         case edit
     }

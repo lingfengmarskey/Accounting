@@ -9,9 +9,10 @@ import Foundation
 import ComposableArchitecture
 import Domain
 import Core
-
-public struct CurrencyStore: Reducer {
-    public struct State: Equatable {
+@Reducer
+public struct CurrencyStore {
+    @ObservableState
+    public struct State {
         var currencies: [CurrencyModel]
         var selectedCurrency: CurrencyModel?
 
@@ -23,7 +24,7 @@ public struct CurrencyStore: Reducer {
         }
     }
 
-    public enum Action: Equatable {
+    public enum Action {
         case onAppear
         case onTap(CurrencyModel)
     }

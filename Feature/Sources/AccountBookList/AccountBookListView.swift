@@ -12,7 +12,7 @@ import SwiftUI
 import UIComponents
 
 public struct AccountBookListView: View {
-    let store: StoreOf<AccountBooklistStore>
+    @Perception.Bindable var store: StoreOf<AccountBooklistStore>
 
     @State var mode: EditMode = .inactive
 
@@ -21,57 +21,59 @@ public struct AccountBookListView: View {
     }
 
     public var body: some View {
-        WithViewStore(self.store, observe: { $0 }) { viewStore in
-            NavigationStack {
-                ZStack {
-                    List {
-                        ForEach(viewStore.books) {
-                            BookView(
-                                title: $0.name,
-                                owner: $0.owner.name,
-                                id: $0.id,
-                                selectedId: viewStore.$selected,
-                                onTapDetail: { id in
-                                    viewStore.send(.tapDetail(bookID: id))
-                                }
-                            )
-                        }
-                        .onDelete { index in
-                            viewStore.send(.removeItem(index))
-                        }
+        NavigationStack {
+            ZStack {
+                listView
+                VStack {
+                    Spacer()
+                    FooterButton {
+                        store.send(.selectDone)
+                    } onAdd: {
+                        store.send(.addBook)
                     }
-                    .listStyle(.plain)
-                    VStack {
-                        Spacer()
-                        FooterButton {
-                            viewStore.send(.selectDone)
-                        } onAdd: {
-                            viewStore.send(.addBook)
-                        }
+                }
+                .disabled(mode.isEditing ? false : store.saveDisable)
+            }
+            .navigationTitle("Account Books")
+            .toolbar {
+                EditButton()
+            }
+            .environment(\.editMode, $mode)
+        }
+        .onAppear {
+            store.send(.onAppear)
+        }
+////        .sheet(isPresented: store.binding(
+////            get: \.isShouldPresent,
+////            send: AccountBooklistStore.Action.setPresent
+////        )) {
+////            AccountBookConfigView(
+////                self.store.scope(
+////                    state: \.accountBookConfig,
+////                    action: \.accountBookConfig
+////                )
+////            )
+////        }
+    }
+    
+    public var listView: some View {
+        List {
+            ForEach(store.books) {
+                BookView(
+                    title: $0.name,
+                    owner: $0.owner.name,
+                    id: $0.id,
+                    selectedId: $store.selected,
+                    onTapDetail: { id in
+                        store.send(.tapDetail(bookID: id))
                     }
-                    .disabled(mode.isEditing ? false : viewStore.saveDisable)
-                }
-                .navigationTitle("Account Books")
-                .toolbar {
-                    EditButton()
-                }
-                .environment(\.editMode, $mode)
-            }
-            .onAppear {
-                viewStore.send(.onAppear)
-            }
-            .sheet(isPresented: viewStore.binding(
-                get: \.isShouldPresent,
-                send: AccountBooklistStore.Action.setPresent
-            )) {
-                AccountBookConfigView(
-                    self.store.scope(
-                        state: \.accountBookConfig,
-                        action: AccountBooklistStore.Action.accountBookConfig
-                    )
                 )
             }
+            .onDelete { index in
+                store.send(.removeItem(index))
+            }
         }
+        .listStyle(.plain)
     }
 }
 

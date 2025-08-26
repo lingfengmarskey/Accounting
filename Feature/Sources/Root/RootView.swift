@@ -4,43 +4,34 @@ import ComposableArchitecture
 import SwiftUI
 
 public struct RootView: View {
-    @State var present: Bool = false
+//    @State var present: Bool = false
 
-    let store: StoreOf<RootStore>
+    @ComposableArchitecture.Bindable var store: StoreOf<RootStore>
 
     public init(_ store: StoreOf<RootStore>) {
         self.store = store
     }
 
     public var body: some View {
-        WithViewStore(store, observe: { $0 }) { _ in
+        HStack {
+            Spacer()
             VStack {
-                Text("Root")
-                Button {
-                    present.toggle()
-                } label: {
-                    Text("LIST")
-                }
-                .foregroundColor(.white)
-                .padding()
-                .background(Color.gray)
-                .cornerRadius(12)
+                Spacer()
+                Image("logo", bundle: .module)
+                Spacer()
             }
-            .fullScreenCover(isPresented: $present) {
-                BillslistView(
-                    self.store.scope(
-                        state: \.bills,
-                        action: RootStore.Action.bills
-                    )
-                )
-//                AccountBookListView(
-//                    self.store.scope(
-//                        state: \.accountBooklistState,
-//                        action: RootStore.Action.accountBooklistAction
-//                    )
-//                )
-            }
+            Spacer()
         }
+        .background(Color.black)
+        .onAppear() {
+            store.send(.onAppear)
+        }
+        .fullScreenCover(item: $store.scope(state:\.destination?.booklist, action: \.destination.booklist), content: { store in
+            AccountBookListView(store)
+        })
+        .fullScreenCover(item: $store.scope(state:\.destination?.billslist, action: \.destination.billslist), content: { store in
+            BillslistView(store)
+        })
     }
 }
 

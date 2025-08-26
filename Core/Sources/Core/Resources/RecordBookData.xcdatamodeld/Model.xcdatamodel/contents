@@ -1,60 +1,63 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22757" systemVersion="23E224" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
-    <entity name="AccountBookModel" representedClassName="AccountBookModel" syncable="YES" codeGenerationType="class">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="23788.4" systemVersion="24F74" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" usedWithSwiftData="YES" userDefinedModelVersionIdentifier="">
+    <entity name="BillMainCategoryEntity" representedClassName="BillMainCategoryEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="bills" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TransactionEntity" inverseName="mainCategory" inverseEntity="TransactionEntity"/>
+        <relationship name="subCategories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="BillSubCategoryEntity" inverseName="mainCategory" inverseEntity="BillSubCategoryEntity"/>
+    </entity>
+    <entity name="BillSubCategoryEntity" representedClassName="BillSubCategoryEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="bills" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TransactionEntity" inverseName="subCategory" inverseEntity="TransactionEntity"/>
+        <relationship name="mainCategory" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BillMainCategoryEntity" inverseName="subCategories" inverseEntity="BillMainCategoryEntity"/>
+    </entity>
+    <entity name="LedgerEntity" representedClassName="LedgerEntity" syncable="YES" codeGenerationType="class">
         <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="bills" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="BillModel" inverseName="book" inverseEntity="BillModel"/>
-        <relationship name="owner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserModel" inverseName="createdBooks" inverseEntity="UserModel"/>
-        <relationship name="participacers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="UserModel" inverseName="takePartInBooks" inverseEntity="UserModel"/>
-        <relationship name="readers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="UserModel" inverseName="readBooks" inverseEntity="UserModel"/>
+        <attribute name="id" optional="YES" attributeType="String"/>
+        <attribute name="ownerID" optional="YES" attributeType="String"/>
+        <attribute name="ownerName" optional="YES" attributeType="String"/>
+        <attribute name="recordName" optional="YES" attributeType="String"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <relationship name="bills" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TransactionEntity" inverseName="book" inverseEntity="TransactionEntity"/>
+        <relationship name="owner" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserEntity" inverseName="createdBooks" inverseEntity="UserEntity"/>
+        <relationship name="participacers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="UserEntity" inverseName="takePartInBooks" inverseEntity="UserEntity"/>
+        <relationship name="readers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="UserEntity" inverseName="readBooks" inverseEntity="UserEntity"/>
     </entity>
-    <entity name="BillMainCategoryModel" representedClassName="BillMainCategoryModel" syncable="YES" codeGenerationType="class">
-        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="bills" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="BillModel" inverseName="mainCategory" inverseEntity="BillModel"/>
-        <relationship name="subCategories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="BillSubCategoryModel" inverseName="mainCategory" inverseEntity="BillSubCategoryModel"/>
-    </entity>
-    <entity name="BillModel" representedClassName="BillModel" syncable="YES" codeGenerationType="class">
+    <entity name="TransactionEntity" representedClassName="TransactionEntity" syncable="YES" codeGenerationType="class">
         <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="descriptionContent" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="type" optional="YES" attributeType="String"/>
         <attribute name="updatedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="value" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <relationship name="book" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AccountBookModel" inverseName="bills" inverseEntity="AccountBookModel"/>
-        <relationship name="createdByUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserModel" inverseName="createdBills" inverseEntity="UserModel"/>
-        <relationship name="mainCategory" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BillMainCategoryModel" inverseName="bills" inverseEntity="BillMainCategoryModel"/>
-        <relationship name="subCategory" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BillSubCategoryModel" inverseName="bills" inverseEntity="BillSubCategoryModel"/>
-        <relationship name="updatedByUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserModel" inverseName="updatedBills" inverseEntity="UserModel"/>
+        <relationship name="book" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="LedgerEntity" inverseName="bills" inverseEntity="LedgerEntity"/>
+        <relationship name="createdByUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserEntity" inverseName="createdBills" inverseEntity="UserEntity"/>
+        <relationship name="mainCategory" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BillMainCategoryEntity" inverseName="bills" inverseEntity="BillMainCategoryEntity"/>
+        <relationship name="subCategory" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BillSubCategoryEntity" inverseName="bills" inverseEntity="BillSubCategoryEntity"/>
+        <relationship name="updatedByUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserEntity" inverseName="updatedBills" inverseEntity="UserEntity"/>
     </entity>
-    <entity name="BillSubCategoryModel" representedClassName="BillSubCategoryModel" syncable="YES" codeGenerationType="class">
+    <entity name="UserEntity" representedClassName="UserEntity" syncable="YES" codeGenerationType="class">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="bills" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="BillModel" inverseName="subCategory" inverseEntity="BillModel"/>
-        <relationship name="mainCategory" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BillMainCategoryModel" inverseName="subCategories" inverseEntity="BillMainCategoryModel"/>
-    </entity>
-    <entity name="UserModel" representedClassName="UserModel" syncable="YES" codeGenerationType="class">
-        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="createdBills" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="BillModel" inverseName="createdByUser" inverseEntity="BillModel"/>
-        <relationship name="createdBooks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AccountBookModel" inverseName="owner" inverseEntity="AccountBookModel"/>
-        <relationship name="readBooks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AccountBookModel" inverseName="readers" inverseEntity="AccountBookModel"/>
-        <relationship name="takePartInBooks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AccountBookModel" inverseName="participacers" inverseEntity="AccountBookModel"/>
-        <relationship name="updatedBills" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="BillModel" inverseName="updatedByUser" inverseEntity="BillModel"/>
+        <relationship name="createdBills" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TransactionEntity" inverseName="createdByUser" inverseEntity="TransactionEntity"/>
+        <relationship name="createdBooks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="LedgerEntity" inverseName="owner" inverseEntity="LedgerEntity"/>
+        <relationship name="readBooks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="LedgerEntity" inverseName="readers" inverseEntity="LedgerEntity"/>
+        <relationship name="takePartInBooks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="LedgerEntity" inverseName="participacers" inverseEntity="LedgerEntity"/>
+        <relationship name="updatedBills" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TransactionEntity" inverseName="updatedByUser" inverseEntity="TransactionEntity"/>
     </entity>
     <configuration name="Cloud" usedWithCloudKit="YES">
-        <memberEntity name="AccountBookModel"/>
-        <memberEntity name="BillMainCategoryModel"/>
-        <memberEntity name="BillModel"/>
-        <memberEntity name="BillSubCategoryModel"/>
-        <memberEntity name="UserModel"/>
+        <memberEntity name="LedgerEntity"/>
+        <memberEntity name="BillMainCategoryEntity"/>
+        <memberEntity name="TransactionEntity"/>
+        <memberEntity name="BillSubCategoryEntity"/>
+        <memberEntity name="UserEntity"/>
     </configuration>
     <configuration name="Local">
-        <memberEntity name="AccountBookModel"/>
-        <memberEntity name="BillMainCategoryModel"/>
-        <memberEntity name="BillModel"/>
-        <memberEntity name="BillSubCategoryModel"/>
-        <memberEntity name="UserModel"/>
+        <memberEntity name="LedgerEntity"/>
+        <memberEntity name="BillMainCategoryEntity"/>
+        <memberEntity name="TransactionEntity"/>
+        <memberEntity name="BillSubCategoryEntity"/>
+        <memberEntity name="UserEntity"/>
     </configuration>
 </model>

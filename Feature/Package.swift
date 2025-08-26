@@ -39,7 +39,11 @@ let package = Package(
             dependencies: coreDependencies + [
                 "AccountBookList",
                 "Billslist",
-            ]),
+            ],
+            resources: [
+                .process("Resources")
+            ]
+        ),
         .testTarget(
             name: "RootTests",
             dependencies: ["Root"]),

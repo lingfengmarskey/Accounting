@@ -12,9 +12,11 @@ import ParticipatorDetail
 import SwiftUI
 import CoreData
 
-public struct AccountBookConfigStore: Reducer {
-    public struct State: Equatable {
-        @BindingState var name: String = ""
+@Reducer
+public struct AccountBookConfigStore {
+    @ObservableState
+    public struct State {
+        var name: String = ""
 
         public var book: AccountBook?
 
@@ -26,9 +28,9 @@ public struct AccountBookConfigStore: Reducer {
 
         var sharedLink: String = ""
 
-        @BindingState var shouldShared: Bool = false
+        var shouldShared: Bool = false
 
-        @PresentationState var destination: Destination.State?
+        @Presents var destination: Destination.State?
 
         public init(
             book: AccountBook? = nil
@@ -37,7 +39,7 @@ public struct AccountBookConfigStore: Reducer {
         }
     }
 
-    public enum Action: BindableAction, Equatable {
+    public enum Action: BindableAction {
         case onAppear
         case addMember
         case tapUser(String?)
@@ -79,33 +81,20 @@ public struct AccountBookConfigStore: Reducer {
                 state.destination = nil
                 return .none
             case .tapTopDone:
-                DataManager.shared.createAccountBook(name: state.name) { error in
-                    print("result is \(error)")
-                }
+//                DataManager.shared.createAccountBook(name: state.name) { error in
+//                    print("result is \(error)")
+//                }
                 // TODO: safe logics
                 return .none
             default:
                 return .none
             }
         }
-        .ifLet(\.$destination, action: /Action.destination) {
-            Destination()
-        }
+        .ifLet(\.$destination, action: \.destination)
     }
 
-    public struct Destination: Reducer {
-        public enum State: Equatable {
-            case participatorDetail(ParticipatorDetailStore.State)
-        }
-
-        public enum Action: Equatable {
-            case participatorDetail(ParticipatorDetailStore.Action)
-        }
-
-        public var body: some Reducer<State, Action> {
-            Scope(state: /State.participatorDetail, action: /Action.participatorDetail) {
-                ParticipatorDetailStore()
-            }
-        }
+    @Reducer
+    public enum Destination {
+        case participatorDetail(ParticipatorDetailStore)
     }
 }

@@ -18,42 +18,42 @@ public struct BillDetailView: View {
     }
 
     public var body: some View {
-        WithViewStore(store, observe: { $0 }) { viewStore in
-            List {
+        
+        List {
+            Spacer()
+                .frame(height: 50)
+            HStack {
                 Spacer()
-                    .frame(height: 50)
-                HStack {
-                    Spacer()
-                    Text(viewStore.billModel.type == .income ? "+" : "-")
-                    Text(String(format: "%.2f", viewStore.billModel.value))
-                    Spacer()
-                }
-                .font(.largeTitle)
-                .fontWeight(.heavy)
-                .foregroundStyle(viewStore.billModel.type == .income ? Color.blue : .red)
-                .listRowSeparator(.hidden)
+                Text(store.billModel.type == .income ? "+" : "-")
+                Text(String(format: "%.2f", store.billModel.value))
                 Spacer()
-                    .frame(height: 80)
-                detail(title: "MainCategory", content: viewStore.billModel.mainCategory.name)
-                detail(title: "createdByUser", content: viewStore.billModel.createdByUser.name)
-                detail(title: "createdAt", content: viewStore.billModel.createdAt)
-                detail(title: "updatedByUser", content: viewStore.billModel.updatedByUser.name)
-                detail(title: "updatedAt", content: viewStore.billModel.updatedAt)
-                detail(title: "subCategory", content: viewStore.billModel.subCategory.name)
-                detail(title: "description", content: viewStore.billModel.description)
             }
-            .listStyle(.plain)
-            .navigationTitle("Bill Detail")
-            .toolbar(content: {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        viewStore.send(.edit)
-                    } label: {
-                        Text("Edit")
-                    }
-                }
-            })
+            .font(.largeTitle)
+            .fontWeight(.heavy)
+            .foregroundStyle(store.billModel.type == .income ? Color.blue : .red)
+            .listRowSeparator(.hidden)
+            Spacer()
+                .frame(height: 80)
+            detail(title: "MainCategory", content: store.billModel.mainCategory.name)
+            detail(title: "createdByUser", content: store.billModel.createdByUser.name)
+            detail(title: "createdAt", content: store.billModel.createdAt)
+            detail(title: "updatedByUser", content: store.billModel.updatedByUser.name)
+            detail(title: "updatedAt", content: store.billModel.updatedAt)
+            detail(title: "subCategory", content: store.billModel.subCategory.name)
+            detail(title: "description", content: store.billModel.description)
         }
+        .listStyle(.plain)
+        .navigationTitle("Bill Detail")
+        .toolbar(content: {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    store.send(.edit)
+                } label: {
+                    Text("Edit")
+                }
+            }
+        })
+        
     }
 
     func detail(title: String, content: String) -> some View {

@@ -25,54 +25,52 @@ public struct SubCategoriesView: View {
     ]
 
     public var body: some View {
-        WithViewStore(store, observe: { $0 }) { viewStore in
-            NavigationStack {
-                ScrollView {
-                    LazyVGrid(columns: items,
-                              alignment: .leading,
-                              spacing: 10,
-                              content: {
-                        ForEach(0..<viewStore.subCategories.count, id: \.self) { idx in
-                            Button(action: {
-                                viewStore.send(.onTap(viewStore.subCategories[idx]))
-                            }, label: {
-                                HStack {
-                                    // TODO: add real icon
-                                    Image.foodIcon
-                                        .renderingMode(.template)
-                                        .resizable()
-                                        .frame(width: 24, height: 24)
-                                    // TODO: updated title
-                                    Text("\(viewStore.subCategories[idx].name.firstValue)")
-                                        .font(.system(size: 20, weight: .bold))
-                                    Spacer()
-                                }
-                                .foregroundStyle(viewStore.selectedSubCategory == viewStore.subCategories[idx] ? Color.white : Color.black)
-                                .padding()
-                                .background(viewStore.selectedSubCategory == viewStore.subCategories[idx] ? Color.flatGreen : Color.lightGray)
-                                .clipShape(RoundedRectangle(cornerRadius: 8))
-                                
-                            })
-                        }
-                    })
-                    .padding()
-                }
-                .navigationTitle("小分類")
-                .toolbar(content: {
-                    ToolbarItem(placement: .topBarLeading) {
+        NavigationStack {
+            ScrollView {
+                LazyVGrid(columns: items,
+                          alignment: .leading,
+                          spacing: 10,
+                          content: {
+                    ForEach(0..<store.subCategories.count, id: \.self) { idx in
                         Button(action: {
-                            //                            viewStore.send(.tapSetting)
+                            store.send(.onTap(store.subCategories[idx]))
                         }, label: {
-                            Image(systemName: "book.closed.fill")
+                            HStack {
+                                // TODO: add real icon
+                                Image.foodIcon
+                                    .renderingMode(.template)
+                                    .resizable()
+                                    .frame(width: 24, height: 24)
+                                // TODO: updated title
+                                Text("\(store.subCategories[idx].name.firstValue)")
+                                    .font(.system(size: 20, weight: .bold))
+                                Spacer()
+                            }
+                            .foregroundStyle(store.selectedSubCategory == store.subCategories[idx] ? Color.white : Color.black)
+                            .padding()
+                            .background(store.selectedSubCategory == store.subCategories[idx] ? Color.flatGreen : Color.lightGray)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            
                         })
                     }
                 })
+                .padding()
             }
-            .onAppear(perform: {
-                viewStore.send(.onAppear)
+            .navigationTitle("小分類")
+            .toolbar(content: {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(action: {
+                        //                            store.send(.tapSetting)
+                    }, label: {
+                        Image(systemName: "book.closed.fill")
+                    })
+                }
             })
         }
-    }    
+        .onAppear(perform: {
+            store.send(.onAppear)
+        })
+    }
 }
 
 

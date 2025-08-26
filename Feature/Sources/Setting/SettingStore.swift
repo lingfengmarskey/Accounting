@@ -11,11 +11,13 @@ import Core
 import Foundation
 import UIKit
 
-public struct SettingStore: Reducer {
-    public struct State: Equatable {
+@Reducer
+public struct SettingStore {
+    @ObservableState
+    public struct State {
         var bookState: BookState = .notChoosen
 
-        @PresentationState var destination: Destination.State?
+        @Presents var destination: Destination.State?
 
         public init(
             bookState: BookState = .notChoosen
@@ -24,7 +26,12 @@ public struct SettingStore: Reducer {
         }
     }
 
-    public enum Action: Equatable {
+    @Reducer
+    public enum Destination {
+        case selectBook(AccountBooklistStore)
+    }
+
+    public enum Action {
         case tapBook
         case none
         case onAppear
@@ -45,22 +52,6 @@ public struct SettingStore: Reducer {
                 return "Error"
             case .notChoosen:
                 return "未选择"
-            }
-        }
-    }
-
-    public struct Destination: Reducer {
-        public enum State: Equatable {
-            case selectBook(AccountBooklistStore.State)
-        }
-
-        public enum Action: Equatable {
-            case selectBook(AccountBooklistStore.Action)
-        }
-
-        public var body: some Reducer<State, Action> {
-            Scope(state: /State.selectBook, action: /Action.selectBook) {
-                AccountBooklistStore()
             }
         }
     }
@@ -101,8 +92,6 @@ public struct SettingStore: Reducer {
                 return .none
             }
         }
-        .ifLet(\.$destination, action: /Action.destination) {
-            Destination()
-        }
+        .ifLet(\.$destination, action: \.destination)
     }
 }

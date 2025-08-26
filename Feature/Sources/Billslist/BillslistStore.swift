@@ -13,16 +13,16 @@ import Foundation
 import InputAccounts
 import Setting
 
-public struct BillslistStore: Reducer {
-    public struct State: Equatable {
+@Reducer
+public struct BillslistStore {
+    @ObservableState
+    public struct State{
         var bills: [BillSectionData] = .stub()
-
-        @PresentationState var destination: Destination.State?
-
+        @Presents var destination: Destination.State?
         public init() {}
     }
 
-    public enum Action: Equatable {
+    public enum Action {
         case onAppear
         case tapSetting
         case tapAdd(BillType?)
@@ -50,34 +50,14 @@ public struct BillslistStore: Reducer {
                 return .none
             }
         }
-        .ifLet(\.$destination, action: /Action.destination) {
-            Destination()
-        }
+        .ifLet(\.$destination, action: \.destination)
     }
 
-    public struct Destination: Reducer {
-        public enum State: Equatable {
-            case billDetail(BillDetailStore.State)
-            case setting(SettingStore.State)
-            case addAccounts(InputAccountsStore.State)
-        }
-
-        public enum Action: Equatable {
-            case billDetail(BillDetailStore.Action)
-            case setting(SettingStore.Action)
-            case addAccounts(InputAccountsStore.Action)
-        }
-
-        public var body: some Reducer<State, Action> {
-            Scope(state: /State.billDetail, action: /Action.billDetail) {
-                BillDetailStore()
-            }
-            Scope(state: /State.setting, action: /Action.setting) {
-                SettingStore()
-            }
-            Scope(state: /State.addAccounts, action: /Action.addAccounts) {
-                InputAccountsStore()
-            }
-        }
+    @Reducer
+    public enum Destination {
+        case billDetail(BillDetailStore)
+        case setting(SettingStore)
+        case addAccounts(InputAccountsStore)
     }
+    
 }

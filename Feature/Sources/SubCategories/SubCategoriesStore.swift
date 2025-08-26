@@ -9,9 +9,10 @@ import Foundation
 import ComposableArchitecture
 import Domain
 import Core
-
-public struct SubCategoriesStore: Reducer {
-    public struct State: Equatable {
+@Reducer
+public struct SubCategoriesStore {
+    @ObservableState
+    public struct State {
         var subCategories: [BillSubCategory]
         var selectedSubCategory: BillSubCategory?
 
@@ -23,7 +24,7 @@ public struct SubCategoriesStore: Reducer {
         }
     }
 
-    public enum Action: Equatable {
+    public enum Action {
         case onAppear
         case onTap(BillSubCategory)
     }

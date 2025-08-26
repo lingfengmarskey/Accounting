@@ -20,7 +20,8 @@ struct RecordBookApp: App {
                         RootStore()
                             .signpost()
                             ._printChanges()
-                    })
+                    }
+                )
             )
         }
     }
