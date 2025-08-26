@@ -37,17 +37,17 @@ public struct InputAccountsView: View {
                     }
                 })
                 .navigationDestination(
-                    item: $store.scope(state: \.$destination?.selectCategory, action: \.destination.selectCategory)
+                    item: $store.scope(state: \.destination?.selectCategory, action: \.destination.selectCategory)
                 ) { store in
                     CategoriesView(store)
                 }
                 .navigationDestination(
-                    item: $store.scope(state: \.$destination?.selectSubCategory, action: \.destination.selectSubCategory)
+                    item: $store.scope(state: \.destination?.selectSubCategory, action: \.destination.selectSubCategory)
                 ) { store in
                     SubCategoriesView(store)
                 }
                 .navigationDestination(
-                    item: $store.scope(state: \.$destination?.selectCurrency, action: \.destination.selectCurrency)
+                    item: $store.scope(state: \.destination?.selectCurrency, action: \.destination.selectCurrency)
                 ) { store in
                     CurrencyView(store)
                 }
@@ -55,11 +55,9 @@ public struct InputAccountsView: View {
         .onAppear(perform: {
             store.send(.onAppear)
         })
-        .confirmationDialog(
-            store: $store.scope(state: \.$choosePhotoDialog, action: \.$choosePhotoDialog)
-        )
+        .confirmationDialog($store.scope(state: \.choosePhotoDialog, action: \.choosePhotoDialog))
     }
-    
+
     var scrollView: some View {
         ScrollView {
             VStack(spacing: 15) {
@@ -68,7 +66,7 @@ public struct InputAccountsView: View {
                 Group {
                     HStack {
                         BoldTextField(
-                            textValue: store.binding(get: \.inputValue, send: InputAccountsStore.Action.textChanged),
+                            textValue: $store.inputValue.sending(\.textChanged),
                             placeholderText: store.state.inputPlaceholder,
                             fontSize: 48
                         ) { item in
@@ -177,8 +175,8 @@ public struct InputAccountsView: View {
                 // Date
                 Group {
                     HStack {
-                        DatePicker("", selection: store.binding(get: \.inputDate, send: InputAccountsStore.Action.dateChanged), displayedComponents: [.date, .hourAndMinute])
-                            .labelsHidden()
+                        DatePicker("", selection: $store.inputDate.sending(\.dateChanged), displayedComponents: [.date, .hourAndMinute])
+//                            .labelsHidden()
                         Spacer()
                     }
                 }

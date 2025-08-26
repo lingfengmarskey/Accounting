@@ -76,11 +76,13 @@ public struct InputAccountsStore {
         case destination(PresentationAction<Destination.Action>)
         case tapChoosePhoto
         case choosePhotoDialog(PresentationAction<ChoosePhotoDialog>)
+        @CasePathable
         public enum ChoosePhotoDialog: Equatable {
-          case fromCamera
-          case fromLibrary
+            case fromCamera
+            case fromLibrary
         }
     }
+    
     
     @Dependency(\.dismiss) var dismiss
 
@@ -208,6 +210,8 @@ public struct InputAccountsStore {
         case selectCategory(CategoriesStore)
         case selectSubCategory(SubCategoriesStore)
         case selectCurrency(CurrencyStore)
+        case fromCamera
+        case fromLibrary
     }
 }
 
