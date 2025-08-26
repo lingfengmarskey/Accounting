@@ -43,17 +43,14 @@ public struct AccountBookListView: View {
         .onAppear {
             store.send(.onAppear)
         }
-////        .sheet(isPresented: store.binding(
-////            get: \.isShouldPresent,
-////            send: AccountBooklistStore.Action.setPresent
-////        )) {
-////            AccountBookConfigView(
-////                self.store.scope(
-////                    state: \.accountBookConfig,
-////                    action: \.accountBookConfig
-////                )
-////            )
-////        }
+        .sheet(isPresented: $store.isShouldPresent.sending(\.setPresent)) {
+            AccountBookConfigView(
+                self.store.scope(
+                    state: \.accountBookConfig,
+                    action: \.accountBookConfig
+                )
+            )
+        }
     }
     
     public var listView: some View {
