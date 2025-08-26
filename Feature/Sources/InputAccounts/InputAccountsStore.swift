@@ -15,8 +15,10 @@ import Categories
 import SubCategories
 import Currency
 
-public struct InputAccountsStore: Reducer {
-    public struct State: Equatable {
+@Reducer
+public struct InputAccountsStore {
+    @ObservableState
+    public struct State {
         // payment or income or others in the futrue.
         var title: String
         var inputValue: String
@@ -29,8 +31,8 @@ public struct InputAccountsStore: Reducer {
         var currentOperator: Operator?
         var currentOperand: String?
         
-        @PresentationState var destination: Destination.State?
-        @PresentationState var choosePhotoDialog: ConfirmationDialogState<Action.ChoosePhotoDialog>?
+        @Presents var destination: Destination.State?
+        @Presents var choosePhotoDialog: ConfirmationDialogState<Action.ChoosePhotoDialog>?
 
         public init(title: String = "Payment", 
                     inputValue: String = "",
@@ -59,7 +61,7 @@ public struct InputAccountsStore: Reducer {
         }
     }
 
-    public enum Action: Equatable {
+    public enum Action {
         case onAppear
         case tapClose
         case textChanged(String)
@@ -164,10 +166,8 @@ public struct InputAccountsStore: Reducer {
                 return .none
             }
         }
-        .ifLet(\.$destination, action: /Action.destination) {
-            Destination()
-        }
-        .ifLet(\.$choosePhotoDialog, action: /Action.choosePhotoDialog)
+        .ifLet(\.$destination, action: \.destination)
+        .ifLet(\.$choosePhotoDialog, action: \.choosePhotoDialog)
     }
     
     func setNumber(state: inout State, value: AccountInput) -> Effect<Action> {
@@ -203,30 +203,11 @@ public struct InputAccountsStore: Reducer {
         return .none
     }
 
-    public struct Destination: Reducer {
-        public enum State: Equatable {
-            case selectCategory(CategoriesStore.State)
-            case selectSubCategory(SubCategoriesStore.State)
-            case selectCurrency(CurrencyStore.State)
-        }
-
-        public enum Action: Equatable {
-            case selectCategory(CategoriesStore.Action)
-            case selectSubCategory(SubCategoriesStore.Action)
-            case selectCurrency(CurrencyStore.Action)
-        }
-
-        public var body: some Reducer<State, Action> {
-            Scope(state: /State.selectCategory, action: /Action.selectCategory) {
-                CategoriesStore()
-            }
-            Scope(state: /State.selectSubCategory, action: /Action.selectSubCategory) {
-                SubCategoriesStore()
-            }
-            Scope(state: /State.selectCurrency, action: /Action.selectCurrency) {
-                CurrencyStore()
-            }
-        }
+    @Reducer
+    public enum Destination {
+        case selectCategory(CategoriesStore)
+        case selectSubCategory(SubCategoriesStore)
+        case selectCurrency(CurrencyStore)
     }
 }
 

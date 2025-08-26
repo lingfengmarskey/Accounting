@@ -14,61 +14,53 @@ import SubCategories
 import Currency
 
 public struct InputAccountsView: View {
-    let store: StoreOf<InputAccountsStore>
+    @Perception.Bindable var store: StoreOf<InputAccountsStore>
 
     public init(_ store: StoreOf<InputAccountsStore>) {
         self.store = store
     }
 
     public var body: some View {
-        WithViewStore(store, observe: { $0 }) { viewStore in
-            NavigationStack {
-                makeScrollView(viewStore)
+        NavigationStack {
+            scrollView
                 .padding(.leading, 25)
                 .padding(.trailing, 25)
-                .navigationTitle(viewStore.title)
+                .navigationTitle(store.title)
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar(content: {
                     ToolbarItem(placement: .topBarLeading) {
                         Button(action: {
-                            viewStore.send(.tapClose)
+                            store.send(.tapClose)
                         }, label: {
                             Image(systemName: "xmark")
                         })
                     }
                 })
                 .navigationDestination(
-                    store: self.store.scope(state: \.$destination, action: { .destination($0) }),
-                    state: /InputAccountsStore.Destination.State.selectCategory,
-                    action: InputAccountsStore.Destination.Action.selectCategory
+                    item: $store.scope(state: \.$destination?.selectCategory, action: \.destination.selectCategory)
                 ) { store in
                     CategoriesView(store)
                 }
                 .navigationDestination(
-                    store: self.store.scope(state: \.$destination, action: { .destination($0) }),
-                    state: /InputAccountsStore.Destination.State.selectSubCategory,
-                    action: InputAccountsStore.Destination.Action.selectSubCategory
+                    item: $store.scope(state: \.$destination?.selectSubCategory, action: \.destination.selectSubCategory)
                 ) { store in
                     SubCategoriesView(store)
                 }
                 .navigationDestination(
-                    store: self.store.scope(state: \.$destination, action: { .destination($0) }),
-                    state: /InputAccountsStore.Destination.State.selectCurrency,
-                    action: InputAccountsStore.Destination.Action.selectCurrency
+                    item: $store.scope(state: \.$destination?.selectCurrency, action: \.destination.selectCurrency)
                 ) { store in
                     CurrencyView(store)
                 }
-            }
-            .onAppear(perform: {
-                viewStore.send(.onAppear)
-            })
         }
+        .onAppear(perform: {
+            store.send(.onAppear)
+        })
         .confirmationDialog(
-          store: self.store.scope(state: \.$choosePhotoDialog, action: { .choosePhotoDialog($0) })
+            store: $store.scope(state: \.$choosePhotoDialog, action: \.$choosePhotoDialog)
         )
     }
     
-    func makeScrollView(_ viewStore: ViewStore<InputAccountsStore.State, InputAccountsStore.Action>) -> some View {
+    var scrollView: some View {
         ScrollView {
             VStack(spacing: 15) {
                 
@@ -76,11 +68,11 @@ public struct InputAccountsView: View {
                 Group {
                     HStack {
                         BoldTextField(
-                            textValue: viewStore.binding(get: \.inputValue, send: InputAccountsStore.Action.textChanged),
-                            placeholderText: viewStore.state.inputPlaceholder,
+                            textValue: store.binding(get: \.inputValue, send: InputAccountsStore.Action.textChanged),
+                            placeholderText: store.state.inputPlaceholder,
                             fontSize: 48
                         ) { item in
-                            viewStore.send(.input(item))
+                            store.send(.input(item))
                         }
                         .font(.system(size: 48, weight: .bold))
                         Spacer()
@@ -90,7 +82,7 @@ public struct InputAccountsView: View {
                 Group {
                     HStack {
                         Button(action: {
-                            viewStore.send(.tapCurrency(nil))
+                            store.send(.tapCurrency(nil))
                         }, label: {
                             HStack {
                                 Text("USD") // TODO: update here to real data.
@@ -107,10 +99,10 @@ public struct InputAccountsView: View {
                     .horizontal,
                     showsIndicators: false) {
                         LazyHStack(spacing: 20) {
-                            ForEach(viewStore.billsType, id: \.self) { value in
+                            ForEach(store.billsType, id: \.self) { value in
                                 
                                 Button {
-                                    viewStore.send(.billsType(value))
+                                    store.send(.billsType(value))
                                 } label: {
                                     HStack {
                                         value.icon
@@ -120,8 +112,8 @@ public struct InputAccountsView: View {
                                     }
                                     .padding()
                                 }
-                                .foregroundStyle(viewStore.selectedBillType == value ? Color.white : Color.black)
-                                .background(viewStore.selectedBillType == value ? Color.flatGreen : Color.lightGray)
+                                .foregroundStyle(store.selectedBillType == value ? Color.white : Color.black)
+                                .background(store.selectedBillType == value ? Color.flatGreen : Color.lightGray)
                                 .frame(height: 50)
                                 .clipShape(RoundedRectangle(cornerRadius: 12))
                             }
@@ -133,7 +125,7 @@ public struct InputAccountsView: View {
                     HStack {
                         Button {
                             // TODO: add real params.
-                            viewStore.send(.tapBigCategory(nil))
+                            store.send(.tapBigCategory(nil))
                         } label: {
                             HStack {
                                 VStack {
@@ -160,7 +152,7 @@ public struct InputAccountsView: View {
                     HStack {
                         Button {
                             // TODO: add real params.
-                            viewStore.send(.tapSubCategory(nil))
+                            store.send(.tapSubCategory(nil))
                         } label: {
                             HStack {
                                 VStack {
@@ -185,7 +177,7 @@ public struct InputAccountsView: View {
                 // Date
                 Group {
                     HStack {
-                        DatePicker("", selection: viewStore.binding(get: \.inputDate, send: InputAccountsStore.Action.dateChanged), displayedComponents: [.date, .hourAndMinute])
+                        DatePicker("", selection: store.binding(get: \.inputDate, send: InputAccountsStore.Action.dateChanged), displayedComponents: [.date, .hourAndMinute])
                             .labelsHidden()
                         Spacer()
                     }
@@ -194,7 +186,7 @@ public struct InputAccountsView: View {
                 Group {
                     HStack {
                         Button {
-                            viewStore.send(.tapChoosePhoto)
+                            store.send(.tapChoosePhoto)
                         } label: {
                             VStack {
                                 HStack(alignment: .center) {
