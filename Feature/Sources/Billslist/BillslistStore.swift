@@ -73,6 +73,10 @@ public struct BillslistStore {
                     )
                 )
                 return .none
+            case let .destination(.presented(.setting(.delegate(.didSelectLedger(ledger))))):
+                state.ledger = ledger
+                state.bills = Self.makeBillSections(from: ledger)
+                return .none
             case .ledgersResponse(let ledgers):
                 guard !ledgers.isEmpty else {
                     state.bills = []
