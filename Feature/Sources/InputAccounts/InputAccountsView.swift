@@ -56,6 +56,7 @@ public struct InputAccountsView: View {
             store.send(.onAppear)
         })
         .confirmationDialog($store.scope(state: \.choosePhotoDialog, action: \.choosePhotoDialog))
+        .alert($store.scope(state: \.alert, action: \.alert))
     }
 
     var scrollView: some View {
@@ -80,10 +81,10 @@ public struct InputAccountsView: View {
                 Group {
                     HStack {
                         Button(action: {
-                            store.send(.tapCurrency(nil))
+                            store.send(.tapCurrency)
                         }, label: {
                             HStack {
-                                Text("USD") // TODO: update here to real data.
+                                Text(store.selectedCurrency.shortName)
                                     .font(.system(size: 20, weight: .bold))
                                 Image(systemName: "chevron.down")
                             }
@@ -122,12 +123,11 @@ public struct InputAccountsView: View {
                 Group {
                     HStack {
                         Button {
-                            // TODO: add real params.
-                            store.send(.tapBigCategory(nil))
+                            store.send(.tapBigCategory(store.selectedMainCategory))
                         } label: {
                             HStack {
                                 VStack {
-                                    Text("大分類")
+                                    Text(store.selectedMainCategory?.name ?? "大分類")
                                         .font(.system(size: 20))
                                     Spacer()
                                 }
@@ -149,12 +149,11 @@ public struct InputAccountsView: View {
                 Group {
                     HStack {
                         Button {
-                            // TODO: add real params.
-                            store.send(.tapSubCategory(nil))
+                            store.send(.tapSubCategory(store.selectedSubCategory))
                         } label: {
                             HStack {
                                 VStack {
-                                    Text("小分類")
+                                    Text(store.selectedSubCategory?.name ?? "小分類")
                                         .font(.system(size: 20))
                                     Spacer()
                                 }
@@ -208,12 +207,16 @@ public struct InputAccountsView: View {
                 Spacer()
                 Group {
                     Button {
-                        
+                        store.send(.tapRecord)
                     } label: {
                         HStack {
                             Spacer()
-                            Text("Record")
-                                .font(.system(size: 24, weight: .bold))
+                            if store.isSaving {
+                                ProgressView()
+                            } else {
+                                Text("Record")
+                                    .font(.system(size: 24, weight: .bold))
+                            }
                             Spacer()
                         }
                     }
@@ -221,7 +224,8 @@ public struct InputAccountsView: View {
                     .background(Color.black)
                     .foregroundStyle(Color.white)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
-                                                
+                    .disabled(store.isSaving)
+
                 }
             }
         }

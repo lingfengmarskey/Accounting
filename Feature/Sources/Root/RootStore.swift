@@ -79,7 +79,8 @@ public struct RootStore {
                         return .none
                     }
                     let billsState = BillslistStore.State(
-                        bills: Self.makeBillSections(from: ledger)
+                        bills: Self.makeBillSections(from: ledger),
+                        ledger: ledger
                     )
                     state.bills = billsState
                     state.destination = .billslist(billsState)
@@ -90,9 +91,13 @@ public struct RootStore {
 //                state.destination = nil
                 if let book = state.bookConfig.book {
                     let billSections = Self.makeBillSections(from: book)
-                    state.destination = .billslist(BillslistStore.State(bills: billSections))
+                    let billsState = BillslistStore.State(bills: billSections, ledger: book)
+                    state.bills = billsState
+                    state.destination = .billslist(billsState)
                 } else {
-                    state.destination = .billslist(BillslistStore.State(bills: []))
+                    let billsState = BillslistStore.State(bills: [])
+                    state.bills = billsState
+                    state.destination = .billslist(billsState)
                 }
                 return .none
             default:
