@@ -10,7 +10,7 @@ import CoreData
 import CloudKit
 import UIKit
 import ComposableArchitecture
-
+import Domain
 
 public enum LedgerDataClientKey: DependencyKey {
   public static let liveValue: LedgerDataClient = .live
@@ -88,13 +88,87 @@ extension LedgerDataClient {
 
 public struct LedgerAdapter {
     static func from(entity: LedgerEntity) -> AccountBook {
-        AccountBook(
-            owner: .init(id: entity.ownerID ?? "", name: entity.ownerName ?? ""),
-            participacer: entity.participacers?.convertToParticipacers(permission: .read) ?? [],
-            bills: [],
+        // owner 对象
+        let owner = User(
+            id: entity.ownerID ?? "",
+            name: entity.ownerName ?? ""
+        )
+        
+        // participacer 列表
+        let participacers: [Participacer]
+        if let set = entity.participacers {
+            participacers = set.convertToParticipacers(permission: .read)
+        } else {
+            participacers = []
+        }
+        
+        // bills 列表（实际为 TransactionEntity）
+        let bills: [Bill]
+        if let transactionSet = entity.bills as? Set<TransactionEntity> {
+            bills = transactionSet.compactMap { BillAdapter.from(entity: $0) }
+        } else {
+            bills = []
+        }
+        
+        // 时间格式化
+        let dateFormatter = ISO8601DateFormatter()
+        let createdAtString = entity.createdAt.map { dateFormatter.string(from: $0) } ?? ""
+        
+        // AccountBook 组装
+        return AccountBook(
+            owner: owner,
+            participacer: participacers,
+            bills: bills,
             id: entity.id ?? "",
             name: entity.title ?? "",
-            createdAt: entity.createdAt?.ISO8601Format() ?? ""
+            createdAt: createdAtString
+        )
+    }
+}
+
+public struct BillAdapter {
+    static func from(entity: TransactionEntity) -> Bill {
+        // 账单类型
+        let billType = BillType(rawValue: entity.type ?? "0") ?? .payment
+        
+        // 主分类
+        let mainCategory = BillMainCategory(
+            id: entity.mainCategory?.id?.uuidString ?? "",
+            name: entity.mainCategory?.name ?? "",
+            subCategories: [] // 如需详细子类，请关联转换
+        )
+        // 子分类
+        let subCategory = BillSubCategory(
+            id: entity.subCategory?.id?.uuidString ?? "",
+            name: entity.subCategory?.name ?? ""
+        )
+        
+        // 创建人
+        let createdBy = User(
+            id: entity.createdByUser?.id?.uuidString ?? "",
+            name: entity.createdByUser?.name ?? ""
+        )
+        let updatedBy = User(
+            id: entity.updatedByUser?.id?.uuidString ?? "",
+            name: entity.updatedByUser?.name ?? ""
+        )
+        
+        // 时间格式化
+        let dateFormatter = ISO8601DateFormatter()
+        let createdAt = entity.createdAt.map { dateFormatter.string(from: $0) } ?? ""
+        let updatedAt = entity.updatedAt.map { dateFormatter.string(from: $0) } ?? ""
+        
+        return Bill(
+            id: entity.id?.uuidString ?? "",
+            value: entity.value,
+            type: billType,
+            mainCategory: mainCategory,
+            subCategory: subCategory,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+            createdByUser: createdBy,
+            updatedByUser: updatedBy,
+            description: entity.descriptionContent ?? ""
         )
     }
 }
