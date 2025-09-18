@@ -74,12 +74,8 @@ public struct BillslistStore {
                 )
                 return .none
             case .destination(.presented(.addAccounts(.saveResponse(.success)))):
-                guard
-                    case .addAccounts(let addAccountsState) = state.destination,
-                    addAccountsState.isSaving == false
-                else {
-                    return .none
-                }
+                // Saving has completed successfully inside InputAccountsStore.
+                // Dismiss and refresh ledgers/bills.
                 state.destination = nil
                 return .run { send in
                     let ledgers = await ledgerClient.fetchLedgers()
@@ -139,4 +135,3 @@ private extension AccountBook {
         createdAt: ""
     )
 }
-
