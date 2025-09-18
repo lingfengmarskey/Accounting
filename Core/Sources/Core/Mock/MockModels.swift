@@ -77,7 +77,7 @@ public extension Bill {
         Bill(
             id: modelFaker.number.increasingUniqueId().stringValue,
             value: modelFaker.number.randomDouble(),
-            type: .init(rawValue: modelFaker.number.randomInt(min: 0, max: 2))!,
+            type: .init(rawValue: "\(modelFaker.number.randomInt(min: 0, max: 2))")!,
             mainCategory: .stub(),
             subCategory: .stub(),
             createdAt: modelFaker.date.between(.init(timeIntervalSince1970: 1661906440), .init()).systemFormatDate,

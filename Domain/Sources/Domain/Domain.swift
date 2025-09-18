@@ -51,9 +51,9 @@ public enum Role: Int {
 //    var description: String { get }
 //}
 
-public enum BillType: Int {
-    case payment = 0
-    case income
+public enum BillType: String {
+    case payment = "0"
+    case income = "1"
 }
 
 public extension BillType {
