@@ -25,7 +25,7 @@ public struct AccountBookConfigView: View {
     public var body: some View {
         NavigationStack {
             scrollView
-            .navigationTitle("Account Book")
+            .navigationTitle(store.isCreate ? "add account book" : "edit account book")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button(action: {
@@ -52,11 +52,12 @@ public struct AccountBookConfigView: View {
             //                    // make icloudSharedController
             //                }
         }
+        .alert($store.scope(state: \.alert, action: \.alert))
         .onAppear {
             store.send(.onAppear)
         }
     }
-    
+
     var scrollView: some View {
         ScrollView {
             VStack(alignment: .leading) {
@@ -64,16 +65,17 @@ public struct AccountBookConfigView: View {
                     .font(.headline)
                 TextField("Name Your Account Book", text: $store.name)
                     .textFieldStyle(.roundedBorder)
-                
-                
-                Group {
-                    Text("Participators")
-                        .font(.headline)
-                    LazyVGrid(columns: gridItems) {
-                        ForEach(0 ... store.paticipators.count, id: \.self) {
-                            let model = $0 == store.paticipators.count ? nil : store.paticipators[$0]
-                            ParticipatorView(user: model) { user in
-                                store.send(.tapUser(user?.id))
+
+                if !store.isCreate {
+                    Group {
+                        Text("Participators")
+                            .font(.headline)
+                        LazyVGrid(columns: gridItems) {
+                            ForEach(0 ... store.paticipators.count, id: \.self) {
+                                let model = $0 == store.paticipators.count ? nil : store.paticipators[$0]
+                                ParticipatorView(user: model) { user in
+                                    store.send(.tapUser(user?.id))
+                                }
                             }
                         }
                     }

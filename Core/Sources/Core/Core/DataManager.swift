@@ -25,8 +25,12 @@ var ledgerClient: LedgerDataClient {
 
 public struct LedgerDataClient {
     public var fetchLedgers: @Sendable () async -> [AccountBook]
-    public var addLedger: @Sendable (_ title: String, _ ownerID: String) async -> Void // title, ownerID
+    public var addLedger: @Sendable (_ title: String, _ ownerID: String, _ ownerName: String) async throws -> AccountBook
     public var deleteLedger: @Sendable (String) async -> Void // ledger ID
+}
+
+public enum LedgerDataClientError: Error {
+    case saveFailed
 }
 
 extension LedgerDataClient {
@@ -39,16 +43,22 @@ extension LedgerDataClient {
             let models = ledgers.map(LedgerAdapter.from)
             return models
         },
-        addLedger: { title, ownerID in
+        addLedger: { title, ownerID, ownerName in
             let context = PersistenceController.shared.container.viewContext
             let ledger = LedgerEntity(context: context)
             ledger.id = UUID().uuidString
             ledger.title = title
             ledger.createdAt = Date()
             ledger.ownerID = ownerID
-            ledger.ownerName = nil
+            ledger.ownerName = ownerName
             ledger.recordName = UUID().uuidString
-            try? context.save()
+            do {
+                try context.save()
+            } catch {
+                context.rollback()
+                throw LedgerDataClientError.saveFailed
+            }
+            return LedgerAdapter.from(entity: ledger)
         },
         deleteLedger: { id in
             let context = PersistenceController.shared.container.viewContext
@@ -63,11 +73,16 @@ extension LedgerDataClient {
     
     public static let mock = LedgerDataClient {
         []
-    } addLedger: { title, ownerID in
-        
-    } deleteLedger: { ledgerID in
-        
-    }
+    } addLedger: { title, ownerID, ownerName in
+        AccountBook(
+            owner: .init(id: ownerID, name: ownerName),
+            participacer: [],
+            bills: [],
+            id: UUID().uuidString,
+            name: title,
+            createdAt: Date().ISO8601Format()
+        )
+    } deleteLedger: { _ in }
 
 }
 
