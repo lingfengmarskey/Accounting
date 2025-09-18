@@ -216,7 +216,7 @@ extension TransactionDataClient {
         }
 
         let transaction = TransactionEntity(context: context)
-        transaction.id = UUID()
+        transaction.id = UUID().uuidString
         transaction.value = value
         transaction.type = type.rawValue
         transaction.createdAt = date
@@ -334,23 +334,23 @@ public struct BillAdapter {
 
         // 主分类
         let mainCategory = BillMainCategory(
-            id: entity.mainCategory?.id?.uuidString ?? "",
+            id: entity.mainCategory?.id ?? "",
             name: entity.mainCategory?.name ?? "",
             subCategories: [] // 如需详细子类，请关联转换
         )
         // 子分类
         let subCategory = BillSubCategory(
-            id: entity.subCategory?.id?.uuidString ?? "",
+            id: entity.subCategory?.id ?? "",
             name: entity.subCategory?.name ?? ""
         )
         
         // 创建人
         let createdBy = User(
-            id: entity.createdByUser?.id?.uuidString ?? "",
+            id: entity.createdByUser?.id ?? "",
             name: entity.createdByUser?.name ?? ""
         )
         let updatedBy = User(
-            id: entity.updatedByUser?.id?.uuidString ?? "",
+            id: entity.updatedByUser?.id ?? "",
             name: entity.updatedByUser?.name ?? ""
         )
         
@@ -360,7 +360,7 @@ public struct BillAdapter {
         let updatedAt = entity.updatedAt.map { dateFormatter.string(from: $0) } ?? ""
         
         return Bill(
-            id: entity.id?.uuidString ?? "",
+            id: entity.id ?? "",
             value: entity.value,
             type: billType,
             mainCategory: mainCategory,
@@ -388,11 +388,7 @@ private func fetchOrCreateMainCategoryEntity(from category: BillMainCategory, co
     }
 
     let entity = BillMainCategoryEntity(context: context)
-    if let uuid = UUID(uuidString: category.id) {
-        entity.id = uuid
-    } else {
-        entity.id = UUID()
-    }
+    entity.id = category.id
     entity.name = category.name
     return entity
 }
@@ -412,11 +408,7 @@ private func fetchOrCreateSubCategoryEntity(from category: BillSubCategory, main
     }
 
     let entity = BillSubCategoryEntity(context: context)
-    if let uuid = UUID(uuidString: category.id) {
-        entity.id = uuid
-    } else {
-        entity.id = UUID()
-    }
+    entity.id = category.id
     entity.name = category.name
     entity.mainCategory = mainCategoryEntity
     return entity
@@ -424,11 +416,8 @@ private func fetchOrCreateSubCategoryEntity(from category: BillSubCategory, main
 
 private func fetchOrCreateUserEntity(from user: User, context: NSManagedObjectContext) throws -> UserEntity {
     let request: NSFetchRequest<UserEntity> = UserEntity.fetchRequest()
-    if let uuid = UUID(uuidString: user.id) {
-        request.predicate = NSPredicate(format: "id == %@", uuid as CVarArg)
-    } else {
-        request.predicate = NSPredicate(value: false)
-    }
+
+    request.predicate = NSPredicate(format: "id == %@", user.id as CVarArg)
 
     if let existing = try context.fetch(request).first {
         existing.name = user.name
@@ -436,11 +425,7 @@ private func fetchOrCreateUserEntity(from user: User, context: NSManagedObjectCo
     }
 
     let entity = UserEntity(context: context)
-    if let uuid = UUID(uuidString: user.id) {
-        entity.id = uuid
-    } else {
-        entity.id = UUID()
-    }
+    entity.id = user.id
     entity.name = user.name
     return entity
 }

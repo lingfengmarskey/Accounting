@@ -79,7 +79,7 @@ public extension Participacer {
     static let none = Participacer(permission: .read, id: "", name: "")
     static func from(_ user: UserEntity, permission: Permission) -> Participacer? {
         guard let userId = user.id, let name = user.name else { return nil }
-        return .init(permission: permission, id: userId.uuidString, name: name)
+        return .init(permission: permission, id: userId, name: name)
     }
 }
 
@@ -147,6 +147,11 @@ public extension Bill {
     )
 }
 
+public enum BillCategoryScope: Equatable {
+    case `public`
+    case `private`
+}
+
 /// 账单类别
 ///
 /// Zone:
@@ -160,10 +165,18 @@ public struct BillMainCategory: Equatable, Identifiable {
     public let name: String
     public let subCategories: [BillSubCategory]
     
-    public init(id: String, name: String, subCategories: [BillSubCategory]) {
+    public let scope: BillCategoryScope
+
+    public init(
+        id: String,
+        name: String,
+        subCategories: [BillSubCategory],
+        scope: BillCategoryScope = .public
+    ) {
         self.id = id
         self.name = name
         self.subCategories = subCategories
+        self.scope = scope
     }
 }
 
@@ -183,9 +196,20 @@ public struct BillSubCategory: Equatable {
     public let id: String
     public let name: String
     
-    public init(id: String, name: String) {
+    public let mainCategoryID: String?
+    
+    public let scope: BillCategoryScope
+
+        public init(
+            id: String,
+            name: String,
+            mainCategoryID: String? = nil,
+            scope: BillCategoryScope = .public
+        ) {
         self.id = id
         self.name = name
+            self.mainCategoryID = mainCategoryID
+                    self.scope = scope
     }
 }
 

@@ -94,13 +94,11 @@ extension BillMainCategory {
         .init(
             id: modelFaker.number.increasingUniqueId().stringValue,
             name: modelFaker.name.title(),
-            subCategories: [
-                .stub(),
-                .stub(),
-                .stub()
-            ])
+            subCategories: .stub(),
+            scope: .public)
     }
 }
+
 
 public extension [BillMainCategory] {
     static func stub() -> [BillMainCategory] {
@@ -110,14 +108,6 @@ public extension [BillMainCategory] {
             result.append(.stub())
         }
         return result
-    }
-}
-
-extension BillSubCategory {
-    static func stub() -> BillSubCategory {
-        .init(id: modelFaker.number.increasingUniqueId().stringValue,
-              name: modelFaker.name.title()
-        )
     }
 }
 
@@ -184,5 +174,15 @@ public extension [BillSectionData] {
             result.append(.stub())
         }
         return result
+    }
+}
+
+extension BillSubCategory {
+    static func stub() -> BillSubCategory {
+        .init(id: modelFaker.number.increasingUniqueId().stringValue,
+              name: modelFaker.name.title(),
+              mainCategoryID: modelFaker.number.increasingUniqueId().stringValue,
+              scope: .public
+        )
     }
 }
