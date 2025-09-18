@@ -37,6 +37,13 @@
         <relationship name="subCategory" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="BillSubCategoryEntity" inverseName="bills" inverseEntity="BillSubCategoryEntity"/>
         <relationship name="updatedByUser" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="UserEntity" inverseName="updatedBills" inverseEntity="UserEntity"/>
     </entity>
+    <entity name="CurrencyEntity" representedClassName="CurrencyEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="recordName" optional="YES" attributeType="String"/>
+        <attribute name="shortName" optional="YES" attributeType="String"/>
+        <attribute name="fullName" optional="YES" attributeType="String"/>
+        <attribute name="rate" optional="YES" attributeType="Double" usesScalarValueType="YES"/>
+        <attribute name="modifiedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+    </entity>
     <entity name="UserEntity" representedClassName="UserEntity" syncable="YES" codeGenerationType="class">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
@@ -52,6 +59,7 @@
         <memberEntity name="TransactionEntity"/>
         <memberEntity name="BillSubCategoryEntity"/>
         <memberEntity name="UserEntity"/>
+        <memberEntity name="CurrencyEntity"/>
     </configuration>
     <configuration name="Local">
         <memberEntity name="LedgerEntity"/>
@@ -59,5 +67,6 @@
         <memberEntity name="TransactionEntity"/>
         <memberEntity name="BillSubCategoryEntity"/>
         <memberEntity name="UserEntity"/>
+        <memberEntity name="CurrencyEntity"/>
     </configuration>
 </model>

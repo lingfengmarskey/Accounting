@@ -123,7 +123,14 @@ extension BillSubCategory {
 
 extension CurrencyModel {
     static func stub() -> CurrencyModel {
-        .init(shortName: modelFaker.name.prefix(), fullName: modelFaker.name.firstName(), rate: modelFaker.number.randomCGFloat(min: 0, max: 2))
+        let modifiedAt = Date().addingTimeInterval(-TimeInterval.random(in: 0...100_000))
+        return .init(
+            recordName: UUID().uuidString,
+            shortName: modelFaker.name.prefix(),
+            fullName: modelFaker.name.firstName(),
+            rate: Double.random(in: 0...2),
+            modifiedAt: modifiedAt
+        )
     }
 }
 

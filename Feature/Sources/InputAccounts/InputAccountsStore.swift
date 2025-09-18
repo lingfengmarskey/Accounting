@@ -326,7 +326,7 @@ public struct InputAccountsStore {
  
 extension InputAccountsStore {
     struct Constants {
-        static let usdCurrency = CurrencyModel(shortName: "USD", fullName: "United States Dollar", rate: 1)
+        static let usdCurrency = CurrencyModel.usd
         static let placeholderLedger = AccountBook(
             owner: .init(id: "", name: ""),
             participacer: [],

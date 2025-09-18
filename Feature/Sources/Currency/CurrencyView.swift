@@ -28,6 +28,12 @@ public struct CurrencyView: View {
         
         NavigationStack {
             ScrollView {
+                if store.isLoading && store.currencies.isEmpty {
+                    ProgressView()
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                }
+
                 LazyVGrid(columns: items,
                           alignment: .leading,
                           spacing: 10,
@@ -39,7 +45,7 @@ public struct CurrencyView: View {
                             HStack(spacing: 20) {
                                 Text("\(store.currencies[idx].shortName.firstValue)")
                                     .font(.system(size: 20, weight: .bold))
-                                
+
                                 Text("\(store.currencies[idx].fullName)")
                                     .font(.system(size: 20, weight: .bold))
                                 Spacer()
@@ -48,7 +54,7 @@ public struct CurrencyView: View {
                             .padding()
                             .background(store.selectedCurrency == store.currencies[idx] ? Color.flatGreen : Color.lightGray)
                             .clipShape(RoundedRectangle(cornerRadius: 8))
-                            
+
                         })
                     }
                 })
@@ -68,14 +74,18 @@ public struct CurrencyView: View {
         .onAppear(perform: {
             store.send(.onAppear)
         })
+        .alert(store: store.scope(state: \.$alert, action: \.alert))
     }
 }
 
 
 #Preview {
-    CurrencyView(
-        Store(initialState: CurrencyStore.State(), reducer: {
+    let currencies = [CurrencyModel].stub()
+    return CurrencyView(
+        Store(initialState: CurrencyStore.State(currencies: currencies, selectedCurrency: currencies.first)) {
             CurrencyStore()
-        })
+        } withDependencies: {
+            $0.currencyClient = .stub
+        }
     )
 }
