@@ -27,7 +27,9 @@ public struct InputAccountsStore {
         var tapPlus: Bool
         var billsType: [BillType]
         var selectedBillType: BillType
-        var showPhotoLib = false
+        var selectedImageData: Data?
+        var isCameraPickerPresented = false
+        var isPhotoLibraryPresented = false
         var ledger: AccountBook
         var selectedCurrency: CurrencyModel
         var selectedMainCategory: BillMainCategory?
@@ -36,6 +38,12 @@ public struct InputAccountsStore {
         var isSaving: Bool
         var currentOperator: Operator?
         var currentOperand: String?
+
+        var isFormValid: Bool {
+            guard Double(inputValue) != nil else { return false }
+            guard let mainCategory = selectedMainCategory else { return false }
+            return !mainCategory.id.isEmpty
+        }
 
         @Presents var destination: Destination.State?
         @Presents var choosePhotoDialog: ConfirmationDialogState<Action.ChoosePhotoDialog>?
@@ -53,7 +61,10 @@ public struct InputAccountsStore {
                     selectedMainCategory: BillMainCategory? = nil,
                     selectedSubCategory: BillSubCategory? = nil,
                     memo: String = "",
-                    isSaving: Bool = false
+                    isSaving: Bool = false,
+                    selectedImageData: Data? = nil,
+                    isCameraPickerPresented: Bool = false,
+                    isPhotoLibraryPresented: Bool = false
         ) {
             if title.isEmpty {
                 self.title = selectedBillType == .income ? "Income" : "Payment"
@@ -72,6 +83,9 @@ public struct InputAccountsStore {
             self.selectedSubCategory = selectedSubCategory
             self.memo = memo
             self.isSaving = isSaving
+            self.selectedImageData = selectedImageData
+            self.isCameraPickerPresented = isCameraPickerPresented
+            self.isPhotoLibraryPresented = isPhotoLibraryPresented
         }
     }
 
@@ -99,6 +113,9 @@ public struct InputAccountsStore {
         case destination(PresentationAction<Destination.Action>)
         case tapChoosePhoto
         case choosePhotoDialog(PresentationAction<ChoosePhotoDialog>)
+        case presentImagePicker(ImageSource)
+        case imagePicked(Data)
+        case removeImage
         case tapRecord
         case saveResponse(Result<Bill, Error>)
         case alert(PresentationAction<Alert>)
@@ -106,6 +123,10 @@ public struct InputAccountsStore {
         public enum ChoosePhotoDialog: Equatable {
             case fromCamera
             case fromLibrary
+        }
+        public enum ImageSource: Equatable {
+            case camera
+            case photoLibrary
         }
         public enum Alert: Equatable {
             case acknowledge
@@ -175,13 +196,45 @@ public struct InputAccountsStore {
                 })
                 return .none
             case .choosePhotoDialog(.presented(.fromCamera)):
-                // TODO:
-                // present imagepicker
-                return .none
+                return .send(.presentImagePicker(.camera))
             case .choosePhotoDialog(.presented(.fromLibrary)):
-                // TODO:
-                // present photo picker
-                state.showPhotoLib = true
+                return .send(.presentImagePicker(.photoLibrary))
+            case .presentImagePicker(.camera):
+                state.isCameraPickerPresented = true
+                state.destination = .fromCamera(
+                    .init(source: .camera)
+                )
+                return .none
+            case .presentImagePicker(.photoLibrary):
+                state.isPhotoLibraryPresented = true
+                state.destination = .fromLibrary(
+                    .init(source: .photoLibrary)
+                )
+                return .none
+            case let .destination(.presented(.fromCamera(.didFinishPicking(data)))):
+                return .send(.imagePicked(data))
+            case .destination(.presented(.fromCamera(.didCancel))):
+                state.isCameraPickerPresented = false
+                state.destination = nil
+                return .none
+            case let .destination(.presented(.fromLibrary(.didFinishPicking(data)))):
+                return .send(.imagePicked(data))
+            case .destination(.presented(.fromLibrary(.didCancel))):
+                state.isPhotoLibraryPresented = false
+                state.destination = nil
+                return .none
+            case .destination(.dismiss):
+                state.isCameraPickerPresented = false
+                state.isPhotoLibraryPresented = false
+                return .none
+            case let .imagePicked(data):
+                state.selectedImageData = data
+                state.isCameraPickerPresented = false
+                state.isPhotoLibraryPresented = false
+                state.destination = nil
+                return .none
+            case .removeImage:
+                state.selectedImageData = nil
                 return .none
             case .input(let value):
                 switch value {
@@ -230,8 +283,14 @@ public struct InputAccountsStore {
                     state.alert = Self.makeAlert(message: "金額を入力してください。")
                     return .none
                 }
-                let mainCategory = state.selectedMainCategory ?? BillMainCategory(id: UUID().uuidString, name: "未分類", subCategories: [])
-                let subCategory = state.selectedSubCategory ?? BillSubCategory(id: UUID().uuidString, name: "未分類")
+                guard let mainCategory = state.selectedMainCategory else {
+                    state.alert = Self.makeAlert(message: "カテゴリを選択してください。")
+                    return .none
+                }
+                guard let subCategory = state.selectedSubCategory else {
+                    state.alert = Self.makeAlert(message: "サブカテゴリを選択してください。")
+                    return .none
+                }
                 var descriptionText = state.memo
                 let currency = state.selectedCurrency.shortName
                 if !currency.isEmpty {
@@ -320,8 +379,40 @@ public struct InputAccountsStore {
         case selectCategory(CategoriesStore)
         case selectSubCategory(SubCategoriesStore)
         case selectCurrency(CurrencyStore)
-        case fromCamera
-        case fromLibrary
+        case fromCamera(ImagePicker)
+        case fromLibrary(ImagePicker)
+    }
+}
+
+extension InputAccountsStore.Destination {
+    @Reducer
+    public struct ImagePicker {
+        @ObservableState
+        public struct State: Equatable, Identifiable {
+            public let id: UUID
+            public let source: Source
+
+            public init(id: UUID = UUID(), source: Source) {
+                self.id = id
+                self.source = source
+            }
+        }
+
+        public enum Source: Equatable {
+            case camera
+            case photoLibrary
+        }
+
+        public enum Action: Equatable {
+            case didFinishPicking(Data)
+            case didCancel
+        }
+
+        public var body: some ReducerOf<Self> {
+            Reduce { _, _ in
+                .none
+            }
+        }
     }
 }
  

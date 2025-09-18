@@ -77,6 +77,17 @@ public struct BillslistStore {
                 state.ledger = ledger
                 state.bills = Self.makeBillSections(from: ledger)
                 return .none
+            case .destination(.presented(.addAccounts(.saveResponse(.success)))):
+                // Saving has completed successfully inside InputAccountsStore.
+                // Dismiss and refresh ledgers/bills.
+                state.destination = nil
+                return .run { send in
+                    let ledgers = await ledgerClient.fetchLedgers()
+                    await send(.ledgersResponse(ledgers))
+                }
+            case .destination(.dismiss):
+                state.destination = nil
+                return .none
             case .ledgersResponse(let ledgers):
                 guard !ledgers.isEmpty else {
                     state.bills = []
@@ -128,4 +139,3 @@ private extension AccountBook {
         createdAt: ""
     )
 }
-
