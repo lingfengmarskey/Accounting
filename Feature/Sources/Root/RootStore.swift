@@ -22,7 +22,7 @@ public struct RootStore {
 
     @ObservableState
     public struct State {
-        public var accountBooklistState = AccountBookConfigStore.State()
+        public var bookConfig = AccountBookConfigStore.State()
 
         var bills: BillslistStore.State = .init()
 
@@ -36,7 +36,7 @@ public struct RootStore {
             ledgers: [AccountBook] = [],
             destination: Destination.State? = nil
         ) {
-            self.accountBooklistState = accountBookConfig
+            self.bookConfig = accountBookConfig
             self.bills = bills
             self.ledgers = ledgers
             self.destination = destination
@@ -56,7 +56,7 @@ public struct RootStore {
     public init() {}
 
     public var body: some Reducer<State, Action> {
-        Scope(state: \.accountBooklistState, action: \.addBookAccount) {
+        Scope(state: \.bookConfig, action: \.addBookAccount) {
             AccountBookConfigStore()
         }
         Scope(state: \.bills, action: \.bills) {
@@ -85,6 +85,16 @@ public struct RootStore {
                     state.destination = .billslist(billsState)
                 }
                 return .none
+            case .addBookAccount(.onSaved):
+                // 这里关闭页面，或切换到账单列表route
+//                state.destination = nil
+                if let book = state.bookConfig.book {
+                    let billSections = Self.makeBillSections(from: book)
+                    state.destination = .billslist(BillslistStore.State(bills: billSections))
+                } else {
+                    state.destination = .billslist(BillslistStore.State(bills: []))
+                }
+                return .none
             default:
                 return .none
             }
@@ -105,3 +115,4 @@ private extension RootStore {
         ]
     }
 }
+

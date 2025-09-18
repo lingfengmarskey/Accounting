@@ -73,6 +73,7 @@ public struct AccountBookConfigStore {
         case destination(PresentationAction<Destination.Action>)
         case alert(PresentationAction<Alert>)
         case binding(BindingAction<State>)
+        case onSaved   // << 新增：用于通知父级保存成功
     
         public enum Alert: Equatable {
             case confirmDiscard
@@ -133,13 +134,10 @@ public struct AccountBookConfigStore {
                     let ownerID = state.book?.owner.id ?? UUID().uuidString
                     let ownerName = state.book?.owner.name ?? "Owner"
                     return .run { send in
-                        await send(
-                            .saveResponse(
-                                TaskResult {
-                                    try await ledgerClient.addLedger(title, ownerID, ownerName)
-                                }
-                            )
-                        )
+                        let result = await Result {
+                            try await ledgerClient.addLedger(title, ownerID, ownerName)
+                        }
+                        await send(.saveResponse(result))
                     }
                 } else if var book = state.book {
                     book.name = state.trimmedName
@@ -155,26 +153,26 @@ public struct AccountBookConfigStore {
                 state.name = book.name
                 state.paticipators = book.participacer
                 state.isSaving = false
-                return .none
+                return .send(.onSaved)  // << 新增，通知父级保存完成做跳转
             case .saveResponse(.failure):
                 state.isSaving = false
                 state.alert = AlertState(
-                    title: TextState("Save Failed"),
-                    message: TextState("Please try again."),
-                    buttons: [
-                        .default(TextState("OK"), action: .send(.acknowledgeFailure))
-                    ]
+                    title: { TextState("Save Failed") },
+                    actions: {
+                        ButtonState(action: .send(.acknowledgeFailure), label: { TextState("OK") })
+                    },
+                    message: { TextState("Please try again.") }
                 )
                 return .none
             case .tapTopCancel:
                 if state.hasEdits {
                     state.alert = AlertState(
-                        title: TextState("Discard changes?"),
-                        message: TextState("Your current edits will be lost."),
-                        buttons: [
-                            .destructive(TextState("Discard"), action: .send(.confirmDiscard)),
-                            .cancel(TextState("Keep Editing"))
-                        ]
+                        title: { TextState("Discard changes?") },
+                        actions: {
+                            ButtonState(role: .destructive, action: .send(.confirmDiscard), label: { TextState("Discard") })
+                            ButtonState(role: .cancel, action: .send(nil), label: { TextState("Keep Editing") })
+                        },
+                        message: { TextState("Your current edits will be lost.") }
                     )
                     return .none
                 }
@@ -189,6 +187,9 @@ public struct AccountBookConfigStore {
                 state.alert = nil
                 return .none
             case .alert:
+                return .none
+            case .onSaved:
+                // 这里通常交由父级处理，不用处理
                 return .none
             default:
                 return .none

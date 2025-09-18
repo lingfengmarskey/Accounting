@@ -98,7 +98,7 @@ public struct AccountBooklistStore {
                 return .none
             case let .booksResponse(books):
                 state.books = books
-                if let selected, !books.contains(where: { $0.id == selected }) {
+                if let selected = state.selected, !books.contains(where: { $0.id == selected }) {
                     state.selected = nil
                     state.saveDisable = true
                 } else {
@@ -137,3 +137,4 @@ public struct AccountBooklistStore {
 //        }
     }
 }
+
