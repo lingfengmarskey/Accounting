@@ -42,8 +42,7 @@ public struct InputAccountsStore {
         var isFormValid: Bool {
             guard Double(inputValue) != nil else { return false }
             guard let mainCategory = selectedMainCategory else { return false }
-            guard let subCategory = selectedSubCategory else { return false }
-            return !mainCategory.id.isEmpty && !subCategory.id.isEmpty
+            return !mainCategory.id.isEmpty
         }
 
         @Presents var destination: Destination.State?
