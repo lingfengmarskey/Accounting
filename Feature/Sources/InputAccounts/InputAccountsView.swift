@@ -59,6 +59,10 @@ public struct InputAccountsView: View {
         .alert($store.scope(state: \.alert, action: \.alert))
     }
 
+    private var isSubCategoryDisabled: Bool {
+        store.selectedMainCategory == nil
+    }
+
     var scrollView: some View {
         ScrollView {
             VStack(spacing: 15) {
@@ -165,9 +169,15 @@ public struct InputAccountsView: View {
                             }
                         }
                         .frame(width: 200, height: 65)
-                        .background(Color.lightGray)
-                        .foregroundStyle(Color.black)
+                        .background(Color.lightGray.opacity(isSubCategoryDisabled ? 0.6 : 1))
+                        .foregroundStyle(isSubCategoryDisabled ? Color.gray : Color.black)
                         .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(isSubCategoryDisabled ? Color.gray.opacity(0.5) : Color.clear, lineWidth: 1)
+                        )
+                        .opacity(isSubCategoryDisabled ? 0.6 : 1)
+                        .disabled(isSubCategoryDisabled)
                         Spacer()
                     }
                 }
