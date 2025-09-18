@@ -76,7 +76,7 @@ public struct CategoriesView: View {
 
 #Preview {
     CategoriesView(
-        Store(initialState: CategoriesStore.State(), reducer: {
+        Store(initialState: CategoriesStore.State(categories: .stub()), reducer: {
             CategoriesStore()
         })
     )
