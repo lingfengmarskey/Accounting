@@ -53,6 +53,103 @@ public enum TransactionDataClientError: Error {
     case saveFailed
 }
 
+public enum CurrencyDataClientKey: DependencyKey {
+    public static let liveValue: CurrencyDataClient = .live
+}
+
+public extension DependencyValues {
+    var currencyClient: CurrencyDataClient {
+        get { self[CurrencyDataClientKey.self] }
+        set { self[CurrencyDataClientKey.self] = newValue }
+    }
+}
+
+public struct CurrencyDataClient {
+    public var fetchLocalCurrencies: @Sendable () async -> [CurrencyModel]
+    public var syncFromCloud: @Sendable () async throws -> [CurrencyModel]
+}
+
+public enum CurrencyDataClientError: LocalizedError {
+    case saveFailed(Error)
+
+    public var errorDescription: String? {
+        switch self {
+        case let .saveFailed(error):
+            return "保存汇率数据失败：\(error.localizedDescription)"
+        }
+    }
+}
+
+extension CurrencyDataClient {
+    public static let live = CurrencyDataClient(
+        fetchLocalCurrencies: {
+            let context = PersistenceController.shared.container.viewContext
+            return await fetchCurrencies(in: context)
+        },
+        syncFromCloud: {
+            let database = CKContainer(identifier: Config.containerIdentifier).publicCloudDatabase
+            let records = try await fetchCurrencyRecords(from: database)
+            let models = records.compactMap(CurrencyModel.init(record:))
+            let latestByRecordName = models.reduce(into: [String: CurrencyModel]()) { partialResult, model in
+                if let existing = partialResult[model.recordName], existing.modifiedAt >= model.modifiedAt {
+                    return
+                }
+                partialResult[model.recordName] = model
+            }
+            let syncedRecordNames = Set(latestByRecordName.keys)
+
+            let container = PersistenceController.shared.container
+            let backgroundContext = container.newBackgroundContext()
+            backgroundContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+
+            try await backgroundContext.perform {
+                let fetchRequest = NSFetchRequest<CurrencyEntity>(entityName: "CurrencyEntity")
+                let existingEntities = try backgroundContext.fetch(fetchRequest)
+                var entitiesByRecordName: [String: CurrencyEntity] = [:]
+
+                for entity in existingEntities {
+                    guard let recordName = entity.recordName else {
+                        backgroundContext.delete(entity)
+                        continue
+                    }
+
+                    if syncedRecordNames.contains(recordName) {
+                        entitiesByRecordName[recordName] = entity
+                    } else {
+                        backgroundContext.delete(entity)
+                    }
+                }
+
+                for (recordName, model) in latestByRecordName {
+                    let entity = entitiesByRecordName[recordName] ?? CurrencyEntity(context: backgroundContext)
+                    model.apply(to: entity)
+                    entitiesByRecordName[recordName] = entity
+                }
+
+                if backgroundContext.hasChanges {
+                    do {
+                        try backgroundContext.save()
+                    } catch {
+                        backgroundContext.reset()
+                        throw CurrencyDataClientError.saveFailed(error)
+                    }
+                }
+            }
+
+            return await fetchCurrencies(in: container.viewContext)
+        }
+    )
+
+    public static let stub = CurrencyDataClient(
+        fetchLocalCurrencies: {
+            [CurrencyModel].stub()
+        },
+        syncFromCloud: {
+            [CurrencyModel].stub()
+        }
+    )
+}
+
 extension LedgerDataClient {
     public static let live = LedgerDataClient(
         fetchLedgers: {
@@ -145,6 +242,49 @@ extension TransactionDataClient {
 
         return BillAdapter.from(entity: transaction)
     }
+}
+
+private func fetchCurrencies(in context: NSManagedObjectContext) async -> [CurrencyModel] {
+    await context.perform {
+        let request = NSFetchRequest<CurrencyEntity>(entityName: "CurrencyEntity")
+        request.sortDescriptors = [NSSortDescriptor(key: "shortName", ascending: true)]
+        let entities = (try? context.fetch(request)) ?? []
+        return entities.compactMap { $0.toModel() }
+    }
+}
+
+private func fetchCurrencyRecords(from database: CKDatabase) async throws -> [CKRecord] {
+    var allRecords: [CKRecord] = []
+    var cursor: CKQueryOperation.Cursor?
+
+    repeat {
+        if let cursor {
+            let response = try await database.records(continuingMatchFrom: cursor)
+            try response.matchResults.forEach { _, result in
+                switch result {
+                case let .success(record):
+                    allRecords.append(record)
+                case let .failure(error):
+                    throw error
+                }
+            }
+            cursor = response.queryCursor
+        } else {
+            let query = CKQuery(recordType: "Currency", predicate: NSPredicate(value: true))
+            let response = try await database.records(matching: query)
+            try response.matchResults.forEach { _, result in
+                switch result {
+                case let .success(record):
+                    allRecords.append(record)
+                case let .failure(error):
+                    throw error
+                }
+            }
+            cursor = response.queryCursor
+        }
+    } while cursor != nil
+
+    return allRecords
 }
 
 public struct LedgerAdapter {

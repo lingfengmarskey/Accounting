@@ -4,6 +4,8 @@
 //
 //  Created by Marcos Meng on 2022/08/04.
 //
+import CloudKit
+import CoreData
 import Domain
 import Foundation
 
@@ -191,21 +193,107 @@ public extension BillSubCategory {
     static let none = BillSubCategory(id: "", name: "")
 }
 
-public struct CurrencyModel: Equatable {
-    public let shortName: String
-    public let fullName: String
-    public let rate: CGFloat
-    
-    public init(shortName: String, fullName: String, rate: CGFloat) {
+public struct CurrencyModel: Equatable, Identifiable {
+    public var recordName: String
+    public var shortName: String
+    public var fullName: String
+    public var rate: Double
+    public var modifiedAt: Date
+
+    public var id: String { recordName }
+
+    public init(recordName: String, shortName: String, fullName: String, rate: Double, modifiedAt: Date) {
+        self.recordName = recordName
         self.shortName = shortName
         self.fullName = fullName
         self.rate = rate
+        self.modifiedAt = modifiedAt
     }
 }
 
 public extension CurrencyModel {
-    static let usd = CurrencyModel(shortName: "USD", fullName: "United States Dollar", rate: 1)
-    static let none = CurrencyModel(shortName: "", fullName: "", rate: 0)
+    static let usd = CurrencyModel(
+        recordName: "USD",
+        shortName: "USD",
+        fullName: "United States Dollar",
+        rate: 1,
+        modifiedAt: .distantPast
+    )
+    static let none = CurrencyModel(
+        recordName: "",
+        shortName: "",
+        fullName: "",
+        rate: 0,
+        modifiedAt: .distantPast
+    )
+}
+
+public extension CurrencyModel {
+    init?(entity: CurrencyEntity) {
+        guard let recordName = entity.recordName,
+              let shortName = entity.shortName,
+              let fullName = entity.fullName
+        else { return nil }
+
+        let modifiedAt = entity.modifiedAt ?? .distantPast
+        self.init(
+            recordName: recordName,
+            shortName: shortName,
+            fullName: fullName,
+            rate: entity.rate,
+            modifiedAt: modifiedAt
+        )
+    }
+
+    init?(record: CKRecord) {
+        guard let shortName = record["shortName"] as? String,
+              let fullName = record["fullName"] as? String,
+              let rate = record["rate"] as? Double
+        else { return nil }
+
+        let modifiedAt = record.modificationDate ?? record.creationDate ?? .distantPast
+        self.init(
+            recordName: record.recordID.recordName,
+            shortName: shortName,
+            fullName: fullName,
+            rate: rate,
+            modifiedAt: modifiedAt
+        )
+    }
+
+    func apply(to entity: CurrencyEntity) {
+        entity.recordName = recordName
+        entity.shortName = shortName
+        entity.fullName = fullName
+        entity.rate = rate
+        entity.modifiedAt = modifiedAt
+    }
+
+    func makeRecord(existingRecord: CKRecord? = nil) -> CKRecord {
+        let record: CKRecord
+        if let existingRecord {
+            record = existingRecord
+        } else {
+            let recordID = CKRecord.ID(recordName: recordName)
+            record = CKRecord(recordType: "Currency", recordID: recordID)
+        }
+        record["shortName"] = shortName as CKRecordValue
+        record["fullName"] = fullName as CKRecordValue
+        record["rate"] = NSNumber(value: rate)
+        return record
+    }
+}
+
+public extension CurrencyEntity {
+    func toModel() -> CurrencyModel? {
+        CurrencyModel(entity: self)
+    }
+}
+
+public extension CKRecord {
+    func toCurrencyModel() -> CurrencyModel? {
+        CurrencyModel(record: self)
+    }
 }
 
 public struct BillSectionData: SectionDataProtocol, Equatable, Identifiable {
