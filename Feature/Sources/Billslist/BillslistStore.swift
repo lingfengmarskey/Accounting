@@ -19,7 +19,14 @@ public struct BillslistStore {
     public struct State{
         var bills: [BillSectionData] = .stub()
         @Presents var destination: Destination.State?
-        public init() {}
+
+        public init(
+            bills: [BillSectionData] = .stub(),
+            destination: Destination.State? = nil
+        ) {
+            self.bills = bills
+            self.destination = destination
+        }
     }
 
     public enum Action {
