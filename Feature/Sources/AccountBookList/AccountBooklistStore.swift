@@ -52,11 +52,13 @@ public struct AccountBooklistStore {
         case tapDetail(bookID: String)
         case setPresent(Bool)
         case removeItem(IndexSet)
+        case booksResponse([AccountBook])
         case binding(BindingAction<State>)
         case accountBookConfig(AccountBookConfigStore.Action)
     }
 
     @Dependency(\.dismiss) var dismiss
+    @Dependency(\.ledgerClient) var ledgerClient
 
     public init() {}
 
@@ -65,7 +67,9 @@ public struct AccountBooklistStore {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                return .none
+                return .run { send in
+                    await send(.booksResponse(await ledgerClient.fetchLedgers()))
+                }
             case .addBook:
                 state.accountBookConfig = .init()
                 return .run { send in
@@ -92,6 +96,15 @@ public struct AccountBooklistStore {
                 state.saveDisable = true
                 state.books.remove(atOffsets: index)
                 return .none
+            case let .booksResponse(books):
+                state.books = books
+                if let selected, !books.contains(where: { $0.id == selected }) {
+                    state.selected = nil
+                    state.saveDisable = true
+                } else {
+                    state.saveDisable = state.selected == nil
+                }
+                return .none
 //            case .binding(let $dd):
 ////                
 ////                state.saveDisable = state.selected == nil
@@ -99,13 +112,18 @@ public struct AccountBooklistStore {
             case .binding:
                 return .none
             case .accountBookConfig(.tapTopCancel):
-                state.isShouldPresent = false
-                // config cancel
                 return .none
-            case .accountBookConfig(.tapTopDone):
+            case .accountBookConfig(.cancelConfirmed):
                 state.isShouldPresent = false
-                // config Done
-                // TODO: save action need be add
+                state.accountBookConfig = .init()
+                return .none
+            case .accountBookConfig(.saveResponse(.success)):
+                state.isShouldPresent = false
+                state.accountBookConfig = .init()
+                return .run { send in
+                    await send(.booksResponse(await ledgerClient.fetchLedgers()))
+                }
+            case .accountBookConfig(.saveResponse(.failure)):
                 return .none
             default:
                 return .none
