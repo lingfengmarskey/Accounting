@@ -48,7 +48,7 @@ public struct InputAccountsStore {
                     tapPlus: Bool = false,
                     billsType: [BillType] = [.income, .payment],
                     selectedBillType: BillType = .payment,
-                    ledger: AccountBook = .placeholderLedger,
+                    ledger: AccountBook,
                     selectedCurrency: CurrencyModel = .usd,
                     selectedMainCategory: BillMainCategory? = nil,
                     selectedSubCategory: BillSubCategory? = nil,
@@ -323,8 +323,8 @@ public struct InputAccountsStore {
         case fromLibrary
     }
 }
-
-private extension InputAccountsStore {
+ 
+extension InputAccountsStore {
     struct Constants {
         static let usdCurrency = CurrencyModel(shortName: "USD", fullName: "United States Dollar", rate: 1)
         static let placeholderLedger = AccountBook(
@@ -350,14 +350,6 @@ private extension InputAccountsStore {
     }
 }
 
-private extension AccountBook {
-    static var placeholderLedger: AccountBook { InputAccountsStore.Constants.placeholderLedger }
-}
-
-private extension CurrencyModel {
-    static var usd: CurrencyModel { InputAccountsStore.Constants.usdCurrency }
-}
-
 extension BillType {
     var icon: Image {
         switch self {
@@ -376,3 +368,4 @@ extension String {
         return Double(self) != nil
     }
 }
+

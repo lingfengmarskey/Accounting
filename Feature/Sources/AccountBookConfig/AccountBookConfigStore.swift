@@ -60,6 +60,8 @@ public struct AccountBookConfigStore {
                 self.paticipators = book.participacer
             }
         }
+        
+        public static var none = State.init(book: nil)
     }
 
     public enum Action: BindableAction {

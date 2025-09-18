@@ -258,7 +258,7 @@ struct AsistButton: View {
 
 #Preview {
     InputAccountsView(
-        Store(initialState: InputAccountsStore.State(), reducer: {
+        Store(initialState: InputAccountsStore.State(ledger: .none), reducer: {
             InputAccountsStore()
         })
     )

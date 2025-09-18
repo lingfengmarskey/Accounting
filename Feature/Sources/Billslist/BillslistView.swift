@@ -96,7 +96,7 @@ public struct BillslistView: View {
 
 #Preview {
     BillslistView(
-        Store(initialState: BillslistStore.State(), reducer: {
+        Store(initialState: BillslistStore.State(bills: [], ledger: .none), reducer: {
             BillslistStore()
         })
     )

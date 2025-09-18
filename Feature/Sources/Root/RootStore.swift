@@ -24,15 +24,15 @@ public struct RootStore {
     public struct State {
         public var bookConfig = AccountBookConfigStore.State()
 
-        var bills: BillslistStore.State = .init()
+        var bills: BillslistStore.State
 
         var ledgers: [AccountBook] = []
 
         @Presents var destination: Destination.State?
 
         public init(
-            accountBookConfig: AccountBookConfigStore.State = AccountBookConfigStore.State(),
-            bills: BillslistStore.State = .init(),
+            accountBookConfig: AccountBookConfigStore.State = .none,
+            bills: BillslistStore.State = .none,
             ledgers: [AccountBook] = [],
             destination: Destination.State? = nil
         ) {
@@ -88,17 +88,14 @@ public struct RootStore {
                 return .none
             case .addBookAccount(.onSaved):
                 // 这里关闭页面，或切换到账单列表route
-//                state.destination = nil
-                if let book = state.bookConfig.book {
-                    let billSections = Self.makeBillSections(from: book)
-                    let billsState = BillslistStore.State(bills: billSections, ledger: book)
-                    state.bills = billsState
-                    state.destination = .billslist(billsState)
-                } else {
-                    let billsState = BillslistStore.State(bills: [])
-                    state.bills = billsState
-                    state.destination = .billslist(billsState)
+                guard let book = state.bookConfig.book else {
+                    print("failed to get book from bookConfig")
+                    return .none
                 }
+                let billSections = Self.makeBillSections(from: book)
+                let billsState = BillslistStore.State(bills: billSections, ledger: book)
+                state.bills = billsState
+                state.destination = .billslist(billsState)
                 return .none
             default:
                 return .none

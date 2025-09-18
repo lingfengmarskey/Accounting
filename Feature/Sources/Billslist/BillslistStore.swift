@@ -22,14 +22,16 @@ public struct BillslistStore {
         @Presents var destination: Destination.State?
 
         public init(
-            bills: [BillSectionData] = .stub(),
-            ledger: AccountBook = .placeholder,
+            bills: [BillSectionData],
+            ledger: AccountBook,
             destination: Destination.State? = nil
         ) {
             self.bills = bills
             self.ledger = ledger
             self.destination = destination
         }
+        
+        public static var none = State.init(bills: [], ledger: .none)
     }
 
     public enum Action {
@@ -65,9 +67,9 @@ public struct BillslistStore {
             case .tapAdd(let type?):
                 state.destination = .addAccounts(
                     .init(
-                        ledger: state.ledger,
+                        title: type == .income ? "Income" : "Payment",
                         selectedBillType: type,
-                        title: type == .income ? "Income" : "Payment"
+                        ledger: state.ledger
                     )
                 )
                 return .none
@@ -122,3 +124,4 @@ private extension AccountBook {
         createdAt: ""
     )
 }
+

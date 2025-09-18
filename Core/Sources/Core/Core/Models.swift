@@ -36,10 +36,19 @@ public struct AccountBook: Equatable, Identifiable {
     }
 }
 
+public extension AccountBook {
+    static let none = AccountBook(
+        owner: .none,
+        participacer: [],
+        bills: [],
+        id: "",
+        name: "",
+        createdAt: ""
+    )
+}
 
 public struct User: Equatable, Identifiable, UserProtocol {
     public var id: String
-    
     public var name: String
     
     public init(id: String, name: String) {
@@ -48,11 +57,13 @@ public struct User: Equatable, Identifiable, UserProtocol {
     }
 }
 
+public extension User {
+    static let none = User(id: "", name: "")
+}
+
 public struct Participacer: Equatable, Identifiable, UserProtocol {
     public var permission: Permission
-    
     public var id: String
-    
     public var name: String
     
     public init(permission: Permission, id: String, name: String) {
@@ -63,6 +74,7 @@ public struct Participacer: Equatable, Identifiable, UserProtocol {
 }
 
 public extension Participacer {
+    static let none = Participacer(permission: .read, id: "", name: "")
     static func from(_ user: UserEntity, permission: Permission) -> Participacer? {
         guard let userId = user.id, let name = user.name else { return nil }
         return .init(permission: permission, id: userId.uuidString, name: name)
@@ -94,23 +106,14 @@ public extension NSSet {
 /// private
 public struct Bill: Equatable, Identifiable {
     public var id: String
-    
     public var value: Double
-    
     public var type: BillType
-    
     public var mainCategory: BillMainCategory
-    
     public var subCategory: BillSubCategory
-    
     public var createdAt: String
-    
     public var updatedAt: String
-    
     public var createdByUser: User
-    
     public var updatedByUser: User
-    
     public var description: String
    
     public init(id: String, value: Double, type: BillType, mainCategory: BillMainCategory, subCategory: BillSubCategory, createdAt: String, updatedAt: String, createdByUser: User, updatedByUser: User, description: String) {
@@ -125,6 +128,21 @@ public struct Bill: Equatable, Identifiable {
         self.updatedByUser = updatedByUser
         self.description = description
     }
+}
+
+public extension Bill {
+    static let none = Bill(
+        id: "",
+        value: 0,
+        type: .payment,
+        mainCategory: .none,
+        subCategory: .none,
+        createdAt: "",
+        updatedAt: "",
+        createdByUser: .none,
+        updatedByUser: .none,
+        description: ""
+    )
 }
 
 /// 账单类别
@@ -147,6 +165,10 @@ public struct BillMainCategory: Equatable, Identifiable {
     }
 }
 
+public extension BillMainCategory {
+    static let none = BillMainCategory(id: "", name: "", subCategories: [])
+}
+
 /// 账单子类别
 ///
 /// Zone:
@@ -165,6 +187,10 @@ public struct BillSubCategory: Equatable {
     }
 }
 
+public extension BillSubCategory {
+    static let none = BillSubCategory(id: "", name: "")
+}
+
 public struct CurrencyModel: Equatable {
     public let shortName: String
     public let fullName: String
@@ -177,20 +203,19 @@ public struct CurrencyModel: Equatable {
     }
 }
 
+public extension CurrencyModel {
+    static let usd = CurrencyModel(shortName: "USD", fullName: "United States Dollar", rate: 1)
+    static let none = CurrencyModel(shortName: "", fullName: "", rate: 0)
+}
 
 public struct BillSectionData: SectionDataProtocol, Equatable, Identifiable {
     public typealias CellData = Bill
-    
     public typealias HeaderData = String
-    
     public typealias FooterData = String
 
     public var id: String
-    
     public var header: String?
-    
     public var footer: String?
-    
     public var cells: [Bill]
 
     public init(id: String, header: String? = nil, footer: String? = nil, cells: [Bill]) {
@@ -201,8 +226,9 @@ public struct BillSectionData: SectionDataProtocol, Equatable, Identifiable {
     }
 }
 
-
-
+public extension BillSectionData {
+    static let none = BillSectionData(id: "", header: nil, footer: nil, cells: [])
+}
 
 /**
  open class Participant : NSObject, NSSecureCoding, NSCopying {
@@ -216,7 +242,7 @@ public struct BillSectionData: SectionDataProtocol, Equatable, Identifiable {
      open var role: CKShare.ParticipantRole
 
      
-     /** The default participant type is @c CKShareParticipantTypePrivateUser. */
+     /** The default participant type is @c CKShare.ParticipantTypePrivateUser. */
      @available(iOS, introduced: 10.0, deprecated: 12.0)
      open var type: CKShare.ParticipantType
 
@@ -292,3 +318,4 @@ public struct BillSectionData: SectionDataProtocol, Equatable, Identifiable {
  }
  
  */
+
