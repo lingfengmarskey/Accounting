@@ -26,15 +26,19 @@ public struct RootStore {
 
         var bills: BillslistStore.State = .init()
 
+        var ledgers: [AccountBook] = []
+
         @Presents var destination: Destination.State?
 
         public init(
             accountBookConfig: AccountBookConfigStore.State = AccountBookConfigStore.State(),
             bills: BillslistStore.State = .init(),
+            ledgers: [AccountBook] = [],
             destination: Destination.State? = nil
         ) {
-            self.accountBooklistState = accountBooklistState
+            self.accountBooklistState = accountBookConfig
             self.bills = bills
+            self.ledgers = ledgers
             self.destination = destination
         }
     }
@@ -66,12 +70,19 @@ public struct RootStore {
                     await send(.ledgersLoaded(ledgers))
                 }
             case .ledgersLoaded(let ledgers):
+                state.ledgers = ledgers
                 if ledgers.isEmpty {
                     state.destination = .addBook(AccountBookConfigStore.State())
                 } else {
-                    // 有账本：选择一个当前账本并进入账单列表
-                    // TODO
-                    state.destination = .billslist(BillslistStore.State())
+                    guard let ledger = ledgers.first else {
+                        state.destination = .addBook(AccountBookConfigStore.State())
+                        return .none
+                    }
+                    let billsState = BillslistStore.State(
+                        bills: Self.makeBillSections(from: ledger)
+                    )
+                    state.bills = billsState
+                    state.destination = .billslist(billsState)
                 }
                 return .none
             default:
@@ -79,5 +90,18 @@ public struct RootStore {
             }
         }
         .ifLet(\.$destination, action: \.destination)
+    }
+}
+
+private extension RootStore {
+    static func makeBillSections(from ledger: AccountBook) -> [BillSectionData] {
+        guard !ledger.bills.isEmpty else { return [] }
+        return [
+            BillSectionData(
+                id: ledger.id,
+                header: ledger.name,
+                cells: ledger.bills
+            )
+        ]
     }
 }
