@@ -17,19 +17,35 @@ public struct SettingView: View {
     }
     public var body: some View {
         WithViewStore(store) { viewStore in
-            VStack {
-                HStack {
-                    Text("当前账本")
-                    Spacer()
-                    Button {
-                        viewStore.send(.tapBook)
-                    } label: {
-                        Text(viewStore.state.bookState.text)
+            NavigationView {
+                List {
+                    Section(header: Text("当前账本")) {
+                        HStack {
+                            Text("当前账本")
+                            Spacer()
+                            Button {
+                                viewStore.send(.tapBook)
+                            } label: {
+                                Text(viewStore.state.bookState.text)
+                            }
+                        }
+                    }
+
+                    Section(header: Text("账单")) {
+                        NavigationLink("账单分类") {
+                            CategorySelectionView(
+                                store: Store(
+                                    initialState: CategorySelectionStore.State(),
+                                    reducer: {
+                                        CategorySelectionStore()
+                                    }
+                                )
+                            )
+                        }
                     }
                 }
-                Spacer()
+                .navigationTitle("设置")
             }
-            .padding()
             .onAppear {
                 viewStore.send(.onAppear)
             }

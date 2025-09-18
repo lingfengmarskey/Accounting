@@ -114,15 +114,27 @@ public struct BillModel: Equatable, Identifiable {
 ///
 /// Record:
 /// public
+public enum BillCategoryScope: Equatable {
+    case `public`
+    case `private`
+}
+
 public struct BillMainCategoryModel: Equatable, Identifiable {
     public let id: String
     public let name: String
     public let subCategories: [BillSubCategoryModel]
-    
-    public init(id: String, name: String, subCategories: [BillSubCategoryModel]) {
+    public let scope: BillCategoryScope
+
+    public init(
+        id: String,
+        name: String,
+        subCategories: [BillSubCategoryModel],
+        scope: BillCategoryScope = .public
+    ) {
         self.id = id
         self.name = name
         self.subCategories = subCategories
+        self.scope = scope
     }
 }
 
@@ -137,10 +149,19 @@ public struct BillMainCategoryModel: Equatable, Identifiable {
 public struct BillSubCategoryModel: BillSubCategory, Equatable {
     public let id: String
     public let name: String
-    
-    public init(id: String, name: String) {
+    public let mainCategoryID: String?
+    public let scope: BillCategoryScope
+
+    public init(
+        id: String,
+        name: String,
+        mainCategoryID: String? = nil,
+        scope: BillCategoryScope = .public
+    ) {
         self.id = id
         self.name = name
+        self.mainCategoryID = mainCategoryID
+        self.scope = scope
     }
 }
 

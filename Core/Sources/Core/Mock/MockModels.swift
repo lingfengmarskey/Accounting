@@ -87,14 +87,18 @@ extension BillMainCategoryModel {
                 .stub(),
                 .stub(),
                 .stub()
-            ])
+            ],
+            scope: .public)
     }
 }
 
 extension BillSubCategoryModel {
     static func stub() -> BillSubCategoryModel {
-        .init(id: modelFaker.number.increasingUniqueId().stringValue,
-              name: modelFaker.name.title()
+        .init(
+            id: modelFaker.number.increasingUniqueId().stringValue,
+            name: modelFaker.name.title(),
+            mainCategoryID: modelFaker.number.increasingUniqueId().stringValue,
+            scope: .public
         )
     }
 }
