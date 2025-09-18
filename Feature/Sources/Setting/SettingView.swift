@@ -46,6 +46,11 @@ public struct SettingView: View {
                 }
             }
             .navigationTitle("设置")
+            .navigationDestination(
+                item: $store.scope(state: \.destination?.selectBook, action: \.destination.selectBook)
+            ) { store in
+                AccountBookListView(store)
+            }
         }
         .onAppear {
             store.send(.onAppear)
