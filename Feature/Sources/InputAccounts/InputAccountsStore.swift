@@ -140,6 +140,7 @@ public struct InputAccountsStore {
                 )
                 return .none
             case .tapSubCategory(let category):
+                guard state.selectedMainCategory != nil else { return .none }
                 let selected = category ?? state.selectedSubCategory
                 let subCategories = state.selectedMainCategory?.subCategories ?? []
                 state.destination = .selectSubCategory(
