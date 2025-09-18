@@ -39,6 +39,13 @@ public struct InputAccountsStore {
         var currentOperator: Operator?
         var currentOperand: String?
 
+        var isFormValid: Bool {
+            guard Double(inputValue) != nil else { return false }
+            guard let mainCategory = selectedMainCategory else { return false }
+            guard let subCategory = selectedSubCategory else { return false }
+            return !mainCategory.id.isEmpty && !subCategory.id.isEmpty
+        }
+
         @Presents var destination: Destination.State?
         @Presents var choosePhotoDialog: ConfirmationDialogState<Action.ChoosePhotoDialog>?
         @Presents var alert: AlertState<Action.Alert>?
@@ -277,8 +284,14 @@ public struct InputAccountsStore {
                     state.alert = Self.makeAlert(message: "金額を入力してください。")
                     return .none
                 }
-                let mainCategory = state.selectedMainCategory ?? BillMainCategory(id: UUID().uuidString, name: "未分類", subCategories: [])
-                let subCategory = state.selectedSubCategory ?? BillSubCategory(id: UUID().uuidString, name: "未分類")
+                guard let mainCategory = state.selectedMainCategory else {
+                    state.alert = Self.makeAlert(message: "カテゴリを選択してください。")
+                    return .none
+                }
+                guard let subCategory = state.selectedSubCategory else {
+                    state.alert = Self.makeAlert(message: "サブカテゴリを選択してください。")
+                    return .none
+                }
                 var descriptionText = state.memo
                 let currency = state.selectedCurrency.shortName
                 if !currency.isEmpty {

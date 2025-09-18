@@ -90,6 +90,10 @@ public struct InputAccountsView: View {
         store.selectedMainCategory == nil
     }
 
+    private var isRecordDisabled: Bool {
+        !store.isFormValid || store.isSaving
+    }
+
     var scrollView: some View {
         ScrollView {
             VStack(spacing: 15) {
@@ -239,10 +243,10 @@ public struct InputAccountsView: View {
                         }
                     }
                     .frame(height: 68)
-                    .background(Color.black)
-                    .foregroundStyle(Color.white)
+                    .background(isRecordDisabled ? Color.gray.opacity(0.3) : Color.black)
+                    .foregroundStyle(isRecordDisabled ? Color.white.opacity(0.7) : Color.white)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
-                    .disabled(store.isSaving)
+                    .disabled(isRecordDisabled)
 
                 }
             }
