@@ -14,8 +14,8 @@ import Foundation
 public struct AccountBooklistStore {
     @ObservableState
     public struct State {
-        var books: [AccountBook] = .stub()
-        var saveDisable: Bool = true
+        var books: [AccountBook]
+        var saveDisable: Bool
 
         public var selectedBook: AccountBook? {
             if let book = books.first(where: { selected == $0.id }) {
@@ -26,11 +26,22 @@ public struct AccountBooklistStore {
 
         var selected: String?
 
-        var accountBookConfig: AccountBookConfigStore.State = .init()
+        var accountBookConfig: AccountBookConfigStore.State
 
         var isShouldPresent = false
 
-        public init() {}
+        public init(books: [AccountBook] = [],
+                    saveDisable: Bool = true,
+                    selected: String? = nil,
+                    accountBookConfig: AccountBookConfigStore.State = .init(),
+                    isShouldPresent: Bool = false
+        ) {
+            self.books = books
+            self.saveDisable = saveDisable
+            self.selected = selected
+            self.accountBookConfig = accountBookConfig
+            self.isShouldPresent = isShouldPresent
+        }
     }
 
     public enum Action: BindableAction {

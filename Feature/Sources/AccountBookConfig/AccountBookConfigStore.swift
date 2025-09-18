@@ -20,11 +20,13 @@ public struct AccountBookConfigStore {
 
         public var book: AccountBook?
 
-        var paticipators: [Participacer] = .stub()
+        var paticipators: [Participacer] = []
 
         var saveDisable: Bool {
             name.isEmpty
         }
+        
+        var isCreate: Bool
 
         var sharedLink: String = ""
 
@@ -36,6 +38,7 @@ public struct AccountBookConfigStore {
             book: AccountBook? = nil
         ) {
             self.book = book
+            self.isCreate = book == nil
         }
     }
 
@@ -48,6 +51,8 @@ public struct AccountBookConfigStore {
         case destination(PresentationAction<Destination.Action>)
         case binding(BindingAction<State>)
     }
+
+    @Dependency(\.ledgerClient) public var ledgerClient
 
     public init() {}
 
@@ -85,7 +90,9 @@ public struct AccountBookConfigStore {
 //                    print("result is \(error)")
 //                }
                 // TODO: safe logics
-                return .none
+                    return .run { send in
+                        await ledgerClient.addLedger("", "")
+                    }
             default:
                 return .none
             }

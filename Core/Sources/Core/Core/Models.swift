@@ -62,6 +62,27 @@ public struct Participacer: Equatable, Identifiable, UserProtocol {
     }
 }
 
+public extension Participacer {
+    static func from(_ user: UserEntity, permission: Permission) -> Participacer? {
+        guard let userId = user.id, let name = user.name else { return nil }
+        return .init(permission: permission, id: userId.uuidString, name: name)
+    }
+}
+
+public extension [Participacer] {
+    static func from(_ users: Set<UserEntity>, permission: Permission) -> [Participacer] {
+        return users.compactMap { Participacer.from($0, permission: permission) }
+    }
+}
+
+public extension NSSet {
+    func convertToParticipacers(permission: Permission) -> [Participacer] {
+        guard let source = self as? Set<UserEntity> else { return [] }
+        return source.compactMap { entity in
+            Participacer.from(entity, permission: permission)
+        }
+    }
+}
 
 /// 账单
 ///

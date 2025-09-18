@@ -64,20 +64,24 @@ public struct AccountBookConfigView: View {
                     .font(.headline)
                 TextField("Name Your Account Book", text: $store.name)
                     .textFieldStyle(.roundedBorder)
-                Text("Participators")
-                    .font(.headline)
-                LazyVGrid(columns: gridItems) {
-                    ForEach(0 ... store.paticipators.count, id: \.self) {
-                        let model = $0 == store.paticipators.count ? nil : store.paticipators[$0]
-                        ParticipatorView(user: model) { user in
-                            store.send(.tapUser(user?.id))
+                
+                
+                Group {
+                    Text("Participators")
+                        .font(.headline)
+                    LazyVGrid(columns: gridItems) {
+                        ForEach(0 ... store.paticipators.count, id: \.self) {
+                            let model = $0 == store.paticipators.count ? nil : store.paticipators[$0]
+                            ParticipatorView(user: model) { user in
+                                store.send(.tapUser(user?.id))
+                            }
                         }
                     }
                 }
-                Spacer()
             }
-            .padding()
+            Spacer()
         }
+        .padding()
     }
 }
 

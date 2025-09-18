@@ -5,7 +5,7 @@
 //  Created by Marcos Meng on 2023/08/31.
 //
 
-import AccountBookList
+import AccountBookConfig
 import Billslist
 import ComposableArchitecture
 import Foundation
@@ -17,19 +17,19 @@ public struct RootStore {
     @Reducer
     public enum Destination {
         case billslist(BillslistStore)
-        case booklist(AccountBooklistStore)
+        case addBook(AccountBookConfigStore)
     }
 
     @ObservableState
     public struct State {
-        public var accountBooklistState = AccountBooklistStore.State()
+        public var accountBooklistState = AccountBookConfigStore.State()
 
         var bills: BillslistStore.State = .init()
 
         @Presents var destination: Destination.State?
 
         public init(
-            accountBooklistState: AccountBooklistStore.State = AccountBooklistStore.State(),
+            accountBookConfig: AccountBookConfigStore.State = AccountBookConfigStore.State(),
             bills: BillslistStore.State = .init(),
             destination: Destination.State? = nil
         ) {
@@ -41,7 +41,7 @@ public struct RootStore {
 
     public enum Action {
         case onAppear
-        case accountBooklistAction(AccountBooklistStore.Action)
+        case addBookAccount(AccountBookConfigStore.Action)
         case bills(BillslistStore.Action)
         case ledgersLoaded([AccountBook])
         case destination(PresentationAction<Destination.Action>)
@@ -52,8 +52,8 @@ public struct RootStore {
     public init() {}
 
     public var body: some Reducer<State, Action> {
-        Scope(state: \.accountBooklistState, action: \.accountBooklistAction) {
-            AccountBooklistStore()
+        Scope(state: \.accountBooklistState, action: \.addBookAccount) {
+            AccountBookConfigStore()
         }
         Scope(state: \.bills, action: \.bills) {
             BillslistStore()
@@ -67,8 +67,7 @@ public struct RootStore {
                 }
             case .ledgersLoaded(let ledgers):
                 if ledgers.isEmpty {
-                    // 账本为 0：跳到创建/选择账本页
-                    state.destination = .booklist(AccountBooklistStore.State())
+                    state.destination = .addBook(AccountBookConfigStore.State())
                 } else {
                     // 有账本：选择一个当前账本并进入账单列表
                     // TODO

@@ -25,7 +25,7 @@ var ledgerClient: LedgerDataClient {
 
 public struct LedgerDataClient {
     public var fetchLedgers: @Sendable () async -> [AccountBook]
-    public var addLedger: @Sendable (String, String) async -> Void // title, ownerID
+    public var addLedger: @Sendable (_ title: String, _ ownerID: String) async -> Void // title, ownerID
     public var deleteLedger: @Sendable (String) async -> Void // ledger ID
 }
 
@@ -74,7 +74,7 @@ extension LedgerDataClient {
 public struct LedgerAdapter {
     static func from(entity: LedgerEntity) -> AccountBook {
         AccountBook(owner: .init(id: entity.ownerID ?? "", name: entity.ownerName ?? ""),
-                    participacer: [],
+                    participacer: entity.participacers?.convertToParticipacers(permission: .read) ?? [],
                     bills: [],
                     id: entity.id ?? "",
                     name: entity.title ?? "",

@@ -37,7 +37,7 @@ let package = Package(
         .target(
             name: "Root",
             dependencies: coreDependencies + [
-                "AccountBookList",
+                "AccountBookConfig",
                 "Billslist",
             ],
             resources: [
