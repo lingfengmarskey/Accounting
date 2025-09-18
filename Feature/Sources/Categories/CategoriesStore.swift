@@ -16,7 +16,7 @@ public struct CategoriesStore {
         var categories: [BillMainCategory]
         var selectedCategory: BillMainCategory?
 
-        public init(categories: [BillMainCategory] = .stub(), 
+        public init(categories: [BillMainCategory] = [],
                     selectedCategory: BillMainCategory? = nil
         ) {
             self.categories = categories
@@ -27,6 +27,7 @@ public struct CategoriesStore {
     public enum Action {
         case onAppear
         case onTap(BillMainCategory)
+        case categoriesResponse(TaskResult<[BillMainCategory]>)
     }
 
     public init() {}
@@ -37,9 +38,23 @@ public struct CategoriesStore {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                return .none
+                return .run { [billCategoryClient] send in
+                    await send(.categoriesResponse(TaskResult {
+                        try await billCategoryClient.fetchAllCategories()
+                    }))
+                }
             case let .onTap(category):
                 state.selectedCategory = category
+                return .none
+            case let .categoriesResponse(.success(categories)):
+                state.categories = categories
+                if let selectedID = state.selectedCategory?.id {
+                    state.selectedCategory = categories.first(where: { $0.id == selectedID })
+                }
+                return .none
+            case .categoriesResponse(.failure):
+                state.categories = []
+                state.selectedCategory = nil
                 return .none
             }
         }
