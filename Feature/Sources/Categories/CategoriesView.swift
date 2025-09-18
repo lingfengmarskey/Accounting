@@ -39,7 +39,7 @@ public struct CategoriesView: View {
                                 Image.foodIcon
                                     .renderingMode(.template)
                                 // TODO: updated title
-                                Text("\(store.categories[idx].name.firstValue)")
+                                Text("\(store.categories[idx].name)")
                                     .font(.system(size: 32, weight: .bold))
                                 Spacer()
                             }

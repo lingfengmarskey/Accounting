@@ -42,7 +42,7 @@ public struct SubCategoriesView: View {
                                     .resizable()
                                     .frame(width: 24, height: 24)
                                 // TODO: updated title
-                                Text("\(store.subCategories[idx].name.firstValue)")
+                                Text("\(store.subCategories[idx].name)")
                                     .font(.system(size: 20, weight: .bold))
                                 Spacer()
                             }
