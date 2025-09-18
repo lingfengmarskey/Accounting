@@ -258,8 +258,8 @@ private func fetchCurrencyRecords(from database: CKDatabase) async throws -> [CK
     var cursor: CKQueryOperation.Cursor?
 
     repeat {
-        if let cursor {
-            let response = try await database.records(continuingMatchFrom: cursor)
+        if let currentCursor = cursor {
+            let response = try await database.records(continuingMatchFrom: currentCursor)
             try response.matchResults.forEach { _, result in
                 switch result {
                 case let .success(record):
@@ -270,7 +270,7 @@ private func fetchCurrencyRecords(from database: CKDatabase) async throws -> [CK
             }
             cursor = response.queryCursor
         } else {
-            let query = CKQuery(recordType: "Currency", predicate: NSPredicate(value: true))
+            let query = CKQuery(recordType: "CurrencyEntity", predicate: NSPredicate(value: true))
             let response = try await database.records(matching: query)
             try response.matchResults.forEach { _, result in
                 switch result {
@@ -512,3 +512,4 @@ class PersistenceController {
         return controller
     }()
 }
+

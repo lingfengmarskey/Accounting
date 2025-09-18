@@ -43,10 +43,10 @@ public struct CurrencyView: View {
                             store.send(.onTap(store.currencies[idx]))
                         }, label: {
                             HStack(spacing: 20) {
-                                Text("\(store.currencies[idx].shortName.firstValue)")
+                                Text(store.currencies[idx].shortName)
                                     .font(.system(size: 20, weight: .bold))
 
-                                Text("\(store.currencies[idx].fullName)")
+                                Text(store.currencies[idx].fullName)
                                     .font(.system(size: 20, weight: .bold))
                                 Spacer()
                             }
