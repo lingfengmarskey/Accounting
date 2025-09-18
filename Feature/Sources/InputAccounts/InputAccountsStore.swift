@@ -28,27 +28,50 @@ public struct InputAccountsStore {
         var billsType: [BillType]
         var selectedBillType: BillType
         var showPhotoLib = false
+        var ledger: AccountBook
+        var selectedCurrency: CurrencyModel
+        var selectedMainCategory: BillMainCategory?
+        var selectedSubCategory: BillSubCategory?
+        var memo: String
+        var isSaving: Bool
         var currentOperator: Operator?
         var currentOperand: String?
-        
+
         @Presents var destination: Destination.State?
         @Presents var choosePhotoDialog: ConfirmationDialogState<Action.ChoosePhotoDialog>?
+        @Presents var alert: AlertState<Action.Alert>?
 
-        public init(title: String = "Payment", 
+        public init(title: String = "Payment",
                     inputValue: String = "",
                     inputDate: Date = .now, // TODO: add date to env DI.
                     inputPlaceholder: String = "0.00",
                     tapPlus: Bool = false,
                     billsType: [BillType] = [.income, .payment],
-                    selectedBillType: BillType = .payment
+                    selectedBillType: BillType = .payment,
+                    ledger: AccountBook = .placeholderLedger,
+                    selectedCurrency: CurrencyModel = .usd,
+                    selectedMainCategory: BillMainCategory? = nil,
+                    selectedSubCategory: BillSubCategory? = nil,
+                    memo: String = "",
+                    isSaving: Bool = false
         ) {
-            self.title = title
+            if title.isEmpty {
+                self.title = selectedBillType == .income ? "Income" : "Payment"
+            } else {
+                self.title = title
+            }
             self.inputValue = inputValue
             self.inputDate = inputDate
             self.tapPlus = tapPlus
             self.billsType = billsType
             self.inputPlaceholder = inputPlaceholder
             self.selectedBillType = selectedBillType
+            self.ledger = ledger
+            self.selectedCurrency = selectedCurrency
+            self.selectedMainCategory = selectedMainCategory
+            self.selectedSubCategory = selectedSubCategory
+            self.memo = memo
+            self.isSaving = isSaving
         }
     }
 
@@ -70,21 +93,28 @@ public struct InputAccountsStore {
         case setInputValue(String)
         case tapBigCategory(BillMainCategory?)
         case tapSubCategory(BillSubCategory?)
-        case tapCurrency(CurrencyModel?)
+        case tapCurrency
         case input(AccountInput)
 //        case binding(BindingAction<State>)
         case destination(PresentationAction<Destination.Action>)
         case tapChoosePhoto
         case choosePhotoDialog(PresentationAction<ChoosePhotoDialog>)
+        case tapRecord
+        case saveResponse(Result<Bill, Error>)
+        case alert(PresentationAction<Alert>)
         @CasePathable
         public enum ChoosePhotoDialog: Equatable {
             case fromCamera
             case fromLibrary
         }
+        public enum Alert: Equatable {
+            case acknowledge
+        }
     }
-    
-    
+
+
     @Dependency(\.dismiss) var dismiss
+    @Dependency(\.transactionClient) var transactionClient
 
     public init() {}
 
@@ -100,15 +130,31 @@ public struct InputAccountsStore {
                 }
             case .billsType(let value):
                 state.selectedBillType = value
+                state.title = value == .income ? "Income" : "Payment"
                 return .none
             case .tapBigCategory(let category):
-                state.destination = .selectCategory(.init(selectedCategory: category))
+                state.destination = .selectCategory(
+                    .init(
+                        selectedCategory: category ?? state.selectedMainCategory
+                    )
+                )
                 return .none
             case .tapSubCategory(let category):
-                state.destination = .selectSubCategory(.init(selectedSubCategory: category))
+                let selected = category ?? state.selectedSubCategory
+                let subCategories = state.selectedMainCategory?.subCategories ?? []
+                state.destination = .selectSubCategory(
+                    .init(
+                        subCategories: subCategories,
+                        selectedSubCategory: selected
+                    )
+                )
                 return .none
-            case .tapCurrency(let currency):
-                state.destination = .selectCurrency(.init(selectedCurrency: currency))
+            case .tapCurrency:
+                state.destination = .selectCurrency(
+                    .init(
+                        selectedCurrency: state.selectedCurrency
+                    )
+                )
                 return .none
             case .tapChoosePhoto:
                 state.choosePhotoDialog = .init(title: {
@@ -164,14 +210,77 @@ public struct InputAccountsStore {
                 default:
                     return setNumber(state: &state, value: value)
                 }
+            case .destination(.presented(.selectCategory(.onTap(let category)))):
+                state.selectedMainCategory = category
+                state.selectedSubCategory = nil
+                state.destination = nil
+                return .none
+            case .destination(.presented(.selectSubCategory(.onTap(let category)))):
+                state.selectedSubCategory = category
+                state.destination = nil
+                return .none
+            case .destination(.presented(.selectCurrency(.onTap(let currency)))):
+                state.selectedCurrency = currency
+                state.destination = nil
+                return .none
+            case .tapRecord:
+                guard !state.isSaving else { return .none }
+                guard let value = Double(state.inputValue) else {
+                    state.alert = Self.makeAlert(message: "金額を入力してください。")
+                    return .none
+                }
+                let mainCategory = state.selectedMainCategory ?? BillMainCategory(id: UUID().uuidString, name: "未分類", subCategories: [])
+                let subCategory = state.selectedSubCategory ?? BillSubCategory(id: UUID().uuidString, name: "未分類")
+                var descriptionText = state.memo
+                let currency = state.selectedCurrency.shortName
+                if !currency.isEmpty {
+                    if descriptionText.isEmpty {
+                        descriptionText = "Currency: \(currency)"
+                    } else {
+                        descriptionText += " | Currency: \(currency)"
+                    }
+                }
+                state.isSaving = true
+                let billType = state.selectedBillType
+                let date = state.inputDate
+                let ledger = state.ledger
+                return .run { send in
+                    let result = await Result {
+                        try await transactionClient.addBill(
+                            ledger,
+                            value,
+                            billType,
+                            mainCategory,
+                            subCategory,
+                            date,
+                            descriptionText.isEmpty ? nil : descriptionText
+                        )
+                    }
+                    await send(.saveResponse(result))
+                }
+            case .saveResponse(.success):
+                state.isSaving = false
+                return .run { _ in
+                    await self.dismiss()
+                }
+            case .saveResponse(.failure):
+                state.isSaving = false
+                state.alert = Self.makeAlert(message: "保存に失敗しました。再試行してください。")
+                return .none
+            case .alert(.presented(.acknowledge)):
+                state.alert = nil
+                return .none
+            case .alert:
+                return .none
             default:
                 return .none
             }
         }
         .ifLet(\.$destination, action: \.destination)
         .ifLet(\.$choosePhotoDialog, action: \.choosePhotoDialog)
+        .ifLet(\.$alert, action: \.alert)
     }
-    
+
     func setNumber(state: inout State, value: AccountInput) -> Effect<Action> {
         if Operator.allCasesValue.contains(state.inputValue) {
             state.inputValue = ""
@@ -213,6 +322,40 @@ public struct InputAccountsStore {
         case fromCamera
         case fromLibrary
     }
+}
+
+private extension InputAccountsStore {
+    struct Constants {
+        static let usdCurrency = CurrencyModel(shortName: "USD", fullName: "United States Dollar", rate: 1)
+        static let placeholderLedger = AccountBook(
+            owner: .init(id: "", name: ""),
+            participacer: [],
+            bills: [],
+            id: "",
+            name: "",
+            createdAt: ""
+        )
+    }
+
+    static func makeAlert(message: String) -> AlertState<Action.Alert> {
+        AlertState(
+            title: { TextState("エラー") },
+            actions: {
+                ButtonState(action: .acknowledge) {
+                    TextState("OK")
+                }
+            },
+            message: { TextState(message) }
+        )
+    }
+}
+
+private extension AccountBook {
+    static var placeholderLedger: AccountBook { InputAccountsStore.Constants.placeholderLedger }
+}
+
+private extension CurrencyModel {
+    static var usd: CurrencyModel { InputAccountsStore.Constants.usdCurrency }
 }
 
 extension BillType {

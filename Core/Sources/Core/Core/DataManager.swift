@@ -33,6 +33,26 @@ public enum LedgerDataClientError: Error {
     case saveFailed
 }
 
+public enum TransactionDataClientKey: DependencyKey {
+  public static let liveValue: TransactionDataClient = .live
+}
+
+public extension DependencyValues {
+var transactionClient: TransactionDataClient {
+    get { self[TransactionDataClientKey.self] }
+    set { self[TransactionDataClientKey.self] = newValue }
+  }
+}
+
+public struct TransactionDataClient {
+    public var addBill: @Sendable (_ ledger: AccountBook, _ value: Double, _ type: BillType, _ mainCategory: BillMainCategory, _ subCategory: BillSubCategory, _ date: Date, _ description: String?) async throws -> Bill
+}
+
+public enum TransactionDataClientError: Error {
+    case ledgerNotFound
+    case saveFailed
+}
+
 extension LedgerDataClient {
     public static let live = LedgerDataClient(
         fetchLedgers: {
@@ -86,6 +106,47 @@ extension LedgerDataClient {
 
 }
 
+extension TransactionDataClient {
+    public static let live = TransactionDataClient { ledger, value, type, mainCategory, subCategory, date, description in
+        let context = PersistenceController.shared.container.viewContext
+
+        let request: NSFetchRequest<LedgerEntity> = LedgerEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", ledger.id)
+
+        let ledgerResults = try context.fetch(request)
+        guard let ledgerEntity = ledgerResults.first else {
+            throw TransactionDataClientError.ledgerNotFound
+        }
+
+        let transaction = TransactionEntity(context: context)
+        transaction.id = UUID()
+        transaction.value = value
+        transaction.type = type.rawValue
+        transaction.createdAt = date
+        transaction.updatedAt = date
+        transaction.descriptionContent = description
+        transaction.book = ledgerEntity
+
+        let mainCategoryEntity = try fetchOrCreateMainCategoryEntity(from: mainCategory, context: context)
+        let subCategoryEntity = try fetchOrCreateSubCategoryEntity(from: subCategory, mainCategoryEntity: mainCategoryEntity, context: context)
+        let userEntity = try fetchOrCreateUserEntity(from: ledger.owner, context: context)
+
+        transaction.mainCategory = mainCategoryEntity
+        transaction.subCategory = subCategoryEntity
+        transaction.createdByUser = userEntity
+        transaction.updatedByUser = userEntity
+
+        do {
+            try context.save()
+        } catch {
+            context.rollback()
+            throw TransactionDataClientError.saveFailed
+        }
+
+        return BillAdapter.from(entity: transaction)
+    }
+}
+
 public struct LedgerAdapter {
     static func from(entity: LedgerEntity) -> AccountBook {
         // owner 对象
@@ -130,7 +191,7 @@ public struct BillAdapter {
     static func from(entity: TransactionEntity) -> Bill {
         // 账单类型
         let billType = BillType(rawValue: entity.type ?? "0") ?? .payment
-        
+
         // 主分类
         let mainCategory = BillMainCategory(
             id: entity.mainCategory?.id?.uuidString ?? "",
@@ -171,6 +232,77 @@ public struct BillAdapter {
             description: entity.descriptionContent ?? ""
         )
     }
+}
+
+private func fetchOrCreateMainCategoryEntity(from category: BillMainCategory, context: NSManagedObjectContext) throws -> BillMainCategoryEntity {
+    let request: NSFetchRequest<BillMainCategoryEntity> = BillMainCategoryEntity.fetchRequest()
+    if let uuid = UUID(uuidString: category.id) {
+        request.predicate = NSPredicate(format: "id == %@", uuid as CVarArg)
+    } else {
+        request.predicate = NSPredicate(value: false)
+    }
+
+    if let existing = try context.fetch(request).first {
+        existing.name = category.name
+        return existing
+    }
+
+    let entity = BillMainCategoryEntity(context: context)
+    if let uuid = UUID(uuidString: category.id) {
+        entity.id = uuid
+    } else {
+        entity.id = UUID()
+    }
+    entity.name = category.name
+    return entity
+}
+
+private func fetchOrCreateSubCategoryEntity(from category: BillSubCategory, mainCategoryEntity: BillMainCategoryEntity, context: NSManagedObjectContext) throws -> BillSubCategoryEntity {
+    let request: NSFetchRequest<BillSubCategoryEntity> = BillSubCategoryEntity.fetchRequest()
+    if let uuid = UUID(uuidString: category.id) {
+        request.predicate = NSPredicate(format: "id == %@", uuid as CVarArg)
+    } else {
+        request.predicate = NSPredicate(value: false)
+    }
+
+    if let existing = try context.fetch(request).first {
+        existing.name = category.name
+        existing.mainCategory = mainCategoryEntity
+        return existing
+    }
+
+    let entity = BillSubCategoryEntity(context: context)
+    if let uuid = UUID(uuidString: category.id) {
+        entity.id = uuid
+    } else {
+        entity.id = UUID()
+    }
+    entity.name = category.name
+    entity.mainCategory = mainCategoryEntity
+    return entity
+}
+
+private func fetchOrCreateUserEntity(from user: User, context: NSManagedObjectContext) throws -> UserEntity {
+    let request: NSFetchRequest<UserEntity> = UserEntity.fetchRequest()
+    if let uuid = UUID(uuidString: user.id) {
+        request.predicate = NSPredicate(format: "id == %@", uuid as CVarArg)
+    } else {
+        request.predicate = NSPredicate(value: false)
+    }
+
+    if let existing = try context.fetch(request).first {
+        existing.name = user.name
+        return existing
+    }
+
+    let entity = UserEntity(context: context)
+    if let uuid = UUID(uuidString: user.id) {
+        entity.id = uuid
+    } else {
+        entity.id = UUID()
+    }
+    entity.name = user.name
+    return entity
 }
 
 class PersistenceController {

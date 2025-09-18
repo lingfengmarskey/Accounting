@@ -18,13 +18,16 @@ public struct BillslistStore {
     @ObservableState
     public struct State{
         var bills: [BillSectionData] = .stub()
+        var ledger: AccountBook
         @Presents var destination: Destination.State?
 
         public init(
             bills: [BillSectionData] = .stub(),
+            ledger: AccountBook = .placeholder,
             destination: Destination.State? = nil
         ) {
             self.bills = bills
+            self.ledger = ledger
             self.destination = destination
         }
     }
@@ -34,16 +37,22 @@ public struct BillslistStore {
         case tapSetting
         case tapAdd(BillType?)
         case onTap(Bill)
+        case ledgersResponse([AccountBook])
         case destination(PresentationAction<Destination.Action>)
     }
 
     public init() {}
 
+    @Dependency(\.ledgerClient) var ledgerClient
+
     public var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
             case .onAppear:
-                return .none
+                return .run { send in
+                    let ledgers = await ledgerClient.fetchLedgers()
+                    await send(.ledgersResponse(ledgers))
+                }
             case let .onTap(bill):
                 state.destination = .billDetail(.init(billModel: bill))
                 return .none
@@ -51,7 +60,28 @@ public struct BillslistStore {
                 state.destination = .setting(.init())
                 return .none
             case .tapAdd(nil):
-                state.destination = .addAccounts(.init())
+                state.destination = .addAccounts(.init(ledger: state.ledger))
+                return .none
+            case .tapAdd(let type?):
+                state.destination = .addAccounts(
+                    .init(
+                        ledger: state.ledger,
+                        selectedBillType: type,
+                        title: type == .income ? "Income" : "Payment"
+                    )
+                )
+                return .none
+            case .ledgersResponse(let ledgers):
+                guard !ledgers.isEmpty else {
+                    state.bills = []
+                    return .none
+                }
+                if let matched = ledgers.first(where: { $0.id == state.ledger.id }) {
+                    state.ledger = matched
+                } else if let first = ledgers.first {
+                    state.ledger = first
+                }
+                state.bills = Self.makeBillSections(from: state.ledger)
                 return .none
             default:
                 return .none
@@ -66,5 +96,29 @@ public struct BillslistStore {
         case setting(SettingStore)
         case addAccounts(InputAccountsStore)
     }
-    
+
+}
+
+private extension BillslistStore {
+    static func makeBillSections(from ledger: AccountBook) -> [BillSectionData] {
+        guard !ledger.bills.isEmpty else { return [] }
+        return [
+            BillSectionData(
+                id: ledger.id,
+                header: ledger.name,
+                cells: ledger.bills.sorted(by: { $0.updatedAt > $1.updatedAt })
+            )
+        ]
+    }
+}
+
+private extension AccountBook {
+    static let placeholder = AccountBook(
+        owner: .init(id: "", name: ""),
+        participacer: [],
+        bills: [],
+        id: "",
+        name: "",
+        createdAt: ""
+    )
 }
