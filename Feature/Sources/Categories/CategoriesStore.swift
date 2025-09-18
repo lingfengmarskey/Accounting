@@ -31,6 +31,8 @@ public struct CategoriesStore {
 
     public init() {}
 
+    @Dependency(\.billCategoryClient) public var billCategoryClient
+
     public var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
