@@ -8,6 +8,7 @@
 import ComposableArchitecture
 import Foundation
 import SwiftUI
+import UIKit
 import UIComponents
 import Categories
 import SubCategories
@@ -57,6 +58,32 @@ public struct InputAccountsView: View {
         })
         .confirmationDialog($store.scope(state: \.choosePhotoDialog, action: \.choosePhotoDialog))
         .alert($store.scope(state: \.alert, action: \.alert))
+        .sheet(
+            item: $store.scope(state: \.destination?.fromCamera, action: \.destination.fromCamera)
+        ) { store in
+            ImagePickerContainer(
+                source: .camera,
+                onImagePicked: { data in
+                    store.send(.didFinishPicking(data))
+                },
+                onCancel: {
+                    store.send(.didCancel)
+                }
+            )
+        }
+        .sheet(
+            item: $store.scope(state: \.destination?.fromLibrary, action: \.destination.fromLibrary)
+        ) { store in
+            ImagePickerContainer(
+                source: .photoLibrary,
+                onImagePicked: { data in
+                    store.send(.didFinishPicking(data))
+                },
+                onCancel: {
+                    store.send(.didCancel)
+                }
+            )
+        }
     }
 
     private var isSubCategoryDisabled: Bool {
@@ -191,26 +218,7 @@ public struct InputAccountsView: View {
                 }
                 // photoes
                 Group {
-                    HStack {
-                        Button {
-                            store.send(.tapChoosePhoto)
-                        } label: {
-                            VStack {
-                                HStack(alignment: .center) {
-                                    Text("写真")
-                                        .font(.system(size: 20))
-                                    Spacer()
-                                }
-                                Spacer()
-                            }
-                            .padding(.leading, 15)
-                            .padding(.top, 15)
-                        }
-                        .frame(height: 150)
-                        .background(Color.lightGray)
-                        .foregroundStyle(Color.black)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
-                    }
+                    photoSection
                 }
                 
                 // submit buttons
@@ -241,6 +249,113 @@ public struct InputAccountsView: View {
         }
     }
     
+}
+
+private extension InputAccountsView {
+    var photoSection: some View {
+        ZStack(alignment: .topTrailing) {
+            Button {
+                store.send(.tapChoosePhoto)
+            } label: {
+                ZStack {
+                    if let image = imageFromData(store.selectedImageData) {
+                        image
+                            .resizable()
+                            .scaledToFill()
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 150)
+                            .clipped()
+                    } else {
+                        VStack {
+                            HStack(alignment: .center) {
+                                Text("写真")
+                                    .font(.system(size: 20))
+                                Spacer()
+                            }
+                            Spacer()
+                        }
+                        .padding(.leading, 15)
+                        .padding(.top, 15)
+                    }
+                }
+            }
+            .frame(height: 150)
+            .background(Color.lightGray)
+            .foregroundStyle(Color.black)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+
+            if store.selectedImageData != nil {
+                Button {
+                    store.send(.removeImage)
+                } label: {
+                    Image(systemName: "trash")
+                        .foregroundStyle(Color.white)
+                        .padding(8)
+                        .background(Color.black.opacity(0.6))
+                        .clipShape(Circle())
+                }
+                .padding(8)
+                .buttonStyle(.plain)
+            }
+        }
+    }
+
+    func imageFromData(_ data: Data?) -> Image? {
+        guard
+            let data,
+            let uiImage = UIImage(data: data)
+        else {
+            return nil
+        }
+        return Image(uiImage: uiImage)
+    }
+}
+
+private struct ImagePickerContainer: UIViewControllerRepresentable {
+    let source: UIImagePickerController.SourceType
+    let onImagePicked: (Data) -> Void
+    let onCancel: () -> Void
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(onImagePicked: onImagePicked, onCancel: onCancel)
+    }
+
+    func makeUIViewController(context: Context) -> UIImagePickerController {
+        let picker = UIImagePickerController()
+        picker.delegate = context.coordinator
+        picker.sourceType = source
+        picker.allowsEditing = false
+        return picker
+    }
+
+    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
+
+    final class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+        let onImagePicked: (Data) -> Void
+        let onCancel: () -> Void
+
+        init(onImagePicked: @escaping (Data) -> Void, onCancel: @escaping () -> Void) {
+            self.onImagePicked = onImagePicked
+            self.onCancel = onCancel
+        }
+
+        func imagePickerController(
+            _ picker: UIImagePickerController,
+            didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]
+        ) {
+            if let image = info[.originalImage] as? UIImage,
+               let data = image.jpegData(compressionQuality: 0.8)
+            {
+                onImagePicked(data)
+            }
+            picker.dismiss(animated: true)
+        }
+
+        func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+            onCancel()
+            picker.dismiss(animated: true)
+        }
+    }
 }
 
 
