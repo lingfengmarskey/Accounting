@@ -19,6 +19,8 @@ public struct AccountBookConfigStore {
 
         public var book: AccountBook?
 
+        public var isEditable: Bool
+
         var paticipators: [Participacer] = []
 
         var originalName: String = ""
@@ -26,7 +28,7 @@ public struct AccountBookConfigStore {
         var isSaving: Bool = false
 
         var saveDisable: Bool {
-            trimmedName.isEmpty || isSaving
+            trimmedName.isEmpty || isSaving || !isEditable
         }
 
         var isCreate: Bool
@@ -40,6 +42,7 @@ public struct AccountBookConfigStore {
         }
 
         var hasEdits: Bool {
+            guard isEditable else { return false }
             if isCreate {
                 return !trimmedName.isEmpty
             }
@@ -50,9 +53,11 @@ public struct AccountBookConfigStore {
         @Presents var alert: AlertState<Action.Alert>?
 
         public init(
-            book: AccountBook? = nil
+            book: AccountBook? = nil,
+            isEditable: Bool = true
         ) {
             self.book = book
+            self.isEditable = isEditable
             self.isCreate = book == nil
             if let book {
                 self.name = book.name
@@ -60,7 +65,7 @@ public struct AccountBookConfigStore {
                 self.paticipators = book.participacer
             }
         }
-        
+
         public static var none = State.init(book: nil)
     }
 
@@ -111,6 +116,9 @@ public struct AccountBookConfigStore {
             case .binding:
                 return .none
             case let .tapUser(id):
+                if !state.isEditable, id == nil {
+                    return .none
+                }
                 if let id = id,
                    let model = state.paticipators.first(where: { $0.id == id })
                 {
@@ -127,7 +135,7 @@ public struct AccountBookConfigStore {
                 state.destination = nil
                 return .none
             case .tapTopDone:
-                if state.saveDisable {
+                if !state.isEditable || state.saveDisable {
                     return .none
                 }
                 state.isSaving = true

@@ -25,7 +25,11 @@ public struct AccountBookConfigView: View {
     public var body: some View {
         NavigationStack {
             scrollView
-            .navigationTitle(store.isCreate ? "add account book" : "edit account book")
+            .navigationTitle(
+                store.isEditable
+                    ? (store.isCreate ? "add account book" : "edit account book")
+                    : "account book detail"
+            )
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button(action: {
@@ -65,6 +69,7 @@ public struct AccountBookConfigView: View {
                     .font(.headline)
                 TextField("Name Your Account Book", text: $store.name)
                     .textFieldStyle(.roundedBorder)
+                    .disabled(!store.isEditable)
 
                 if !store.isCreate {
                     Group {
@@ -76,6 +81,7 @@ public struct AccountBookConfigView: View {
                                 ParticipatorView(user: model) { user in
                                     store.send(.tapUser(user?.id))
                                 }
+                                .disabled(!store.isEditable && model == nil)
                             }
                         }
                     }
@@ -89,13 +95,36 @@ public struct AccountBookConfigView: View {
 
 struct AccountBookConfigView_Previews: PreviewProvider {
     static var previews: some View {
-        AccountBookConfigView(
-            Store(
-                initialState: AccountBookConfigStore.State(),
-                reducer: {
-                    AccountBookConfigStore()
-                }
+        Group {
+            AccountBookConfigView(
+                Store(
+                    initialState: AccountBookConfigStore.State(),
+                    reducer: {
+                        AccountBookConfigStore()
+                    }
+                )
             )
-        )
+            AccountBookConfigView(
+                Store(
+                    initialState: AccountBookConfigStore.State(
+                        book: .init(
+                            owner: .init(id: "owner-1", name: "Owner"),
+                            participacer: [
+                                .init(permission: .read, id: "1", name: "Alice"),
+                                .init(permission: .read, id: "2", name: "Bob")
+                            ],
+                            bills: [],
+                            id: "ledger-1",
+                            name: "Read Only Ledger",
+                            createdAt: "2023-10-01"
+                        ),
+                        isEditable: false
+                    ),
+                    reducer: {
+                        AccountBookConfigStore()
+                    }
+                )
+            )
+        }
     }
 }
