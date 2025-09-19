@@ -56,7 +56,9 @@ public struct BookView: View {
                 }
             }
             .onTapGesture {
-                if editMode?.wrappedValue.isEditing == false {
+                if editMode?.wrappedValue.isEditing == true {
+                    onTapDetail(id)
+                } else {
                     selectedId = id
                 }
             }
@@ -76,14 +78,27 @@ public struct BookView: View {
 
 
 struct BookView_Previews: PreviewProvider {
+    private struct PreviewWrapper: View {
+        @State private var selectedId: String? = "123"
+        let isEditing: Bool
+
+        var body: some View {
+            BookView(
+                title: "FamilyFamily",
+                owner: "Lee",
+                id: "123",
+                selectedId: $selectedId,
+                onTapDetail: { _ in }
+            )
+            .environment(\.editMode, .constant(isEditing ? EditMode.active : EditMode.inactive))
+        }
+    }
+
     static var previews: some View {
-        BookView(
-            title: "FamilyFamily",
-            owner: "Lee",
-            id: "123",
-            selectedId: .constant("123"),
-            onTapDetail: { _ in }
-        )
-            .previewLayout(.sizeThatFits)
+        Group {
+            PreviewWrapper(isEditing: false)
+            PreviewWrapper(isEditing: true)
+        }
+        .previewLayout(.sizeThatFits)
     }
 }
