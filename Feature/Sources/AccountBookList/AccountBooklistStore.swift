@@ -77,7 +77,7 @@ public struct AccountBooklistStore {
                 }
             case let .tapDetail(bookID: id):
                 if let book = state.books.first(where: { $0.id == id }) {
-                    state.accountBookConfig.book = book
+                    state.accountBookConfig = .init(book: book, isEditable: false)
                     return .run { send in
                         await send(.setPresent(true))
                     }
