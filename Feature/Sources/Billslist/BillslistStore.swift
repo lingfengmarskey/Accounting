@@ -77,10 +77,16 @@ public struct BillslistStore {
                 state.ledger = ledger
                 state.bills = Self.makeBillSections(from: ledger)
                 return .none
+            case .destination(.presented(.addAccounts(.destination(.dismiss)))):
+                if case .addAccounts(var addAccountsState)? = state.destination {
+                    addAccountsState.isCameraPickerPresented = false
+                    addAccountsState.isPhotoLibraryPresented = false
+                    state.destination = .addAccounts(addAccountsState)
+                }
+                return .none
             case .destination(.presented(.addAccounts(.saveResponse(.success)))):
                 // Saving has completed successfully inside InputAccountsStore.
-                // Dismiss and refresh ledgers/bills.
-                state.destination = nil
+                // Refresh ledgers/bills.
                 return .run { send in
                     let ledgers = await ledgerClient.fetchLedgers()
                     await send(.ledgersResponse(ledgers))
