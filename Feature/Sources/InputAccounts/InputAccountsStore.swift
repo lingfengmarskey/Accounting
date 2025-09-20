@@ -105,6 +105,7 @@ public struct InputAccountsStore {
         case dateChanged(Date)
         case billsType(BillType)
         case setInputValue(String)
+        case setMemo(String)
         case tapBigCategory(BillMainCategory?)
         case tapSubCategory(BillSubCategory?)
         case tapCurrency
@@ -152,6 +153,12 @@ public struct InputAccountsStore {
             case .billsType(let value):
                 state.selectedBillType = value
                 state.title = value == .income ? "Income" : "Payment"
+                return .none
+            case .setInputValue(let value):
+                state.inputValue = value
+                return .none
+            case .setMemo(let value):
+                state.memo = value
                 return .none
             case .tapBigCategory(let category):
                 state.destination = .selectCategory(
