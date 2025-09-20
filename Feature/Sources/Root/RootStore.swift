@@ -52,6 +52,7 @@ public struct RootStore {
     }
     
     @Dependency(\.ledgerClient) public var ledgerClient
+    @Dependency(\.preferences) public var preferences
 
     public init() {}
 
@@ -74,7 +75,11 @@ public struct RootStore {
                 if ledgers.isEmpty {
                     state.destination = .addBook(AccountBookConfigStore.State())
                 } else {
-                    guard let ledger = ledgers.first else {
+                    let savedID = preferences.value(forKey: "currentBook") as? String
+                    let matchedLedger = savedID.flatMap { id in
+                        ledgers.first(where: { $0.id == id })
+                    } ?? ledgers.first
+                    guard let ledger = matchedLedger else {
                         state.destination = .addBook(AccountBookConfigStore.State())
                         return .none
                     }
