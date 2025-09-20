@@ -153,29 +153,63 @@ extension CurrencyDataClient {
 extension LedgerDataClient {
     public static let live = LedgerDataClient(
         fetchLedgers: {
-            let context = PersistenceController.shared.container.viewContext
-            let request: NSFetchRequest<LedgerEntity> = LedgerEntity.fetchRequest()
-            request.sortDescriptors = [NSSortDescriptor(keyPath: \LedgerEntity.createdAt, ascending: false)]
-            let ledgers = (try? context.fetch(request)) ?? []
-            let models = ledgers.map(LedgerAdapter.from)
-            return models
+            let container = PersistenceController.shared.container
+            let backgroundContext = container.newBackgroundContext()
+            backgroundContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+
+            let objectIDs: [NSManagedObjectID] = await backgroundContext.perform {
+                let request = NSFetchRequest<NSManagedObjectID>(entityName: "LedgerEntity")
+                request.sortDescriptors = [NSSortDescriptor(keyPath: \LedgerEntity.createdAt, ascending: false)]
+                request.resultType = .managedObjectIDResultType
+                do {
+                    return try backgroundContext.fetch(request)
+                } catch {
+                    return []
+                }
+            }
+
+            let viewContext = container.viewContext
+            return await viewContext.perform {
+                objectIDs.compactMap { objectID in
+                    guard let ledger = try? viewContext.existingObject(with: objectID) as? LedgerEntity else {
+                        return nil
+                    }
+                    return LedgerAdapter.from(entity: ledger)
+                }
+            }
         },
         addLedger: { title, ownerID, ownerName in
-            let context = PersistenceController.shared.container.viewContext
-            let ledger = LedgerEntity(context: context)
-            ledger.id = UUID().uuidString
-            ledger.title = title
-            ledger.createdAt = Date()
-            ledger.ownerID = ownerID
-            ledger.ownerName = ownerName
-            ledger.recordName = UUID().uuidString
-            do {
-                try context.save()
-            } catch {
-                context.rollback()
-                throw LedgerDataClientError.saveFailed
+            let container = PersistenceController.shared.container
+            let backgroundContext = container.newBackgroundContext()
+            backgroundContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+
+            let objectID: NSManagedObjectID = try await backgroundContext.perform {
+                let ledger = LedgerEntity(context: backgroundContext)
+                ledger.id = UUID().uuidString
+                ledger.title = title
+                ledger.createdAt = Date()
+                ledger.ownerID = ownerID
+                ledger.ownerName = ownerName
+                ledger.recordName = UUID().uuidString
+
+                do {
+                    try backgroundContext.obtainPermanentIDs(for: [ledger])
+                    try backgroundContext.save()
+                } catch {
+                    backgroundContext.rollback()
+                    throw LedgerDataClientError.saveFailed
+                }
+
+                return ledger.objectID
             }
-            return LedgerAdapter.from(entity: ledger)
+
+            let viewContext = container.viewContext
+            return try await viewContext.perform {
+                guard let ledger = try viewContext.existingObject(with: objectID) as? LedgerEntity else {
+                    throw LedgerDataClientError.saveFailed
+                }
+                return LedgerAdapter.from(entity: ledger)
+            }
         },
         deleteLedger: { id in
             let context = PersistenceController.shared.container.viewContext
@@ -205,42 +239,55 @@ extension LedgerDataClient {
 
 extension TransactionDataClient {
     public static let live = TransactionDataClient { ledger, value, type, mainCategory, subCategory, date, description in
-        let context = PersistenceController.shared.container.viewContext
+        let container = PersistenceController.shared.container
+        let backgroundContext = container.newBackgroundContext()
+        backgroundContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
 
-        let request: NSFetchRequest<LedgerEntity> = LedgerEntity.fetchRequest()
-        request.predicate = NSPredicate(format: "id == %@", ledger.id)
+        let transactionObjectID: NSManagedObjectID = try await backgroundContext.perform {
+            let request: NSFetchRequest<LedgerEntity> = LedgerEntity.fetchRequest()
+            request.predicate = NSPredicate(format: "id == %@", ledger.id)
 
-        let ledgerResults = try context.fetch(request)
-        guard let ledgerEntity = ledgerResults.first else {
-            throw TransactionDataClientError.ledgerNotFound
+            let ledgerResults = try backgroundContext.fetch(request)
+            guard let ledgerEntity = ledgerResults.first else {
+                throw TransactionDataClientError.ledgerNotFound
+            }
+
+            let transaction = TransactionEntity(context: backgroundContext)
+            transaction.id = UUID().uuidString
+            transaction.value = value
+            transaction.type = type.rawValue
+            transaction.createdAt = date
+            transaction.updatedAt = date
+            transaction.descriptionContent = description
+            transaction.book = ledgerEntity
+
+            let mainCategoryEntity = try fetchOrCreateMainCategoryEntity(from: mainCategory, context: backgroundContext)
+            let subCategoryEntity = try fetchOrCreateSubCategoryEntity(from: subCategory, mainCategoryEntity: mainCategoryEntity, context: backgroundContext)
+            let userEntity = try fetchOrCreateUserEntity(from: ledger.owner, context: backgroundContext)
+
+            transaction.mainCategory = mainCategoryEntity
+            transaction.subCategory = subCategoryEntity
+            transaction.createdByUser = userEntity
+            transaction.updatedByUser = userEntity
+
+            do {
+                try backgroundContext.obtainPermanentIDs(for: [transaction, mainCategoryEntity, subCategoryEntity, userEntity])
+                try backgroundContext.save()
+            } catch {
+                backgroundContext.rollback()
+                throw TransactionDataClientError.saveFailed
+            }
+
+            return transaction.objectID
         }
 
-        let transaction = TransactionEntity(context: context)
-        transaction.id = UUID().uuidString
-        transaction.value = value
-        transaction.type = type.rawValue
-        transaction.createdAt = date
-        transaction.updatedAt = date
-        transaction.descriptionContent = description
-        transaction.book = ledgerEntity
-
-        let mainCategoryEntity = try fetchOrCreateMainCategoryEntity(from: mainCategory, context: context)
-        let subCategoryEntity = try fetchOrCreateSubCategoryEntity(from: subCategory, mainCategoryEntity: mainCategoryEntity, context: context)
-        let userEntity = try fetchOrCreateUserEntity(from: ledger.owner, context: context)
-
-        transaction.mainCategory = mainCategoryEntity
-        transaction.subCategory = subCategoryEntity
-        transaction.createdByUser = userEntity
-        transaction.updatedByUser = userEntity
-
-        do {
-            try context.save()
-        } catch {
-            context.rollback()
-            throw TransactionDataClientError.saveFailed
+        let viewContext = container.viewContext
+        return try await viewContext.perform {
+            guard let transaction = try viewContext.existingObject(with: transactionObjectID) as? TransactionEntity else {
+                throw TransactionDataClientError.saveFailed
+            }
+            return BillAdapter.from(entity: transaction)
         }
-
-        return BillAdapter.from(entity: transaction)
     }
 }
 
