@@ -168,15 +168,16 @@ extension LedgerDataClient {
                 }
             }
 
-            let viewContext = container.viewContext
-            return await viewContext.perform {
+            let ledgers: [AccountBook] = await backgroundContext.perform {
                 objectIDs.compactMap { objectID in
-                    guard let ledger = try? viewContext.existingObject(with: objectID) as? LedgerEntity else {
+                    guard let ledger = try? backgroundContext.existingObject(with: objectID) as? LedgerEntity else {
                         return nil
                     }
                     return LedgerAdapter.from(entity: ledger)
                 }
             }
+
+            return await MainActor.run { ledgers }
         },
         addLedger: { title, ownerID, ownerName in
             let container = PersistenceController.shared.container
