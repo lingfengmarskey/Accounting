@@ -63,7 +63,7 @@ public struct BillslistView: View {
             .fullScreenCover(
                 item: $store.scope(state: \.destination?.addAccounts, action: \.destination.addAccounts)
             ) { store in
-                InputAccountsView(store)
+                InputAccountsFormView(store)
             }
         }
         .onAppear(perform: {
