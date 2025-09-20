@@ -48,6 +48,7 @@ let package = Package(
             name: "RootTests",
             dependencies: [
                 "Root",
+                "Billslist",
                 .product(name: "Core", package: "Core")
             ]),
         .target(name: "AccountBookList",

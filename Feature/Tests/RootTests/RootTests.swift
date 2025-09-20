@@ -1,7 +1,7 @@
 import Core
 import XCTest
-import Core
 @testable import Root
+@testable import Billslist
 
 @MainActor
 final class RootTests: XCTestCase {
@@ -42,6 +42,7 @@ final class RootTests: XCTestCase {
         default:
             XCTFail("Expected bills list destination to be presented")
         }
+    }
 
     func testNavigateToBillsListAfterSavingFirstLedger() {
         let savedLedger = AccountBook(
@@ -70,5 +71,69 @@ final class RootTests: XCTestCase {
         default:
             XCTFail("Expected bills list destination after saving ledger")
         }
+    }
+}
+
+@MainActor
+final class BillslistStoreTests: XCTestCase {
+
+    func testLedgerResponseUpdatesVisibleLedgerAndBills() {
+        let owner = User(id: "owner", name: "Owner")
+        let initialLedger = AccountBook(
+            owner: owner,
+            participacer: [],
+            bills: [],
+            id: "ledger-1",
+            name: "Personal",
+            createdAt: ""
+        )
+
+        var state = BillslistStore.State(
+            bills: [],
+            ledger: initialLedger
+        )
+
+        let newerBill = Bill(
+            id: "bill-newer",
+            value: 20,
+            type: .income,
+            mainCategory: BillMainCategory(id: "main", name: "Main", subCategories: []),
+            subCategory: BillSubCategory(id: "sub", name: "Sub"),
+            createdAt: "2024-01-02T00:00:00Z",
+            updatedAt: "2024-01-02T12:00:00Z",
+            createdByUser: owner,
+            updatedByUser: owner,
+            description: "New income"
+        )
+
+        let olderBill = Bill(
+            id: "bill-older",
+            value: 10,
+            type: .payment,
+            mainCategory: BillMainCategory(id: "main", name: "Main", subCategories: []),
+            subCategory: BillSubCategory(id: "sub", name: "Sub"),
+            createdAt: "2024-01-01T00:00:00Z",
+            updatedAt: "2024-01-01T08:00:00Z",
+            createdByUser: owner,
+            updatedByUser: owner,
+            description: "Groceries"
+        )
+
+        let refreshedLedger = AccountBook(
+            owner: owner,
+            participacer: [],
+            bills: [olderBill, newerBill],
+            id: "ledger-1",
+            name: "Personal",
+            createdAt: ""
+        )
+
+        _ = BillslistStore().reduce(into: &state, action: .ledgersResponse([refreshedLedger]))
+
+        XCTAssertEqual(state.ledger, refreshedLedger)
+        XCTAssertEqual(
+            state.bills,
+            [BillSectionData(id: refreshedLedger.id, header: refreshedLedger.name, cells: [newerBill, olderBill])]
+        )
     }
 }
