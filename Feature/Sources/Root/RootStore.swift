@@ -78,10 +78,7 @@ public struct RootStore {
                         state.destination = .addBook(AccountBookConfigStore.State())
                         return .none
                     }
-                    let billsState = BillslistStore.State(
-                        bills: Self.makeBillSections(from: ledger),
-                        ledger: ledger
-                    )
+                    let billsState = Self.makeBillsState(from: ledger)
                     state.bills = billsState
                     state.destination = .billslist(billsState)
                 }
@@ -92,11 +89,19 @@ public struct RootStore {
                     print("failed to get book from bookConfig")
                     return .none
                 }
-                let billSections = Self.makeBillSections(from: book)
-                let billsState = BillslistStore.State(bills: billSections, ledger: book)
-                state.bills = billsState
-                state.destination = .billslist(billsState)
+                Self.integrateSavedLedger(book, into: &state)
                 return .none
+            case .destination(.presented(.addBook(.onSaved))):
+                if case let .addBook(addBookState) = state.destination,
+                   let ledger = addBookState.book
+                {
+                    Self.integrateSavedLedger(ledger, into: &state)
+                    return .none
+                }
+                return .run { send in
+                    let ledgers = await ledgerClient.fetchLedgers()
+                    await send(.ledgersLoaded(ledgers))
+                }
             default:
                 return .none
             }
@@ -115,6 +120,25 @@ private extension RootStore {
                 cells: ledger.bills
             )
         ]
+    }
+
+    static func makeBillsState(from ledger: AccountBook) -> BillslistStore.State {
+        BillslistStore.State(
+            bills: makeBillSections(from: ledger),
+            ledger: ledger
+        )
+    }
+
+    static func integrateSavedLedger(_ ledger: AccountBook, into state: inout State) {
+        if let index = state.ledgers.firstIndex(where: { $0.id == ledger.id }) {
+            state.ledgers[index] = ledger
+        } else {
+            state.ledgers.insert(ledger, at: 0)
+        }
+
+        let billsState = makeBillsState(from: ledger)
+        state.bills = billsState
+        state.destination = .billslist(billsState)
     }
 }
 
